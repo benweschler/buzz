@@ -2,6 +2,9 @@ require('dotenv').config()
 
 // Firebase Imports
 const admin = require('firebase-admin');
+import { getAuth } from 'firebase-admin/auth';
+import { getFirestore } from 'firebase-admin/firestore';
+
 
 // Express Setup
 const express = require('express');
@@ -21,3 +24,12 @@ admin.initializeApp({
 })
 
 // https://kavitmht.medium.com/crud-with-firestore-using-the-node-js-sdk-c121ede57bcc
+
+// Export admin functions
+
+const auth = getAuth();
+const database = getFirestore();
+
+module.exports = {
+    admin
+}
