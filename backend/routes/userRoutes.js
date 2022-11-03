@@ -3,6 +3,7 @@ const express = require('express');
 const {
     createUser,
     readUser,
+    readUserByEmail,
     updateUser,
     deleteUser
 } = require('../controllers/userController');
@@ -14,6 +15,9 @@ router.post('/', createUser);
 
 // Read a user
 router.get('/:id', readUser);
+
+// Read a user by their email
+router.get('*', readUserByEmail);
 
 // Update a user
 router.patch('/:id', updateUser);
