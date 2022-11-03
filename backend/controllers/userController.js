@@ -1,12 +1,17 @@
+const { database } = require('../firebase-admin/index');
+
 const createUser = async (req, res) => {
-    const { QRcode, clubs_following, email, 
-        events_registered, interests, major, name, username} = req.body;
-    
-    // IMPLEMENT CHECK TO SEE IF ALL FIELDS ARE POPULATED
+    res.json({
+        message: 'Welcome!',
+        success: true
+    })
 }
 
 const readUser = async (req, res) => {
-
+    const {id} = req.params; // ID should be movxQcAX4l78QooYB2W9
+    database.collection('Users').doc(id).get().then(result => {
+        res.json(result.data())
+    })
 }
 
 const updateUser = async (req, res) => {
