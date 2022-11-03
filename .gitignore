@@ -21,3 +21,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+.env
+/backend/firebase-admin/.firebase/service-account.json
