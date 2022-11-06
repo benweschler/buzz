@@ -14,7 +14,10 @@ admin.initializeApp({
 })
 
 var database = admin.firestore();
+var auth = admin.auth();
 
 module.exports = {
-    database
+    admin,
+    database,
+    auth,
 }
