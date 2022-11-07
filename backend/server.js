@@ -2,6 +2,8 @@ require('dotenv').config()
 
 // Routes
 const userRoutes = require('./routes/userRoutes');
+const organizerRoutes = require('./routes/organizerRoutes');
+const eventRoutes = require('./routes/eventRoutes');
 
 // Express Setup
 const express = require('express');
@@ -17,8 +19,8 @@ app.use((req, res, next) => {
 })
 
 app.use('/api/users', userRoutes);
-//app.use('/api/organizers', organizerRoutes);
-//app.use('/api/events', eventRoutes);
+app.use('/api/organizers', organizerRoutes);
+app.use('/api/events', eventRoutes);
 
 app.listen(process.env.PORT, () => {
     console.log('App listening on port ' + process.env.PORT)
