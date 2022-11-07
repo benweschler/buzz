@@ -40,7 +40,7 @@ const readUser = async (req, res) => {
     // req.params is the extra information at the end of the URL
     const {id} = req.params;
     const userRef = database.collection('Users').doc(id);
-    //const userDoc = await userRef.get();
+    
     userRef.get().then((userDoc) => {
         if (userDoc.exists) {
             res.status(200).json(userDoc.data())
@@ -166,14 +166,7 @@ const authenticateUser = async (req, res) => {
         // since firebase on the client side is v9
         signInWithEmailAndPassword(clientAuth, email, password)
             .then((userCredential) => {
-                // Use Firebase v8 syntax to generate the token,
-                // since firebase-admin uses v8 syntax
-                /*adminAuth.createCustomToken(userCredential.user.uid)
-                    .then((token) => {
-                        res.status(200).json({
-                            token: token
-                        })
-                    });*/
+                // Get the token that firebase generates and return it
                 res.status(200).json({
                     token: userCredential.user.stsTokenManager.accessToken
                 })
