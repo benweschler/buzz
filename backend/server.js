@@ -23,5 +23,5 @@ app.use('/api/organizers', organizerRoutes);
 app.use('/api/events', eventRoutes);
 
 app.listen(process.env.PORT, () => {
-    console.log('App listening on port ' + process.env.PORT)
+    console.log('App listening on port ' + process.env.PORT);
 })

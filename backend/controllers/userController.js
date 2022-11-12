@@ -6,6 +6,7 @@ const { database } = require('../firebase-admin/index');
 const { auth: clientAuth } = require('../../src/firebase/index');
 const { auth: adminAuth } = require('../firebase-admin/index');
 const { signInWithEmailAndPassword } = require('firebase/auth');
+const axios = require('axios');
 
 // When designing basic functionality for CRUD operations, I used
 // https://firebase.google.com/docs/firestore/manage-data/add-data
@@ -16,17 +17,20 @@ const { signInWithEmailAndPassword } = require('firebase/auth');
 const createUser = async (req, res) => {
     // req.body is the extra JSON information that gets sent to the server
     const { qrcode, clubs_following, email, 
-        events_registered, interests, major, name, username } = req.body;
+        events_registered, interests, major, name, username, id } = req.body;
+    //console.log(req.body)
     if (!qrcode || !clubs_following || !email || !events_registered
-        || !interests || !major || !name || !username) {
+        || !interests || !major || !name || !username || !id) {
+            //console.log('Missing field');
             res.status(400).json({
                 error: 'One or more fields are missing'
             })
     } else {
+        console.log('Going to post');
         const userData = req.body;
-        database.collection('Users').add(userData).then((docRef) => {
+        database.collection('Users').doc(id).set(userData).then((docRef) => {
             res.status(200).json({
-                id: docRef.id
+                id: id
             })
         }).catch((error) => {
             res.status(500).json({
@@ -142,15 +146,21 @@ const deleteUser = async (req, res) => {
 // Authentication Functions
 const createUserInAuth = async (req, res) => {
     const {email, password} = req.body;
+    console.log('Creating user in auth')
 
     adminAuth.createUser({
         email: email,
         password: password
     }).then((record) => {
+        console.log('Setting custom claims')
+        adminAuth.setCustomUserClaims(record.uid, {
+            organizer: false
+        })
         res.status(200).json({
             id: record.uid,
         })
     }).catch((error) => {
+        console.log(error)
         res.status(400).json({
             error: error
         })
@@ -180,8 +190,13 @@ const authenticateUser = async (req, res) => {
 
 const tokenTest = async (req, res) => {
     const {token} = req.body;
-    adminAuth.verifyIdToken(token).then(() => {
+    adminAuth.verifyIdToken(token).then((claims) => {
         console.log('Token verified!');
+        if (claims.organizer === false) {
+            console.log('Current user is not an organizer');
+        } else {
+            console.log('Current user is an organizer');
+        }
         res.status(200).json({
             "success": true
         })
@@ -192,6 +207,50 @@ const tokenTest = async (req, res) => {
     })
 }
 
+const createUserAndSignup = async (req, res) => {
+    const { qrcode, clubs_following, email, 
+        events_registered, interests, major, name, username, password } = req.body;
+    if (!qrcode || !clubs_following || !email || !events_registered
+        || !interests || !major || !name || !username) {
+            res.status(400).json({
+                error: 'One or more fields are missing'
+            })
+    } else {
+        axios({
+            method: 'post',
+            url: 'http://localhost:4000/api/users/signup',
+            data: {
+                email: email,
+                password: password
+            }
+        }).then((signupRes) => {
+            axios({
+                method: 'post',
+                url: 'http://localhost:4000/api/users/',
+                data: {
+                    qrcode: qrcode,
+                    clubs_following: clubs_following,
+                    email: email,
+                    events_registered: events_registered,
+                    interests: interests,
+                    major: major,
+                    name: name,
+                    username: username,
+                    id: signupRes.data.id
+                }
+            }).catch((error) => {
+                res.status(404).json({
+                    "error": "test1"
+                })
+            })
+        }).catch((error) => {
+            res.status(404).json({
+                "error": error
+            })
+        })
+    }
+}
+
 module.exports = {
     createUser,
     readUser,
@@ -200,5 +259,6 @@ module.exports = {
     deleteUser,
     createUserInAuth,
     authenticateUser,
-    tokenTest
+    tokenTest,
+    createUserAndSignup,
 }

@@ -36,7 +36,7 @@ const readOrganizer = async (req, res)=>{
     }
 };
 
-const readOrganizerByEmail= async (req, res)=>{
+const readOrganizerByEmail = async (req, res)=>{
     const email = req.query.email;
 
     const orgsCollectionRef = database.collection('Organizers');
@@ -78,7 +78,7 @@ const updateOrganizer=async (req, res)=>{
     })
 };
 
-const deleteOrganizer= async (req, res)=>{
+const deleteOrganizer = async (req, res)=>{
     const {id} = req.params;
     const orgRef = database.collection('Organizers').doc(id);
     
@@ -105,10 +105,31 @@ const deleteOrganizer= async (req, res)=>{
     })
 };
 
+const getAllOrganizerEvents = async (req, res) => {
+    const {id} = req.body;
+    console.log(id);
+
+    let eventsArr = [];
+    database.collection('Events').where("organizer", "==", id).orderBy('date').get().then((snapshot) => {
+        snapshot.forEach((doc) => {
+            //eventsJSON[doc.id] = doc.data();
+            eventsArr.push(doc.data());
+        });
+        res.status(200).json({
+            events_array: eventsArr
+        });
+    }).catch((error) => {
+        res.status(500).json({
+            error: error
+        })
+    })
+}
+
 module.exports = {
     createOrganizer,
     readOrganizer,
     readOrganizerByEmail,
     updateOrganizer,
     deleteOrganizer,
+    getAllOrganizerEvents,
 };

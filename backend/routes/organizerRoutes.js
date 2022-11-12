@@ -6,11 +6,14 @@ const {
     readOrganizerByEmail,
     updateOrganizer,
     deleteOrganizer,
+    getAllOrganizerEvents,
 }=require('../controllers/organizerController'); //import the Controller functions
 
 const router=express.Router(); //initiate express router
 
 router.post('/', createOrganizer);
+
+router.get(/getall$/, getAllOrganizerEvents);
 
 router.get('/:id', readOrganizer);
 

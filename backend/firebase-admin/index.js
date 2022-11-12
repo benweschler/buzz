@@ -1,7 +1,5 @@
 // Firebase Imports
 const admin = require('firebase-admin');
-const authorization = require('firebase-admin/auth');
-const firestore = require('firebase-admin/firestore');
 
 // Initializing Admin SDK with environment variables:
 // https://www.benmvp.com/blog/initializing-firebase-admin-node-sdk-env-vars/
