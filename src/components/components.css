@@ -3,6 +3,7 @@
   width: 100%;
   padding: 1em 0.5em;
   display: flex;
+  gap: 3%;
   height: 64px;
   align-items: center;
   border-bottom: 4px dotted black;

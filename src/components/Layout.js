@@ -8,7 +8,7 @@ function Layout (props) {
     return (
         <>
             <Header />
-            <div style={{display: 'flex'}}>
+            <div style={{display: 'flex',gap: '3%'}}>
                 <Navigation />
                 <main>{props.children}</main>
             </div>
