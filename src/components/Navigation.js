@@ -22,8 +22,8 @@ function Navigation() {
                     </Link>
                 </li>
                 <li>
-                    <Link to="/all">
-                        All events
+                    <Link to="/login">
+                        Sign up/Login in
                     </Link>
                 </li>
             </ul>
