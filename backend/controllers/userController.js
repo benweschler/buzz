@@ -29,10 +29,12 @@ const createUser = async (req, res) => {
         console.log('Going to post');
         const userData = req.body;
         database.collection('Users').doc(id).set(userData).then((docRef) => {
+            console.log('Posted');
             res.status(200).json({
                 id: id
             })
         }).catch((error) => {
+            console.log('Error');
             res.status(500).json({
                 error: error
             })
@@ -180,6 +182,10 @@ const authenticateUser = async (req, res) => {
                 res.status(200).json({
                     token: userCredential.user.stsTokenManager.accessToken
                 })
+            }).catch((error) => {
+                res.status(400).json({
+                    error: error
+                })
             })
     } catch (error) {
         res.status(400).json({
@@ -238,6 +244,10 @@ const createUserAndSignup = async (req, res) => {
                     username: username,
                     id: signupRes.data.id
                 }
+            }).then(() => {
+                res.status(200).json({
+                    success: true
+                })
             }).catch((error) => {
                 res.status(404).json({
                     "error": "test1"
