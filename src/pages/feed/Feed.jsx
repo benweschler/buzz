@@ -1,15 +1,25 @@
+import {useMemo, useState} from 'react';
 import styled from "styled-components";
 import './Feed.css';
 import Events from './events.json';
 
 function Feed() {
-  const filter = () => true;
+  const [filter, setFilter] = useState(() => () => true);
+  const eventCards = useMemo(() => buildEventCards(filter), [filter]);
+
   return (
     <Container>
       <List>
         <h1>Events</h1>
-        <button>Filter</button>
-        {buildEventCards(filter)}
+        <div className="row">
+          <button onClick={() => setFilter(() => () => true)}>
+            Show All
+          </button>
+          <button onClick={() => setFilter(() => () => false)}>
+            Show None
+          </button>
+        </div>
+        {eventCards}
       </List>
     </Container>
   );
@@ -18,12 +28,14 @@ function Feed() {
 function buildEventCards(filter) {
   const cards = [];
   const events = [...Events].filter(filter);
-  for(let i = 0; i < events.length; i++) {
+  for (let i = 0; i < events.length; i++) {
     cards.push(
       <Event
-        number={i}
+        key={i}
         name={Events[i].title}
         organizer={Events[i].organizer}
+        url={Events[i].image}
+        description={Events[i].description}
       />
     );
   }
@@ -31,13 +43,17 @@ function buildEventCards(filter) {
   return cards;
 }
 
-function Event(props) {
+function Event({name, organizer, url, description}) {
   return (
     <div className='row'>
-      <Card>{props.number}</Card>
-      <div className='list'>
-        <h2>{props.name}</h2>
-        <div>{props.organizer}</div>
+      <Card>
+        <img src={url} alt={name} />
+        <Gradient/>
+        <p>{name}</p>
+      </Card>
+      <div className='eventDetails'>
+        <h2>{organizer}</h2>
+        <span>{description}</span>
       </div>
     </div>
   );
@@ -63,12 +79,40 @@ const Card = styled.div`
   height: 400px;
   width: 400px;
   border-radius: 20px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
-  
-  display: flex;
-  flex-flow: column;
-  justify-content: center;
-  align-items: center;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  position: relative;
+
+  p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: absolute;
+    left: 5%;
+    bottom: 0;
+    font-size: 25px;
+    color: white;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  img {
+    border-radius: 20px;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`;
+
+const Gradient = styled.div`
+  width: 100%;
+  height: 33%;
+  bottom: 0;
+  border-radius: 20px;
+  position: absolute;
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5));
 `;
 
 export default Feed;

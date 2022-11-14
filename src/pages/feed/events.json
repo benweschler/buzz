@@ -1,22 +1,32 @@
 [
   {
     "title": "Trip to Joshua Tree",
-    "organizer": "Backpacking Club"
+    "image": "https://events.kcrw.com/wp-content/uploads/sites/2/2020/03/full-1-640x427.jpg",
+    "organizer": "Backpacking Club",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
   },
   {
     "title": "Wellness Hike",
-    "organizer": "UCLA Pagan and Druid Spiritualism Club"
+    "image": "https://events.kcrw.com/wp-content/uploads/sites/2/2020/03/full-1-640x427.jpg",
+    "organizer": "UCLA Pagan and Druid Spiritualism Club",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
   },
   {
     "title": "Book Exchange",
-    "organizer": "The Grateful Dead Cover band Collective"
+    "image": "https://events.kcrw.com/wp-content/uploads/sites/2/2020/03/full-1-640x427.jpg",
+    "organizer": "The Grateful Dead Cover Band Collective",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
   },
   {
     "title": "Silent Disco",
-    "organizer": "LCD Sound System"
+    "image": "https://events.kcrw.com/wp-content/uploads/sites/2/2020/03/full-1-640x427.jpg",
+    "organizer": "LCD Sound System",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
   },
   {
     "title": "Chem-trail Cleanup",
-    "organizer": "Conspiracy Theory Club"
+    "image": "https://events.kcrw.com/wp-content/uploads/sites/2/2020/03/full-1-640x427.jpg",
+    "organizer": "Conspiracy Theory Club",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
   }
 ]

@@ -1,10 +1,14 @@
-.row{
+.row {
     display: flex;
     flex-direction: row;
 }
 
-.list{
+.eventDetails {
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+.eventDetails span {
+    width: 400px;
 }
