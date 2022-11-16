@@ -6,7 +6,8 @@ const { database } = require('../firebase-admin/index');
 const { auth: clientAuth } = require('../../src/firebase/index');
 const { auth: adminAuth } = require('../firebase-admin/index');
 const { signInWithEmailAndPassword } = require('firebase/auth');
-const axios = require('axios');
+
+const { INITIAL_USER_KEYS } = require('../constants/userConstants.js');
 
 // When designing basic functionality for CRUD operations, I used
 // https://firebase.google.com/docs/firestore/manage-data/add-data
@@ -16,29 +17,53 @@ const axios = require('axios');
 
 const createUser = async (req, res) => {
     // req.body is the extra JSON information that gets sent to the server
-    const { qrcode, clubs_following, email, 
-        events_registered, interests, major, name, username, id } = req.body;
-    //console.log(req.body)
-    if (!qrcode || !clubs_following || !email || !events_registered
-        || !interests || !major || !name || !username || !id) {
-            //console.log('Missing field');
-            res.status(400).json({
-                error: 'One or more fields are missing'
-            })
+
+    // The request needs a qrcode, email, password, and major
+    let containsAllElements = true;
+    INITIAL_USER_KEYS.forEach((element) => {
+        if (!Object.keys(req.body).includes(element)) {
+            containsAllElements = false;
+        }
+    })
+
+    if (!containsAllElements) {
+        res.status(400).json({
+            error: 'One or more fields are missing'
+        });
     } else {
-        console.log('Going to post');
-        const userData = req.body;
-        database.collection('Users').doc(id).set(userData).then((docRef) => {
-            console.log('Posted');
-            res.status(200).json({
-                id: id
+        const email = req.body.email;
+        const password = req.body.password;
+
+        adminAuth.createUser({
+            email: email,
+            password: password
+        }).then((record) => {
+            // Don't want the password to be included in the document
+            delete req.body.password;
+
+            database.collection('Users').doc(record.uid).set({
+                ...req.body,
+                "clubs_following": [],
+                "events_registered": [],
+                "interests": [],
+                "organizations": []
+            }).then(() => {
+                console.log('Created user document with id: ' + record.uid);
+                res.status(200).json({
+                    id: record.uid
+                })
+            }).catch((error) => {
+                console.log('Error creating user document in Firestore');
+                res.status(500).json({
+                    error: error
+                })
             })
         }).catch((error) => {
-            console.log('Error');
+            console.log('Error creating user in auth');
             res.status(500).json({
                 error: error
             })
-        });
+        })
     }
 }
 
@@ -71,6 +96,8 @@ const readUserByEmail = async (req, res) => {
     const usersCollectionRef = database.collection('Users');
     // Queries the user collection and tries to match the email with the ID passed in
     // Should only output one document
+
+    // This is using Firestore Query, which is not dependent on the amount of data in the collection
     const userDocSnapshot = await usersCollectionRef.where('email', '==', email).get();
     usersCollectionRef.where('email', '==', email).get().then((snapshot) => {
         if (userDocSnapshot.empty) {
@@ -145,30 +172,6 @@ const deleteUser = async (req, res) => {
     })
 }
 
-// Authentication Functions
-const createUserInAuth = async (req, res) => {
-    const {email, password} = req.body;
-    console.log('Creating user in auth')
-
-    adminAuth.createUser({
-        email: email,
-        password: password
-    }).then((record) => {
-        console.log('Setting custom claims')
-        adminAuth.setCustomUserClaims(record.uid, {
-            organizer: false
-        })
-        res.status(200).json({
-            id: record.uid,
-        })
-    }).catch((error) => {
-        console.log(error)
-        res.status(400).json({
-            error: error
-        })
-    })
-}
-
 // Signs in user and generates a token
 const authenticateUser = async (req, res) => {
     try {
@@ -213,62 +216,12 @@ const tokenTest = async (req, res) => {
     })
 }
 
-const createUserAndSignup = async (req, res) => {
-    const { qrcode, clubs_following, email, 
-        events_registered, interests, major, name, username, password } = req.body;
-    if (!qrcode || !clubs_following || !email || !events_registered
-        || !interests || !major || !name || !username) {
-            res.status(400).json({
-                error: 'One or more fields are missing'
-            })
-    } else {
-        axios({
-            method: 'post',
-            url: 'http://localhost:4000/api/users/signup',
-            data: {
-                email: email,
-                password: password
-            }
-        }).then((signupRes) => {
-            axios({
-                method: 'post',
-                url: 'http://localhost:4000/api/users/',
-                data: {
-                    qrcode: qrcode,
-                    clubs_following: clubs_following,
-                    email: email,
-                    events_registered: events_registered,
-                    interests: interests,
-                    major: major,
-                    name: name,
-                    username: username,
-                    id: signupRes.data.id
-                }
-            }).then(() => {
-                res.status(200).json({
-                    success: true
-                })
-            }).catch((error) => {
-                res.status(404).json({
-                    "error": "test1"
-                })
-            })
-        }).catch((error) => {
-            res.status(404).json({
-                "error": error
-            })
-        })
-    }
-}
-
 module.exports = {
     createUser,
     readUser,
     readUserByEmail,
     updateUser,
     deleteUser,
-    createUserInAuth,
     authenticateUser,
     tokenTest,
-    createUserAndSignup,
 }

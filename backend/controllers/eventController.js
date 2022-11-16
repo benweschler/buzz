@@ -1,46 +1,60 @@
 const { database } = require('../firebase-admin/index');
+const { INITIAL_EVENT_KEYS } = require('../constants/eventConstants.js');
 
 
 const createEvent = async (req, res)=> {
-    const {attendees, capacity, date, description, location, name, organizer, recurring, tags, ticketed} = req.body;
-    const eventData=req.body;
+
+    // Event needs capacity, date ,description, location, title, organizer, recurring, tags, and ticketed
+    let containsAllElements = true;
+    INITIAL_EVENT_KEYS.forEach((element) => {
+        if (!Object.keys(req.body).includes(element)) {
+            containsAllElements = false;
+        }
+    })
+
     //check for empty fields
-    if(!(attendees||capacity||date||description||location||name||organizer||recurring||tags||ticketed))
-    {
+    if (!containsAllElements) {
         return res.status(400).json({
             error: 'One or more fields are missing'
         });
+    } else {
+        database.collection('Events').add({
+            ...req.body,
+            "attendees": [],
+        }).then((docRef) => {
+            console.log('Created event document with id: ' + docRef.id);
+            res.status(200).json({
+                id: docRef.id
+            })
+        }).catch((error) => {
+            res.status(500).json({
+                error: error
+            })
+        });
     }
-    database.collection('Events').add(eventData).then((docRef) => {
-        console.log('TEST TEST')
-        res.status(200).json({
-            id: docRef.id
-        })
-    }).catch((error) => {
-        res.status(500).json({
-            error: error
-        })
-    });
 };
 
 const readEvent = async (req, res) => {
     const {id} = req.params;
-    const eventRef = database.collection('Events').doc(id);
-    const eventDoc = await eventRef.get();
-    if(!eventDoc.exists) {
-        res.status(404).json({
-            error: 'Document does not exist'
-        });
-    }
-    else {
-        res.status(200).json(eventDoc.data());
-    }
+
+    database.collection('Events').doc(id).get().then((doc) => {
+        if (doc.exists) {
+            res.status(200).json(doc.data());
+        } else {
+            res.status(404).json({
+                error: 'Document does not exist'
+            });
+        }
+    }).catch((error) => {
+        res.status(500).json({
+            error: error
+        })
+    })
 };
 
 const updateEvent = async (req, res)=>{
     const {id} = req.params;
-    const eventRef = database.collection('Events').doc(id);
-    eventRef.update(req.body).then(() => {
+    database.collection('Events').doc(id).update(req.body).then(() => {
         res.json({
             id: id
         })

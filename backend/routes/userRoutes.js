@@ -6,19 +6,11 @@ const {
     readUserByEmail,
     updateUser,
     deleteUser,
-    createUserInAuth,
     authenticateUser,
     tokenTest,
-    createUserAndSignup
 } = require('../controllers/userController');
 
 const router = express.Router();
-
-// Create a user in authentication
-router.post(/signup$/, createUserInAuth);
-
-// Signup a user and create their document
-router.post(/signup_create$/, createUserAndSignup);
 
 // Authenticate a user and respond with the authentication token
 router.get(/signin$/, authenticateUser);
@@ -26,7 +18,7 @@ router.get(/signin$/, authenticateUser);
 // Test token
 router.get(/token$/, tokenTest);
 
-// Create a user in firestore
+// Create a user in Firestore and in Firebase Auth
 router.post('/', createUser);
 
 // Read a user

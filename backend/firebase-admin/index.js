@@ -11,8 +11,8 @@ admin.initializeApp({
     databaseURL: "https://buzz-8222d.firebaseio.com"
 })
 
-var database = admin.firestore();
-var auth = admin.auth();
+const database = admin.firestore();
+const auth = admin.auth();
 
 module.exports = {
     admin,
