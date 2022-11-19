@@ -1,4 +1,5 @@
 // Event Constants
+const ATTENDEES = "attendees";
 const CAPACITY = "capacity";
 const DATE = "date";
 const DESCRIPTION = "description";

@@ -2,10 +2,12 @@
 // those requests/responses have to communicate with the server. For
 // authentication we have to use the normal firebase client. Then, we use
 // firebase-admin to generate a token for the user
-const { database } = require('../firebase-admin/index');
+const { database, storage } = require('../firebase-admin/index');
 const { auth: clientAuth } = require('../../src/firebase/index');
 const { auth: adminAuth } = require('../firebase-admin/index');
 const { signInWithEmailAndPassword } = require('firebase/auth');
+const axios = require('axios');
+const { v4 } = require('uuid');
 
 const { INITIAL_USER_KEYS } = require('../constants/userConstants.js');
 
@@ -20,15 +22,18 @@ const createUser = async (req, res) => {
 
     // The request needs a qrcode, email, password, and major
     let containsAllElements = true;
+    let missingFields = [];
     INITIAL_USER_KEYS.forEach((element) => {
         if (!Object.keys(req.body).includes(element)) {
             containsAllElements = false;
+            missingFields.push(element);
         }
     })
 
     if (!containsAllElements) {
         res.status(400).json({
-            error: 'One or more fields are missing'
+            error: 'One or more fields are missing',
+            missing_fields: missingFields
         });
     } else {
         const email = req.body.email;
@@ -216,6 +221,41 @@ const tokenTest = async (req, res) => {
     })
 }
 
+const uploadUserImage = async (req, res) => {
+    if (req.body.id == undefined || req.file == undefined) {
+        res.status(400).json({
+            error: 'One or more fields are missing'
+        })
+    } else {
+
+        const bucket = storage.bucket();
+        const fullPath = `OrganizationImages/${v4()}`;
+        const bucketFile = bucket.file(fullPath);
+
+        await bucketFile.save(req.file.buffer, {
+            contentType: req.file.mimetype,
+            gzip: true
+        });
+
+        const [url] = await bucketFile.getSignedUrl({
+            action: 'read',
+            expires: '01-01-2030'
+        });
+
+        axios.patch(`http://localhost:4000/api/users/${req.body.id}`, {
+            image: url
+        }).then(() => {
+            res.status(200).json({
+                url: url
+            })
+        }).catch((error) => {
+            res.status(500).json({
+                error: error
+            })
+        })
+    }
+}
+
 module.exports = {
     createUser,
     readUser,
@@ -224,4 +264,5 @@ module.exports = {
     deleteUser,
     authenticateUser,
     tokenTest,
+    uploadUserImage
 }

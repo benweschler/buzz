@@ -1,4 +1,6 @@
 const express = require('express');
+const multer = require('multer');
+const upload = multer();
 
 const {
     createUser,
@@ -8,6 +10,7 @@ const {
     deleteUser,
     authenticateUser,
     tokenTest,
+    uploadUserImage
 } = require('../controllers/userController');
 
 const router = express.Router();
@@ -17,6 +20,9 @@ router.get(/signin$/, authenticateUser);
 
 // Test token
 router.get(/token$/, tokenTest);
+
+// Upload image to Firebase Storage
+router.post('/upload', upload.single('file'), uploadUserImage);
 
 // Create a user in Firestore and in Firebase Auth
 router.post('/', createUser);
