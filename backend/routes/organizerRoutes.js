@@ -5,6 +5,7 @@ const upload = multer();
 const {
     createOrganizer,
     readOrganizer,
+    readOrganizerByName,
     updateOrganizer,
     deleteOrganizer,
     getAllOrganizerEvents,
@@ -20,6 +21,8 @@ router.get(/getall$/, getAllOrganizerEvents);
 router.post('/upload', upload.single('file'), uploadOrganizerImage);
 
 router.get('/:id', readOrganizer);
+
+router.get('*', readOrganizerByName);
 
 router.patch('/:id', updateOrganizer);
 

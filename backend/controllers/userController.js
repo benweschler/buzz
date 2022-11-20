@@ -21,16 +21,14 @@ const createUser = async (req, res) => {
     // req.body is the extra JSON information that gets sent to the server
 
     // The request needs a qrcode, email, password, and major
-    let containsAllElements = true;
     let missingFields = [];
     INITIAL_USER_KEYS.forEach((element) => {
         if (!Object.keys(req.body).includes(element)) {
-            containsAllElements = false;
             missingFields.push(element);
         }
     })
 
-    if (!containsAllElements) {
+    if (missingFields.length !== 0) {
         res.status(400).json({
             error: 'One or more fields are missing',
             missing_fields: missingFields
@@ -103,19 +101,12 @@ const readUserByEmail = async (req, res) => {
     // Should only output one document
 
     // This is using Firestore Query, which is not dependent on the amount of data in the collection
-    const userDocSnapshot = await usersCollectionRef.where('email', '==', email).get();
     usersCollectionRef.where('email', '==', email).get().then((snapshot) => {
-        if (userDocSnapshot.empty) {
-            res.status(404).json({
-                error: 'Email does not exist in database'
-            })
-        } else {
-            var docData = {};
-            userDocSnapshot.forEach(doc => {
-                docData = doc.data();
-            })
-            res.status(200).json(docData);
-        }
+        var docData = [];
+        snapshot.forEach(doc => {
+            docData.push(doc.data());
+        })
+        res.status(200).json(docData);
     }).catch((error) => {
         res.status(500).json({
             error: error
