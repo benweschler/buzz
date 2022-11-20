@@ -7,7 +7,7 @@ import {
 import Layout from './components/Layout';
 import Explore from './pages/Explore';
 import Feed from './pages/Feed';
-import Login from './pages/Login';
+import LogRegCtrl from './pages/LogRegCtrl';
 
 function App() {
     return(
@@ -17,7 +17,7 @@ function App() {
                     <Route exact path="/" element = {<Explore/>} />
                     <Route path= "/explore" element = {<Explore/>} />
                     <Route path = "/feed" element = {<Feed/>} />
-                    <Route path = "/login" element = {<Login/>} />
+                    <Route path = "/login" element = {<LogRegCtrl/>} />
                 </Routes>
             </Layout>
         </Router>

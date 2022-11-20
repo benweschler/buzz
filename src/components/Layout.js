@@ -8,8 +8,8 @@ function Layout (props) {
     return (
         <>
             <Header />
-            <div style={{display: 'flex',gap: '3%'}}>
-                <Navigation />
+            <div>
+                {/* <Navigation /> */}
                 <main>{props.children}</main>
             </div>
             <Footer />
