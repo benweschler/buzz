@@ -1,5 +1,6 @@
 const { database } = require('../firebase-admin/index');
 const { INITIAL_EVENT_KEYS } = require('../constants/eventConstants.js');
+const { updateTags } = require("./utilityController");
 
 
 const createEvent = async (req, res)=> {
@@ -23,10 +24,11 @@ const createEvent = async (req, res)=> {
             "attendees": [],
         }).then((docRef) => {
             console.log('Created event document with id: ' + docRef.id);
+            updateTags([],req.body.tags, docRef.id);
             res.status(200).json({
                 id: docRef.id
             })
-        }).catch((error) => {
+         }).catch((error) => {
             res.status(500).json({
                 error: error
             })
@@ -54,15 +56,25 @@ const readEvent = async (req, res) => {
 
 const updateEvent = async (req, res)=>{
     const {id} = req.params;
+    const eventRef=database.collection('Events').doc(id);
+    let oldTags=[];
+    await eventRef.get().then((doc)=>{
+        oldTags=doc.data().tags
+    });
+    console.log(oldTags);
     database.collection('Events').doc(id).update(req.body).then(() => {
+        if(req.body.tags)
+        {
+            updateTags(oldTags, req.body.tags, id);
+        }
         res.json({
             id: id
         })
-    }).catch((error) => {
-        res.status(404).json({
-            error: 'Event could not be updated'
-        })
-    })
+    }) //.catch((error) => {
+    //     res.status(404).json({
+    //         error: 'Event could not be updated'
+    //     })
+    // })
 };
 
 const deleteEvent = async (req, res)=>{
