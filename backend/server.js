@@ -13,7 +13,12 @@ const app = express();
 
 // Parses incoming JSON requests and puts the parsed data in req.body
 app.use(express.json());
-app.use(cors());
+const corsOptions = {
+    origin:'http://localhost:3000', 
+    credentials:true,            //access-control-allow-credentials:true
+    optionSuccessStatus:200
+}
+app.use(cors(corsOptions));
 app.use((req, res, next) => {
     console.log(req.path, req.method);
     next();

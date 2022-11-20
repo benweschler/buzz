@@ -1,21 +1,28 @@
 const express = require('express'); //import express
+const multer = require('multer');
+const upload = multer();
 
 const {
     createOrganizer,
     readOrganizer,
-    readOrganizerByEmail,
+    readOrganizerByName,
     updateOrganizer,
     deleteOrganizer,
     getAllOrganizerEvents,
-}=require('../controllers/organizerController'); //import the Controller functions
+    uploadOrganizerImage,
+} = require('../controllers/organizerController'); //import the Controller functions
 
-const router=express.Router(); //initiate express router
+const router = express.Router(); //initiate express router
 
 router.post('/', createOrganizer);
 
 router.get(/getall$/, getAllOrganizerEvents);
 
+router.post('/upload', upload.single('file'), uploadOrganizerImage);
+
 router.get('/:id', readOrganizer);
+
+router.get('*', readOrganizerByName);
 
 router.patch('/:id', updateOrganizer);
 
