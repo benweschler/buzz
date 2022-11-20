@@ -70,11 +70,11 @@ const updateEvent = async (req, res)=>{
         res.json({
             id: id
         })
-    }) //.catch((error) => {
-    //     res.status(404).json({
-    //         error: 'Event could not be updated'
-    //     })
-    // })
+    }).catch((error) => {
+        res.status(404).json({
+            error: 'Event could not be updated'
+        })
+    })
 };
 
 const deleteEvent = async (req, res)=>{
