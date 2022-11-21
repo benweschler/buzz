@@ -1,6 +1,7 @@
 const TAGS=require("../constants/utilityConstants"); //import tags
 const { database } = require('../firebase-admin/index'); //import firebase
 const { FieldValue } = require('@google-cloud/firestore');
+const { wait } = require("@testing-library/user-event/dist/utils");
 
 Array.prototype.byCount= function(){
     var itm, a= [], L= this.length, o= {};
@@ -39,12 +40,25 @@ await eventRef.get().then((tagDoc) => {  //wait for the query to happen
         
     }
 result=result.byCount();
-if(result.length>20)
+if(result.length>20) //if over 20 we trim it down to 20
 {
     result=result.slice(0,21);
 }
+console.log(result);
+let resultData=[];
+for(let i=0;i<result.length;i++){
+    await database.collection('Events').doc(result[i]).get().then((event)=>
+    {
+        if(event.exists)
+        {
+        //console.log(event.data());
+        resultData.push(event.data());
+        }
+    })
+}
+console.log(resultData)
 res.status(200).json({
-    Events: result
+    Events: resultData
 })
 }
 

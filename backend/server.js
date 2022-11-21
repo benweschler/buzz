@@ -27,7 +27,7 @@ app.use((req, res, next) => {
 app.use('/api/users', userRoutes);
 app.use('/api/organizers', organizerRoutes);
 app.use('/api/events', eventRoutes);
-app.use('/api/utility', utilityRoutes);
+app.use('/api/utilities', utilityRoutes);
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ 

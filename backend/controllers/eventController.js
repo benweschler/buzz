@@ -60,7 +60,14 @@ const readEvent = async (req, res) => {
 
 const updateEvent = async (req, res)=>{
     const {id} = req.params;
-    const eventRef=database.collection('Events').doc(id);
+    const eventRef=await database.collection('Events').doc(id);
+        if (!eventRef.exists)
+        {
+            res.status(404).json({
+                error: "Event not found"
+            })
+            return;
+        }
     let oldTags=[];
     await eventRef.get().then((doc)=>{
         oldTags=doc.data().tags
