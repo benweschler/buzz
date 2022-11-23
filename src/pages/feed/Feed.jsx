@@ -11,6 +11,7 @@ function Feed() {
     <Scaffold>
       <Wrapper>
         <h1>Events</h1>
+        <FilterChip>Test</FilterChip>
         <div>
           <button onClick={() => setFilter(() => () => true)}>
             Show All
@@ -19,7 +20,7 @@ function Feed() {
             Show None
           </button>
         </div>
-        {eventCards}
+        <EventView>{eventCards}</EventView>
       </Wrapper>
     </Scaffold>
   );
@@ -32,7 +33,7 @@ function buildEventCards(filter) {
     cards.push(
       <EventCard
         key={i}
-        name={Events[i].title}
+        title={Events[i].title}
         organizer={Events[i].organizer}
         image={Events[i].image}
         description={Events[i].description}
@@ -47,6 +48,13 @@ function buildEventCards(filter) {
   return cards;
 }
 
+const FilterChip = styled.div`
+  background: white;
+  border-radius: 0.2rem;
+  align-self: start;
+  padding: 0.5rem;
+`
+
 const Scaffold = styled.div`
   display: flex;
   justify-content: center;
@@ -58,8 +66,14 @@ const Scaffold = styled.div`
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   gap: 2rem;
+  width: 90%
+`;
+
+const EventView = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 1.5rem;
 `;
 
 export default Feed;
