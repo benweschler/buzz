@@ -32,7 +32,6 @@ const Card = styled.div`
   flex-direction: column;
   justify-content: start;
   cursor: pointer;
-  transition: box-shadow 150ms ease-in, transform 150ms ease-in;
   min-height: 25rem;
 
   img {
@@ -93,9 +92,7 @@ const Card = styled.div`
   }
 
   &:hover {
-    box-shadow: ${({theme}) => theme.brightness === 'light' 
-            ? '0 10px 30px rgba(0, 0, 0, 0.2)' 
-            : null};
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     transform: scale(1.01);
   }
 

@@ -1,19 +1,15 @@
 import {createGlobalStyle} from "styled-components";
 
 export const GlobalStyles = createGlobalStyle`
-  :root {
-    --theme-transition: all 200ms ease-in;
-  }
-
   body {
     background: ${({theme}) => theme.body};
     color: ${({theme}) => theme.text};
-    transition: var(--theme-transition)
+    transition: background 200ms ease-in, color 200ms ease-in;
   }
 
   .card {
     background: ${({theme}) => theme.card};
-    transition: var(--theme-transition);
+    transition: all 200ms ease-in;
   }
 `;
 
