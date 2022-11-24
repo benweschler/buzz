@@ -1,17 +1,15 @@
 import {useMemo, useState} from 'react';
 import styled from "styled-components";
-import EventCard from  './EventCard'
-import Events from '../../events.json';
+import EventCard from './EventCard'
+import Events from '../../constants/events.json';
 
-function Feed() {
+function Feed({toggleTheme}) {
   const [filter, setFilter] = useState(() => () => true);
   const eventCards = useMemo(() => buildEventCards(filter), [filter]);
 
   return (
     <Scaffold>
       <Wrapper>
-        <h1>Events</h1>
-        <FilterChip>Test</FilterChip>
         <div>
           <button onClick={() => setFilter(() => () => true)}>
             Show All
@@ -19,7 +17,9 @@ function Feed() {
           <button onClick={() => setFilter(() => () => false)}>
             Show None
           </button>
+          <button onClick={toggleTheme}>Toggle Theme</button>
         </div>
+        <h1>Popular Events <span style={{color: "#a4a4a4"}}>at UCLA</span></h1>
         <EventView>{eventCards}</EventView>
       </Wrapper>
     </Scaffold>
@@ -40,6 +40,7 @@ function buildEventCards(filter) {
         attendees={Events[i].attendees}
         location={Events[i].location}
         price={Events[i].price}
+        tags={Events[i].tags}
         date="Mon, Nov 1, 12:32pm"
       />
     );
@@ -48,19 +49,14 @@ function buildEventCards(filter) {
   return cards;
 }
 
-const FilterChip = styled.div`
-  background: white;
-  border-radius: 0.2rem;
-  align-self: start;
-  padding: 0.5rem;
-`
-
+// This is a placeholder for the rest of the app scaffolding this page.
 const Scaffold = styled.div`
   display: flex;
   justify-content: center;
   flex-flow: row wrap;
   width: 100%;
   height: 100%;
+  padding-top: 3rem;
 `;
 
 const Wrapper = styled.div`
