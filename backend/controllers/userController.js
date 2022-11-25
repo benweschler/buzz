@@ -197,11 +197,6 @@ const tokenTest = async (req, res) => {
     const {token} = req.body;
     adminAuth.verifyIdToken(token).then((claims) => {
         console.log('Token verified!');
-        if (claims.organizer === false) {
-            console.log('Current user is not an organizer');
-        } else {
-            console.log('Current user is an organizer');
-        }
         res.status(200).json({
             "success": true
         })
@@ -220,7 +215,7 @@ const uploadUserImage = async (req, res) => {
     } else {
 
         const bucket = storage.bucket();
-        const fullPath = `OrganizationImages/${v4()}`;
+        const fullPath = `UserImages/${v4()}`;
         const bucketFile = bucket.file(fullPath);
 
         await bucketFile.save(req.file.buffer, {
