@@ -25,6 +25,19 @@ const SOCIAL="Social"
 
 const TAGS={ MUSIC, SOCIAL};
 
+
+// QR Code Constants
+const WINDOW_TIME = 60;
+const QR_CODE_LABEL = "buzz-totp-authentication"
+
+const ID = "id";
+const CODE = "hmac";
+
+const VERIFICATION_KEYS = [ID, CODE]
+
 module.exports={
-    TAGS
+    TAGS,
+    WINDOW_TIME,
+    QR_CODE_LABEL,
+    VERIFICATION_KEYS
 }

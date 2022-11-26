@@ -7,9 +7,13 @@ const { auth: clientAuth } = require('../../src/firebase/index');
 const { auth: adminAuth } = require('../firebase-admin/index');
 const { signInWithEmailAndPassword } = require('firebase/auth');
 const axios = require('axios');
-const { v4 } = require('uuid');
+const jsSHA = require('jssha');
+const crypto = require('crypto');
+const QRCode = require('qrcode');
+const base32 = require('base32');
 
 const { INITIAL_USER_KEYS } = require('../constants/userConstants.js');
+const { WINDOW_TIME, VERIFICATION_KEYS } = require('../constants/utilityConstants');
 
 // When designing basic functionality for CRUD operations, I used
 // https://firebase.google.com/docs/firestore/manage-data/add-data
@@ -44,12 +48,19 @@ const createUser = async (req, res) => {
             // Don't want the password to be included in the document
             delete req.body.password;
 
+            // Create the shared secret
+            const secret = new Uint8Array(20);
+            crypto.getRandomValues(secret);
+
+            console.log(secret);
+
             database.collection('Users').doc(record.uid).set({
                 ...req.body,
                 "clubs_following": [],
                 "events_registered": [],
                 "interests": [],
-                "organizations": []
+                "organizations": [],
+                "secret": secret
             }).then(() => {
                 console.log('Created user document with id: ' + record.uid);
                 res.status(200).json({
@@ -62,7 +73,6 @@ const createUser = async (req, res) => {
                 })
             })
         }).catch((error) => {
-            console.log('Error creating user in auth');
             res.status(500).json({
                 error: error
             })
@@ -242,6 +252,100 @@ const uploadUserImage = async (req, res) => {
     }
 }
 
+const generateUserOTP = async (req, res) => {
+    if (!Object.keys(req.params).includes("id")) {
+        res.status(400).json({
+            error: "User ID is missing"
+        })
+    } else {
+        const {id} = req.params;
+        const userRef = database.collection('Users').doc(id);
+        
+        const userDoc = await userRef.get();
+        if (!userDoc.exists) {
+            res.status(404).json({
+                error: 'User does not exist'
+            })
+        } else {
+            const secret = new Uint8Array(userDoc.data().secret);
+            
+            // Get current time in seconds
+            // Date.now() returns milliseconds
+            const currentTime = Date.now() / 1000;
+
+            // Our WINDOW_TIME is 60 seconds
+            const sequenceValue = Math.floor(currentTime)
+
+            // Do HMAC-SHA1 with the secret
+            const hmac = new jsSHA("SHA-1", "HEX");
+            hmac.setHMACKey(secret, "UINT8ARRAY");
+            hmac.update(sequenceValue.toString(16));
+            //console.log(hmac)
+            const hmacString = hmac.getHMAC('HEX');
+
+            res.status(200).json({
+                hmac: hmacString
+            })
+        }
+    }
+}
+
+const validateUserOTP = async (req, res) => {
+    let missingFields = [];
+    VERIFICATION_KEYS.forEach((element) => {
+        if (!Object.keys(req.body).includes(element)) {
+            missingFields.push(element);
+        }
+    })
+
+    if (missingFields.length > 0) {
+        res.status(400).json({
+            error: "One or more missing keys",
+            missing_fields: missingFields
+        })
+    } else {
+        const userRef = database.collection('Users').doc(req.body.id);
+        
+        const userDoc = await userRef.get();
+        if (!userDoc.exists) {
+            res.status(400).json({
+                error: "User does not exist"
+            })
+        } else {
+            const secret = new Uint8Array(userDoc.data().secret);
+        
+            const currentTime = Date.now() / 1000;
+
+            const sequenceValue = Math.floor(currentTime)
+
+            let hmacWindowArray = [];
+            for (let i = 0; i < WINDOW_TIME; i++) {
+                // Get current time in seconds
+                // Date.now() returns milliseconds
+                const iteratedTime = sequenceValue - i;
+
+                // Do HMAC-SHA1 with the secret
+                const hmac = new jsSHA("SHA-1", "HEX");
+                hmac.setHMACKey(secret, "UINT8ARRAY");
+                hmac.update(iteratedTime.toString(16));
+                //console.log(hmac);
+                const hmacString = hmac.getHMAC('HEX');
+                hmacWindowArray.push(hmacString);
+            }
+            
+            if (hmacWindowArray.includes(req.body.hmac)) {
+                res.status(200).json({
+                    authentication: "Authentication code is valid"
+                })
+            } else {
+                res.status(200).json({
+                    authentication: "Authentication code is invalid"
+                })
+            }
+        }
+    }
+}
+
 module.exports = {
     createUser,
     readUser,
@@ -250,5 +354,7 @@ module.exports = {
     deleteUser,
     authenticateUser,
     tokenTest,
-    uploadUserImage
+    uploadUserImage,
+    generateUserOTP,
+    validateUserOTP
 }
