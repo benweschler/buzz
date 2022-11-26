@@ -294,6 +294,51 @@ if(!req.body.user||!req.body.organization)
         }
     })
 }
+
+const addUserToEvent = async (req, res)=>{
+    if(!req.body.user||!req.body.event)
+        {
+            res.status(400).json({
+                error: "Cannot add user to event because one or both are missing from body of request"
+            })
+            return
+        }
+        // console.log(req.body.user)
+        // console.log(typeof(req.body.user))
+        // console.log(req.body.organization)
+        userRef=database.collection('Users').doc(req.body.user)
+        eventRef=database.collection('Events').doc(req.body.event)
+        userRef.get().then((userDoc)=>{
+            if (!userDoc.exists){
+                res.status(404).json({
+                    error: "User not found"
+                })
+                return
+            }
+            else{
+                eventRef.get().then((eventDoc)=>{
+                    if (!eventDoc.exists){
+                        res.status(404).json({
+                            error: "Event not found"
+                        })
+                        return
+                    }
+                    else{
+                        eventRef.update({
+                            "attendees": FieldValue.arrayUnion(req.body.user)
+                        })
+                        userRef.update({
+                            "events_registered":FieldValue.arrayUnion(req.body.event)
+                        })
+                        res.status(200).json({
+                            "success":true
+                        })
+                    }
+                })
+            }
+        })
+    }
+
 const generateUserOTP = async (req, res) => {
     if (!Object.keys(req.params).includes("id")) {
         res.status(400).json({
@@ -400,5 +445,6 @@ module.exports = {
     uploadUserImage,
     addUserToOrg,
     generateUserOTP,
-    validateUserOTP
+    validateUserOTP,
+    addUserToEvent
 }

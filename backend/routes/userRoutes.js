@@ -13,7 +13,8 @@ const {
     uploadUserImage,
     addUserToOrg,
     generateUserOTP,
-    validateUserOTP
+    validateUserOTP,
+    addUserToEvent
 } = require('../controllers/userController');
 
 const router = express.Router();
@@ -44,6 +45,9 @@ router.get('*', readUserByEmail);
 
 //Add user as member to organization
 router.patch(/add$/, addUserToOrg);
+
+//Add user to event
+router.patch(/register$/,addUserToEvent)
 
 // Update a user
 router.patch('/:id', updateUser);
