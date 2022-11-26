@@ -10,7 +10,7 @@ const { signInWithEmailAndPassword } = require('firebase/auth');
 const axios = require('axios');
 const jsSHA = require('jssha');
 const crypto = require('crypto');
-
+const {sortByPop} = require('./utilityController');
 const { INITIAL_USER_KEYS } = require('../constants/userConstants.js');
 const { WINDOW_TIME, VERIFICATION_KEYS } = require('../constants/utilityConstants');
 
@@ -339,6 +339,134 @@ const addUserToEvent = async (req, res)=>{
         })
     }
 
+const followOrg = async (req, res)=>{
+    if(!req.body.user||!req.body.organization)
+        {
+            res.status(400).json({
+                error: "Cannot follow organization because organization or user are missing from body of request"
+            })
+            return
+        }
+        // console.log(req.body.user)
+        // console.log(typeof(req.body.user))
+        // console.log(req.body.organization)
+        userRef=database.collection('Users').doc(req.body.user)
+        orgRef=database.collection('Organizations').doc(req.body.organization)
+        userRef.get().then((userDoc)=>{
+            if (!userDoc.exists){
+                res.status(404).json({
+                    error: "User not found"
+                })
+                return
+            }
+            else{
+                orgRef.get().then((orgDoc)=>{
+                    if (!orgDoc.exists){
+                        res.status(404).json({
+                            error: "Organization not found"
+                        })
+                        return
+                    }
+                    else{
+                        orgRef.update({
+                            "followers": FieldValue.arrayUnion(req.body.user)
+                        })
+                        userRef.update({
+                            "clubs_following":FieldValue.arrayUnion(req.body.organization)
+                        })
+                        res.status(200).json({
+                            "success":true
+                        })
+                    }
+                })
+            }
+        })
+    }    
+
+const unfollowOrg = async (req, res)=>{
+    if(!req.body.user||!req.body.organization)
+        {
+            res.status(400).json({
+                error: "Cannot unfollow organization because user or organization are missing from body of request"
+            })
+            return
+        }
+        // console.log(req.body.user)
+        // console.log(typeof(req.body.user))
+        // console.log(req.body.organization)
+        userRef=database.collection('Users').doc(req.body.user)
+        orgRef=database.collection('Organizations').doc(req.body.organization)
+        userRef.get().then((userDoc)=>{
+            if (!userDoc.exists){
+                res.status(404).json({
+                    error: "User not found"
+                })
+                return
+            }
+            else{
+                orgRef.get().then((orgDoc)=>{
+                    if (!orgDoc.exists){
+                        res.status(404).json({
+                            error: "Organization not found"
+                        })
+                        return
+                    }
+                    else{
+                        orgRef.update({
+                            "followers": FieldValue.arrayRemove(req.body.user)
+                        })
+                        userRef.update({
+                            "clubs_following":FieldValue.arrayRemove(req.body.organization)
+                        })
+                        res.status(200).json({
+                            "success":true
+                        })
+                    }
+                })
+            }
+        })
+    }
+
+const getFeed = async (req, res)=>{
+    if (!req.body.user){
+        res.status(400).json({
+            error: "user missing from body of request"
+        })
+        return}
+    database.collection('Users').doc(req.body.user).get().then(async (user)=>{
+        if(!user.exists){
+            res.status(404).json({
+                error: "user not found"
+            })
+            return
+        }
+        const orgNum=user.data().clubs_following.length
+        if(orgNum==0){
+            res.status(400).json({
+                message:"user is not following any clubs"
+            })
+            return
+        }
+        const orgs=user.data().clubs_following
+        results=[]
+        for(let i =0;i<orgNum;i++){
+            await database.collection('Organizations').doc(orgs[i]).get().then(async(org)=>{
+                if(org.exists){
+                    for(let i=0;i<org.data().events.length;i++){
+                        let event = await database.collection('Events').doc(org.data().events[i]).get()
+                        if(event.exists&&!event.data().has_ended)
+                            results.push(event.data())
+                    }
+                }
+            })
+        }
+        results=sortByPop(results)
+        res.status(200).json({
+            events: results
+        })
+    })
+}
+
 const generateUserOTP = async (req, res) => {
     if (!Object.keys(req.params).includes("id")) {
         res.status(400).json({
@@ -446,5 +574,8 @@ module.exports = {
     addUserToOrg,
     generateUserOTP,
     validateUserOTP,
-    addUserToEvent
+    addUserToEvent,
+    followOrg,
+    unfollowOrg,
+    getFeed
 }

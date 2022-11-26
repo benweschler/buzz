@@ -14,7 +14,10 @@ const {
     addUserToOrg,
     generateUserOTP,
     validateUserOTP,
-    addUserToEvent
+    addUserToEvent,
+    followOrg,
+    unfollowOrg,
+    getFeed
 } = require('../controllers/userController');
 
 const router = express.Router();
@@ -31,6 +34,9 @@ router.get('/generateOTP/:id', generateUserOTP);
 // Validate OTP QRCode
 router.get(/validateOTP$/, validateUserOTP);
 
+// get feed
+router.get(/feed$/, getFeed);
+
 // Upload image to Firebase Storage
 router.post('/upload', upload.single('file'), uploadUserImage);
 
@@ -45,6 +51,12 @@ router.get('*', readUserByEmail);
 
 //Add user as member to organization
 router.patch(/add$/, addUserToOrg);
+
+//unfollow org
+router.patch(/unfollow$/, unfollowOrg);
+
+//follow org
+router.patch(/follow$/, followOrg);
 
 //Add user to event
 router.patch(/register$/,addUserToEvent)

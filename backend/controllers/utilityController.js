@@ -12,6 +12,12 @@ const byElementCount = (array) => {
     return Object.keys(counts).sort((a, b) => counts[a] > counts[b] ? -1 : 1);
 }
 
+const sortByPop =(events)=>{
+    console.log(typeof(events))
+    console.log(events)
+    return events.sort((event1, event2)=>
+    (event1.attendees.length<event2.attendees.length) ?1 : (event1.attendees.length>event2.attendees.length? -1:0))
+}
 
 const filterTags = async (req, res) => {
     let tags = req.body.tags;
@@ -87,15 +93,12 @@ const filterPopularity= async (req,res)=>{
             eventData.push(doc.data())
         })
         //console.log(eventData)
-        let sortedEvents=eventData.sort((event1, event2)=>
-            (event1.attendees.length<event2.attendees.length) ?1 : (event1.attendees.length>event2.attendees.length? -1:0)) //provide sort function so it sorts the events with higher attendee count first
-        results=[]
+        // let sortedEvents=eventData.sort((event1, event2)=>
+        //     (event1.attendees.length<event2.attendees.length) ?1 : (event1.attendees.length>event2.attendees.length? -1:0)) //provide sort function so it sorts the events with higher attendee count first
+        sortedEvents=sortByPop(eventData)
         let i=0
         let val=sortedEvents.map(event=>event.attendees)
-        // console.log(val)
-        // console.log(val[i])
-        // console.log(typeof(val))
-        // console.log(typeof(val[i]))
+        results=[]
         while(i<=10&&i!=sortedEvents.length)
         {
             if(Object.keys(val[i]).length==0)
@@ -113,5 +116,6 @@ const filterPopularity= async (req,res)=>{
 module.exports={
 filterTags,
 updateTags,
-filterPopularity
+filterPopularity,
+sortByPop
 }

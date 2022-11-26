@@ -27,7 +27,8 @@ const createEvent = async (req, res) => {
         database.collection('Events').add({
             ...req.body,
             "date": admin.firestore.Timestamp.now(),
-            "attendees": []
+            "attendees": [],
+            "has_ended": false
         }).then((docRef) => {
             console.log('Created event document with id: ' + docRef.id);
             updateTags([],req.body.tags, docRef.id);
