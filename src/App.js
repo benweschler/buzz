@@ -1,26 +1,9 @@
 import React from 'react';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from "react-router-dom";
-import Layout from './components/Layout';
-import Explore from './pages/Explore';
-import Feed from './pages/Feed';
 import LogRegCtrl from './pages/LogRegCtrl';
 
 function App() {
     return(
-        <Router>
-            <Layout>
-                <Routes>
-                    <Route exact path="/" element = {<Explore/>} />
-                    <Route path= "/explore" element = {<Explore/>} />
-                    <Route path = "/feed" element = {<Feed/>} />
-                    <Route path = "/login" element = {<LogRegCtrl/>} />
-                </Routes>
-            </Layout>
-        </Router>
+        <LogRegCtrl/>
     );
 };
 export default App;
