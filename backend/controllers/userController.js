@@ -9,8 +9,6 @@ const { signInWithEmailAndPassword } = require('firebase/auth');
 const axios = require('axios');
 const jsSHA = require('jssha');
 const crypto = require('crypto');
-const QRCode = require('qrcode');
-const base32 = require('base32');
 
 const { INITIAL_USER_KEYS } = require('../constants/userConstants.js');
 const { WINDOW_TIME, VERIFICATION_KEYS } = require('../constants/utilityConstants');
@@ -267,6 +265,7 @@ const generateUserOTP = async (req, res) => {
                 error: 'User does not exist'
             })
         } else {
+            // Code comes from a section of this website: https://smarx.com/posts/2020/08/totp-how-most-2fa-apps-work/
             const secret = new Uint8Array(userDoc.data().secret);
             
             // Get current time in seconds
@@ -332,7 +331,7 @@ const validateUserOTP = async (req, res) => {
                 const hmacString = hmac.getHMAC('HEX');
                 hmacWindowArray.push(hmacString);
             }
-            
+
             if (hmacWindowArray.includes(req.body.hmac)) {
                 res.status(200).json({
                     authentication: "Authentication code is valid"

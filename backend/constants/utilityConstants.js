@@ -19,25 +19,22 @@
 
 // f1902e13-1298-40f8-a25c-8fbf44f13378
 
-const MUSIC="Music"
+const MUSIC = "Music";
 
-const SOCIAL="Social"
+const SOCIAL = "Social";
 
-const TAGS={ MUSIC, SOCIAL};
-
+const TAGS = { MUSIC, SOCIAL };
 
 // QR Code Constants
 const WINDOW_TIME = 60;
-const QR_CODE_LABEL = "buzz-totp-authentication"
 
 const ID = "id";
 const CODE = "hmac";
 
-const VERIFICATION_KEYS = [ID, CODE]
+const VERIFICATION_KEYS = [ID, CODE];
 
-module.exports={
-    TAGS,
-    WINDOW_TIME,
-    QR_CODE_LABEL,
-    VERIFICATION_KEYS
-}
+module.exports = {
+  TAGS,
+  WINDOW_TIME,
+  VERIFICATION_KEYS,
+};
