@@ -5,6 +5,7 @@
 const { database, storage } = require('../firebase-admin/index');
 const { auth: clientAuth } = require('../../src/firebase/index');
 const { auth: adminAuth } = require('../firebase-admin/index');
+const { FieldValue } = require('@google-cloud/firestore');
 const { signInWithEmailAndPassword } = require('firebase/auth');
 const axios = require('axios');
 const { v4 } = require('uuid');
@@ -247,6 +248,50 @@ const uploadUserImage = async (req, res) => {
     }
 }
 
+const addUserToOrg = async (req, res)=>{
+if(!req.body.user||!req.body.organization)
+    {
+        res.status(400).json({
+            error: "Cannot add user to organization because one or both are missing from body of request"
+        })
+        return
+    }
+    console.log(req.body.user)
+    console.log(typeof(req.body.user))
+    console.log(req.body.organization)
+    userRef=database.collection('Users').doc(req.body.user)
+    orgRef=database.collection('Organizations').doc(req.body.organization)
+    userRef.get().then((userDoc)=>{
+        if (!userDoc.exists){
+            res.status(404).json({
+                error: "User not found"
+            })
+            return
+        }
+        else{
+            orgRef.get().then((orgDoc)=>{
+                if (!orgDoc.exists){
+                    res.status(404).json({
+                        error: "Organization not found"
+                    })
+                    return
+                }
+                else{
+                    orgRef.update({
+                        "members": FieldValue.arrayUnion(req.body.user)
+                    })
+                    userRef.update({
+                        "organizations":FieldValue.arrayUnion(req.body.organization)
+                    })
+                    res.status(200).json({
+                        "success":true
+                    })
+                }
+            })
+        }
+    })
+}
+
 module.exports = {
     createUser,
     readUser,
@@ -255,5 +300,6 @@ module.exports = {
     deleteUser,
     authenticateUser,
     tokenTest,
-    uploadUserImage
+    uploadUserImage,
+    addUserToOrg
 }

@@ -1,11 +1,14 @@
 const express = require('express');
 
 const {
- filterEvents
+ filterTags,
+filterPopularity
      }=require('../controllers/utilityController');
 
 const router=express.Router();
 
-router.get('/', filterEvents);
+router.get('/popular', filterPopularity);
+
+router.get('/tags', filterTags);
 
 module.exports=router

@@ -18,7 +18,7 @@ Array.prototype.byCount= function(){
 }
 
 
-const filterEvents=async(req, res) =>{
+const filterTags=async(req, res) =>{
     let tags=req.body.tags;
 if(!tags||tags.length==0){
     res.status(400).json({
@@ -49,7 +49,7 @@ let resultData=[];
 for(let i=0;i<result.length;i++){
     await database.collection('Events').doc(result[i]).get().then((event)=>
     {
-        if(event.exists)
+        if(event.exists&&event.data().has_ended)
         {
         //console.log(event.data());
         resultData.push(event.data());
@@ -83,8 +83,45 @@ for(let i=0;i<addTags.length;i++) //remove each tag that needs to be removed
 }
 }
 
+const filterPopularity= async (req,res)=>{
+eventRef=database.collection('Events')
+eventRef.where('has_ended', '==', false).get().then((events)=>{
+if(events.empty){
+    res.status(404).json({
+        error: "no events found"
+    })
+    return
+}
+let eventData=[]
+events.forEach(doc=>{
+    eventData.push(doc.data())
+})
+//console.log(eventData)
+let sortedEvents=eventData.sort((event1, event2)=>
+(event1.attendees.length<event2.attendees.length) ?1 : (event1.attendees.length>event2.attendees.length? -1:0)) //provide sort function so it sorts the events with higher attendee count first
+results=[]
+let i=0
+let val=sortedEvents.map(event=>event.attendees)
+// console.log(val)
+// console.log(val[i])
+// console.log(typeof(val))
+// console.log(typeof(val[i]))
+while(i<=10&&i!=sortedEvents.length)
+{
+    if(Object.keys(val[i]).length==0)
+        break;
+    results.push(sortedEvents[i])
+    i++
+}
+res.status(200).json({
+    Events: results
+})
+})
+
+}
 
 module.exports={
-filterEvents,
-updateTags
+filterTags,
+updateTags,
+filterPopularity
 }

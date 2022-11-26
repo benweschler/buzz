@@ -10,7 +10,8 @@ const {
     deleteUser,
     authenticateUser,
     tokenTest,
-    uploadUserImage
+    uploadUserImage,
+    addUserToOrg
 } = require('../controllers/userController');
 
 const router = express.Router();
@@ -33,10 +34,15 @@ router.get('/:id', readUser);
 // Read a user by their email
 router.get('*', readUserByEmail);
 
+//Add user as member to organization
+router.patch(/add$/, addUserToOrg);
+
 // Update a user
 router.patch('/:id', updateUser);
 
 // Delete a user
 router.delete('/:id', deleteUser);
+
+
 
 module.exports = router;
