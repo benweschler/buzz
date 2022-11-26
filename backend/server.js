@@ -2,7 +2,7 @@ require('dotenv').config()
 
 // Routes
 const userRoutes = require('./routes/userRoutes');
-const organizerRoutes = require('./routes/organizerRoutes');
+const organizationRoutes = require('./routes/organizationRoutes');
 const eventRoutes = require('./routes/eventRoutes');
 const utilityRoutes =require('./routes/utilityRoutes');
 
@@ -25,7 +25,7 @@ app.use((req, res, next) => {
 })
 
 app.use('/api/users', userRoutes);
-app.use('/api/organizers', organizerRoutes);
+app.use('/api/organizations', organizationRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/utilities', utilityRoutes);
 

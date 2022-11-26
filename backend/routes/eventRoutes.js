@@ -8,8 +8,7 @@ const {
     updateEvent,
     deleteEvent,
     uploadEventImage,
-    paginateEvents,
-    resetPagination
+    paginateEvents
 }=require('../controllers/eventController'); //import the Controller functions
 
 const router=express.Router(); //initiate express router
@@ -19,8 +18,6 @@ router.post('/', createEvent);
 router.post('/upload', upload.single('file'), uploadEventImage);
 
 router.get(/paginate$/, paginateEvents);
-
-router.get(/paginate_reset/, resetPagination);
 
 router.get('/:id', readEvent);
 

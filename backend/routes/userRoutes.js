@@ -11,7 +11,9 @@ const {
     authenticateUser,
     tokenTest,
     uploadUserImage,
-    addUserToOrg
+    addUserToOrg,
+    generateUserOTP,
+    validateUserOTP
 } = require('../controllers/userController');
 
 const router = express.Router();
@@ -21,6 +23,12 @@ router.get(/signin$/, authenticateUser);
 
 // Test token
 router.get(/token$/, tokenTest);
+
+// Generate OTP QRCode
+router.get('/generateOTP/:id', generateUserOTP);
+
+// Validate OTP QRCode
+router.get(/validateOTP$/, validateUserOTP);
 
 // Upload image to Firebase Storage
 router.post('/upload', upload.single('file'), uploadUserImage);

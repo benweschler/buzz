@@ -1,13 +1,13 @@
 const { database, storage } = require('../firebase-admin/index');
-const { INITIAL_ORGANIZER_KEYS, UPLOAD_KEYS } = require('../constants/organizerConstants.js');
+const { INITIAL_ORGANIZATION_KEYS, UPLOAD_KEYS } = require('../constants/organizationConstants.js');
 const axios = require('axios');
 const { v4 } = require('uuid');
 
-const createOrganizer = async (req, res) => {
+const createOrganization = async (req, res) => {
     
     // The request needs a description, members, and name
     let missingFields = [];
-    INITIAL_ORGANIZER_KEYS.forEach((element) => {
+    INITIAL_ORGANIZATION_KEYS.forEach((element) => {
         if (!Object.keys(req.body).includes(element)) {
             missingFields.push(element);
         }
@@ -22,35 +22,33 @@ const createOrganizer = async (req, res) => {
         // Have to check the database if there is the same name in the organization
 
         let alreadyInDatabase = false;
-        const organizersCollectionRef = database.collection('Organizers');
+        const organizationsCollectionRef = database.collection('Organizations');
 
-        await organizersCollectionRef.where('name', '==', req.body.name).get().then((snapshot) => {
-            var docData = [];
-            snapshot.forEach(doc => {
-                docData.push(doc.data());
-            })
-            if (docData.length !== 0) {
+        await organizationsCollectionRef.where('name', '==', req.body.name).get().then((snapshot) => {
+            if (snapshot.docs.length > 0) {
                 alreadyInDatabase = true;
                 res.status(400).json({
                     error: 'Organization with the same name is already in database'
                 })
             }
         }).catch((error) => {
+            // To prevent the 200 status header being set after this is sent to the client
+            alreadyInDatabase = true;
             res.status(500).json({
                 error: error
             })
         })
 
-        // If not, then add the organizer
+        // If not, then add the organization
 
         if (!alreadyInDatabase) {
-            database.collection('Organizers').add({
+            database.collection('Organizations').add({
                 ...req.body,
                 "events": [],
                 "followers": [],
                 "image": ""
             }).then((docRef) => {
-                console.log('Created organizer document with id: ' + docRef.id);
+                console.log('Created organization document with id: ' + docRef.id);
                 res.status(200).json({
                     id: docRef.id
                 })
@@ -63,10 +61,10 @@ const createOrganizer = async (req, res) => {
     }
 }
 
-const readOrganizer = async (req, res)=>{
+const readOrganization = async (req, res)=>{
     const {id} = req.params;
     
-    database.collection('Organizers').doc(id).get().then((doc) => {
+    database.collection('Organizations').doc(id).get().then((doc) => {
         if (doc.exists) {
             res.status(200).json(doc.data());
         } else {
@@ -81,12 +79,12 @@ const readOrganizer = async (req, res)=>{
     })
 };
 
-const readOrganizerByName = async (req, res) => {
+const readOrganizationByName = async (req, res) => {
     const name = req.query.name;
 
-    const organizersCollectionRef = database.collection('Organizers');
+    const organizationsCollectionRef = database.collection('Organizations');
 
-    organizersCollectionRef.where('name', '==', name).get().then((snapshot) => {
+    organizationsCollectionRef.where('name', '==', name).get().then((snapshot) => {
         var docData = [];
         snapshot.forEach(doc => {
             docData.push(doc.data());
@@ -100,9 +98,9 @@ const readOrganizerByName = async (req, res) => {
 
 }
 
-const updateOrganizer = async (req, res)=>{
+const updateOrganization = async (req, res)=>{
     const {id} = req.params;
-    const orgRef = database.collection('Organizers').doc(id);
+    const orgRef = database.collection('Organizations').doc(id);
 
     orgRef.get().then((orgDoc) => {
         if (orgDoc.exists) {
@@ -113,7 +111,7 @@ const updateOrganizer = async (req, res)=>{
             })
         } else {
             res.status(404).json({
-                error: 'Organizer could not be found'
+                error: 'Organization could not be found'
             })
         }
     }).catch((error) => {
@@ -123,9 +121,9 @@ const updateOrganizer = async (req, res)=>{
     })
 };
 
-const deleteOrganizer = async (req, res)=>{
+const deleteOrganization = async (req, res)=>{
     const {id} = req.params;
-    const orgRef = database.collection('Organizers').doc(id);
+    const orgRef = database.collection('Organizations').doc(id);
     
     orgRef.get().then((orgDoc) => {
         if (orgDoc.exists) {
@@ -140,7 +138,7 @@ const deleteOrganizer = async (req, res)=>{
             })
         } else {
             res.status(404).json({
-                error: 'Organizer does not exist'
+                error: 'Organization does not exist'
             })
         }
     }).catch((error) => {
@@ -150,12 +148,12 @@ const deleteOrganizer = async (req, res)=>{
     })
 };
 
-const getAllOrganizerEvents = async (req, res) => {
+const getAllOrganizationEvents = async (req, res) => {
     const {id} = req.body;
     console.log(id);
 
     let eventsArr = [];
-    database.collection('Events').where("organizer", "==", id).orderBy('date').get().then((snapshot) => {
+    database.collection('Events').where("organization", "==", id).orderBy('date').get().then((snapshot) => {
         snapshot.forEach((doc) => {
             //eventsJSON[doc.id] = doc.data();
             eventsArr.push(doc.data());
@@ -170,7 +168,7 @@ const getAllOrganizerEvents = async (req, res) => {
     })
 }
 
-const uploadOrganizerImage = async (req, res) => {
+const uploadOrganizationImage = async (req, res) => {
     if (req.body.id == undefined || req.file == undefined) {
         res.status(400).json({
             error: 'One or more fields are missing'
@@ -191,7 +189,7 @@ const uploadOrganizerImage = async (req, res) => {
             expires: '01-01-2030'
         });
 
-        axios.patch(`http://localhost:4000/api/organizers/${req.body.id}`, {
+        axios.patch(`http://localhost:4000/api/organizations/${req.body.id}`, {
             image: url
         }).then(() => {
             res.status(200).json({
@@ -206,11 +204,11 @@ const uploadOrganizerImage = async (req, res) => {
 }
 
 module.exports = {
-    createOrganizer,
-    readOrganizer,
-    readOrganizerByName,
-    updateOrganizer,
-    deleteOrganizer,
-    getAllOrganizerEvents,
-    uploadOrganizerImage
+    createOrganization,
+    readOrganization,
+    readOrganizationByName,
+    updateOrganization,
+    deleteOrganization,
+    getAllOrganizationEvents,
+    uploadOrganizationImage
 };

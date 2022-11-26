@@ -1,3 +1,4 @@
+const admin = require('firebase-admin');
 const { database, storage } = require('../firebase-admin/index');
 const { INITIAL_EVENT_KEYS } = require('../constants/eventConstants.js');
 const { updateTags } = require("./utilityController");
@@ -5,9 +6,9 @@ const axios = require('axios');
 const { v4 } = require('uuid');
 
 
-const createEvent = async (req, res)=> {
+const createEvent = async (req, res) => {
 
-    // Event needs capacity, date ,description, location, title, organizer, recurring, tags, and ticketed
+    // Event needs capacity, date ,description, location, title, organization, recurring, tags, and ticketed
     let missingFields = [];
     INITIAL_EVENT_KEYS.forEach((element) => {
         if (!Object.keys(req.body).includes(element)) {
@@ -25,7 +26,8 @@ const createEvent = async (req, res)=> {
     } else {
         database.collection('Events').add({
             ...req.body,
-            "attendees": [],
+            "date": admin.firestore.Timestamp.now(),
+            "attendees": []
         }).then((docRef) => {
             console.log('Created event document with id: ' + docRef.id);
             updateTags([],req.body.tags, docRef.id);
@@ -58,9 +60,9 @@ const readEvent = async (req, res) => {
     })
 };
 
-const updateEvent = async (req, res)=>{
+const updateEvent = async (req, res) => {
     const {id} = req.params;
-    const eventRef=await database.collection('Events').doc(id);
+    const eventRef = await database.collection('Events').doc(id).get();
         if (!eventRef.exists)
         {
             res.status(404).json({
@@ -68,27 +70,23 @@ const updateEvent = async (req, res)=>{
             })
             return;
         }
-    let oldTags=[];
-    await eventRef.get().then((doc)=>{
-        oldTags=doc.data().tags
-    });
-    //console.log(oldTags);
+    const oldTags = eventRef.data().tags
     database.collection('Events').doc(id).update(req.body).then(() => {
         if(req.body.tags)
         {
             updateTags(oldTags, req.body.tags, id);
         }
-        res.json({
+        res.status(200).json({
             id: id
         })
     }).catch((error) => {
-        res.status(404).json({
+        res.status(500).json({
             error: 'Event could not be updated'
         })
     })
 };
 
-const deleteEvent = async (req, res)=>{
+const deleteEvent = async (req, res) => {
     const {id} = req.params;
     const eventRef = database.collection('Events').doc(id);
 
@@ -120,7 +118,7 @@ const uploadEventImage = async (req, res) => {
     } else {
 
         const bucket = storage.bucket();
-        const fullPath = `OrganizationImages/${v4()}`;
+        const fullPath = `EventImages/${v4()}`;
         const bucketFile = bucket.file(fullPath);
 
         await bucketFile.save(req.file.buffer, {
@@ -132,7 +130,7 @@ const uploadEventImage = async (req, res) => {
             action: 'read',
             expires: '01-01-2030'
         });
-
+        
         axios.patch(`http://localhost:4000/api/events/${req.body.id}`, {
             image: url
         }).then(() => {
@@ -162,7 +160,6 @@ const paginateEvents = async (req, res) => {
     let missingFields = [];
     PAGINATE_KEYS.forEach((element) => {
         if (!Object.keys(req.body).includes(element)) {
-            containsAllElements = false;
             missingFields.push(element);
         }
     })
@@ -173,15 +170,33 @@ const paginateEvents = async (req, res) => {
             missing_fields: missingFields
         })
     } else {
+        let lastDoc = 0;
+        let lastDate = 0;
+        // startAfter() needs a query snapshot of the document
+        if (req.body.id) {
+            let docExists = true
+            await database.collection('Events').doc(req.body.id).get().then((snapshot) => {
+                if (snapshot.exists) {
+                    lastDate = snapshot.data().date;
+                } else {
+                    docExists = false
+                    console.log('Document ID does not exist; pagination will send most recent documents.')
+                }
+            })
+            if (docExists) {
+                await database.collection('Events').where("date", "==", lastDate).get().then((snapshot) => {
+                    lastDoc = snapshot.docs[0];
+                })
+            }
+        }
+
         if (!lastDoc) {
             database.collection('Events').orderBy('date', 'desc').limit(req.body.limit).get().then((snapshot) => {
-                //console.log('snapshot')
                 let queryArray = [];
                 snapshot.forEach((doc) => {
                     queryArray.push(doc.data());
                 })
                 var lastVisible = snapshot.docs[snapshot.docs.length - 1];
-                //console.log(lastVisible);
                 lastDoc = lastVisible;
                 res.status(200).json({
                     documents: queryArray
@@ -214,19 +229,11 @@ const paginateEvents = async (req, res) => {
     }
 }
 
-const resetPagination = async (req, res) => {
-    lastDoc = null;
-    res.status(200).json({
-        lastDocument: lastDoc
-    })
-}
-
 module.exports = {
     createEvent,
     readEvent,
     updateEvent,
     deleteEvent,
     uploadEventImage,
-    paginateEvents,
-    resetPagination,
+    paginateEvents
 };
