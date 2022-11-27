@@ -51,8 +51,6 @@ const createUser = async (req, res) => {
             const secret = new Uint8Array(20);
             crypto.getRandomValues(secret);
 
-            console.log(secret);
-
             database.collection('Users').doc(record.uid).set({
                 ...req.body,
                 "clubs_following": [],
@@ -62,8 +60,19 @@ const createUser = async (req, res) => {
                 "secret": secret
             }).then(() => {
                 console.log('Created user document with id: ' + record.uid);
-                res.status(200).json({
-                    id: record.uid
+
+                // Sign in the user and return the token to the front-end
+                signInWithEmailAndPassword(clientAuth, email, password)
+                .then((userCredential) => {
+                    // Get the token that firebase generates and return it
+                    res.status(200).json({
+                        id: record.uid,
+                        token: userCredential.user.stsTokenManager.accessToken
+                    })
+                }).catch((error) => {
+                    res.status(400).json({
+                        error: error
+                    })
                 })
             }).catch((error) => {
                 console.log('Error creating user document in Firestore');
@@ -71,6 +80,7 @@ const createUser = async (req, res) => {
                     error: error
                 })
             })
+
         }).catch((error) => {
             res.status(500).json({
                 error: error
@@ -202,18 +212,26 @@ const authenticateUser = async (req, res) => {
     }
 }
 
-const tokenTest = async (req, res) => {
-    const {token} = req.body;
-    adminAuth.verifyIdToken(token).then((claims) => {
-        console.log('Token verified!');
-        res.status(200).json({
-            "success": true
-        })
-    }).catch((error) => {
+const verifyToken = async (req, res) => {
+    if (!Object.keys(req.params).includes("token")) {
         res.status(400).json({
-            "success": false
+            error: "User ID is missing"
         })
-    })
+    } else {
+        const {token} = req.params;
+        //console.log(token);
+        adminAuth.verifyIdToken(token).then((claims) => {
+            console.log('Token verified!');
+            res.status(200).json({
+                "success": true
+            })
+        }).catch((error) => {
+            console.log('Token not verified!');
+            res.status(400).json({
+                "success": false
+            })
+        })
+    }
 }
 
 const uploadUserImage = async (req, res) => {
@@ -237,7 +255,7 @@ const uploadUserImage = async (req, res) => {
             expires: '01-01-2030'
         });
 
-        axios.patch(`http://localhost:4000/api/users/${req.body.id}`, {
+        axios.patch(`http://localhost:${process.env.PORT}/api/users/${req.body.id}`, {
             image: url
         }).then(() => {
             res.status(200).json({
@@ -259,9 +277,7 @@ if(!req.body.user||!req.body.organization)
         })
         return
     }
-    // console.log(req.body.user)
-    // console.log(typeof(req.body.user))
-    // console.log(req.body.organization)
+    
     userRef=database.collection('Users').doc(req.body.user)
     orgRef=database.collection('Organizations').doc(req.body.organization)
     userRef.get().then((userDoc)=>{
@@ -290,6 +306,10 @@ if(!req.body.user||!req.body.organization)
                         "success":true
                     })
                 }
+            }).catch((error) => {
+                res.status(500).json({
+                    error: error
+                })
             })
         }
     })
@@ -297,142 +317,137 @@ if(!req.body.user||!req.body.organization)
 
 const addUserToEvent = async (req, res)=>{
     if(!req.body.user||!req.body.event)
-        {
-            res.status(400).json({
-                error: "Cannot add user to event because one or both are missing from body of request"
-            })
-            return
-        }
-        // console.log(req.body.user)
-        // console.log(typeof(req.body.user))
-        // console.log(req.body.organization)
-        userRef=database.collection('Users').doc(req.body.user)
-        eventRef=database.collection('Events').doc(req.body.event)
-        userRef.get().then((userDoc)=>{
-            if (!userDoc.exists){
-                res.status(404).json({
-                    error: "User not found"
-                })
-                return
-            }
-            else{
-                eventRef.get().then((eventDoc)=>{
-                    if (!eventDoc.exists){
-                        res.status(404).json({
-                            error: "Event not found"
-                        })
-                        return
-                    }
-                    else{
-                        eventRef.update({
-                            "attendees": FieldValue.arrayUnion(req.body.user)
-                        })
-                        userRef.update({
-                            "events_registered":FieldValue.arrayUnion(req.body.event)
-                        })
-                        res.status(200).json({
-                            "success":true
-                        })
-                    }
-                })
-            }
+    {
+        res.status(400).json({
+            error: "Cannot add user to event because one or both are missing from body of request"
         })
+        return
     }
-
-const followOrg = async (req, res)=>{
-    if(!req.body.user||!req.body.organization)
-        {
-            res.status(400).json({
-                error: "Cannot follow organization because organization or user are missing from body of request"
+    
+    userRef=database.collection('Users').doc(req.body.user)
+    eventRef=database.collection('Events').doc(req.body.event)
+    userRef.get().then((userDoc)=>{
+        if (!userDoc.exists){
+            res.status(404).json({
+                error: "User not found"
             })
             return
         }
-        // console.log(req.body.user)
-        // console.log(typeof(req.body.user))
-        // console.log(req.body.organization)
-        userRef=database.collection('Users').doc(req.body.user)
-        orgRef=database.collection('Organizations').doc(req.body.organization)
-        userRef.get().then((userDoc)=>{
-            if (!userDoc.exists){
-                res.status(404).json({
-                    error: "User not found"
-                })
-                return
-            }
-            else{
-                orgRef.get().then((orgDoc)=>{
-                    if (!orgDoc.exists){
-                        res.status(404).json({
-                            error: "Organization not found"
-                        })
-                        return
-                    }
-                    else{
-                        orgRef.update({
-                            "followers": FieldValue.arrayUnion(req.body.user)
-                        })
-                        userRef.update({
-                            "clubs_following":FieldValue.arrayUnion(req.body.organization)
-                        })
-                        res.status(200).json({
-                            "success":true
-                        })
-                    }
-                })
-            }
+        else{
+            eventRef.get().then((eventDoc)=>{
+                if (!eventDoc.exists){
+                    res.status(404).json({
+                        error: "Event not found"
+                    })
+                    return
+                }
+                else{
+                    eventRef.update({
+                        "attendees": FieldValue.arrayUnion(req.body.user)
+                    })
+                    userRef.update({
+                        "events_registered":FieldValue.arrayUnion(req.body.event)
+                    })
+                    res.status(200).json({
+                        "success":true
+                    })
+                }
+            })
+        }
+    })
+}
+
+const followOrg = async (req, res)=> {
+    if(!req.body.user||!req.body.organization)
+    {
+        res.status(400).json({
+            error: "Cannot follow organization because organization or user are missing from body of request"
         })
-    }    
+        return
+    }
+    
+    userRef=database.collection('Users').doc(req.body.user)
+    orgRef=database.collection('Organizations').doc(req.body.organization)
+    userRef.get().then((userDoc)=>{
+        if (!userDoc.exists){
+            res.status(404).json({
+                error: "User not found"
+            })
+            return
+        }
+        else {
+            orgRef.get().then((orgDoc)=>{
+                if (!orgDoc.exists){
+                    res.status(404).json({
+                        error: "Organization not found"
+                    })
+                    return
+                }
+                else{
+                    orgRef.update({
+                        "followers": FieldValue.arrayUnion(req.body.user)
+                    })
+                    userRef.update({
+                        "clubs_following":FieldValue.arrayUnion(req.body.organization)
+                    })
+                    res.status(200).json({
+                        "success":true
+                    })
+                }
+            })
+        }
+    })
+}    
 
 const unfollowOrg = async (req, res)=>{
     if(!req.body.user||!req.body.organization)
-        {
-            res.status(400).json({
-                error: "Cannot unfollow organization because user or organization are missing from body of request"
+    {
+        res.status(400).json({
+            error: "Cannot unfollow organization because user or organization are missing from body of request"
+        })
+        return
+    }
+    
+    userRef=database.collection('Users').doc(req.body.user)
+    orgRef=database.collection('Organizations').doc(req.body.organization)
+    userRef.get().then((userDoc)=>{
+        if (!userDoc.exists){
+            res.status(404).json({
+                error: "User not found"
             })
             return
         }
-        // console.log(req.body.user)
-        // console.log(typeof(req.body.user))
-        // console.log(req.body.organization)
-        userRef=database.collection('Users').doc(req.body.user)
-        orgRef=database.collection('Organizations').doc(req.body.organization)
-        userRef.get().then((userDoc)=>{
-            if (!userDoc.exists){
-                res.status(404).json({
-                    error: "User not found"
-                })
-                return
-            }
-            else{
-                orgRef.get().then((orgDoc)=>{
-                    if (!orgDoc.exists){
-                        res.status(404).json({
-                            error: "Organization not found"
-                        })
-                        return
-                    }
-                    else{
-                        orgRef.update({
-                            "followers": FieldValue.arrayRemove(req.body.user)
-                        })
-                        userRef.update({
-                            "clubs_following":FieldValue.arrayRemove(req.body.organization)
-                        })
-                        res.status(200).json({
-                            "success":true
-                        })
-                    }
-                })
-            }
-        })
-    }
+        else{
+            orgRef.get().then((orgDoc)=>{
+                if (!orgDoc.exists){
+                    res.status(404).json({
+                        error: "Organization not found"
+                    })
+                    return
+                }
+                else{
+                    orgRef.update({
+                        "followers": FieldValue.arrayRemove(req.body.user)
+                    })
+                    userRef.update({
+                        "clubs_following":FieldValue.arrayRemove(req.body.organization)
+                    })
+                    res.status(200).json({
+                        "success":true
+                    })
+                }
+            })
+        }
+    })
+}
 
 const getFeed = async (req, res)=>{
-    if (!req.body.user){
+    if (!req.body.user) {
         res.status(400).json({
             error: "user missing from body of request"
         })
-        return}
+        return
+    }
     database.collection('Users').doc(req.body.user).get().then(async (user)=>{
         if(!user.exists){
             res.status(404).json({
@@ -496,7 +511,7 @@ const generateUserOTP = async (req, res) => {
             const hmac = new jsSHA("SHA-1", "HEX");
             hmac.setHMACKey(secret, "UINT8ARRAY");
             hmac.update(sequenceValue.toString(16));
-            //console.log(hmac)
+            
             const hmacString = hmac.getHMAC('HEX');
 
             res.status(200).json({
@@ -544,18 +559,18 @@ const validateUserOTP = async (req, res) => {
                 const hmac = new jsSHA("SHA-1", "HEX");
                 hmac.setHMACKey(secret, "UINT8ARRAY");
                 hmac.update(iteratedTime.toString(16));
-                //console.log(hmac);
+                
                 const hmacString = hmac.getHMAC('HEX');
                 hmacWindowArray.push(hmacString);
             }
 
             if (hmacWindowArray.includes(req.body.hmac)) {
                 res.status(200).json({
-                    authentication: "Authentication code is valid"
+                    authentication: true
                 })
             } else {
                 res.status(200).json({
-                    authentication: "Authentication code is invalid"
+                    authentication: false
                 })
             }
         }
@@ -569,7 +584,7 @@ module.exports = {
     updateUser,
     deleteUser,
     authenticateUser,
-    tokenTest,
+    verifyToken,
     uploadUserImage,
     addUserToOrg,
     generateUserOTP,

@@ -13,8 +13,6 @@ const byElementCount = (array) => {
 }
 
 const sortByPop =(events)=>{
-    console.log(typeof(events))
-    console.log(events)
     return events.sort((event1, event2)=>
     (event1.attendees.length<event2.attendees.length) ?1 : (event1.attendees.length>event2.attendees.length? -1:0))
 }
@@ -96,9 +94,7 @@ const filterPopularity= async (req,res)=>{
         events.forEach(doc=>{
             eventData.push(doc.data())
         })
-        //console.log(eventData)
-        // let sortedEvents=eventData.sort((event1, event2)=>
-        //     (event1.attendees.length<event2.attendees.length) ?1 : (event1.attendees.length>event2.attendees.length? -1:0)) //provide sort function so it sorts the events with higher attendee count first
+        
         sortedEvents=sortByPop(eventData)
         let i=0
         let val=sortedEvents.map(event=>event.attendees)
