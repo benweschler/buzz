@@ -189,7 +189,7 @@ const uploadOrganizationImage = async (req, res) => {
             expires: '01-01-2030'
         });
 
-        axios.patch(`http://localhost:4000/api/organizations/${req.body.id}`, {
+        axios.patch(`http://localhost:${process.env.PORT}/api/organizations/${req.body.id}`, {
             image: url
         }).then(() => {
             res.status(200).json({
