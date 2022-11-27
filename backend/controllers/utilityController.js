@@ -1,4 +1,4 @@
-const TAGS=require("../constants/utilityConstants"); //import tags
+const {TAGS}=require("../constants/utilityConstants"); //import tags
 const { database } = require('../firebase-admin/index'); //import firebase
 const { FieldValue } = require('@google-cloud/firestore');
 const { wait } = require("@testing-library/user-event/dist/utils");
@@ -27,15 +27,18 @@ const filterTags = async (req, res) => {
         });
     }
     let result = [];
+    // console.log(typeof(TAGS))
+    // console.log(TAGS.get(tags[0]))
     for(let i = 0; i < tags.length; i++) //loop through all the tags
     {
-        let eventRef=database.collection('Tags').doc(tags[i]); //search db for the current tag
+        let eventRef=database.collection('Tags').doc(TAGS.get(tags[i])); //search db for the current tag
         await eventRef.get().then((tagDoc) => {  //wait for the query to happen
             if (tagDoc.exists){
                 //console.log(tagDoc.data());
+                //console.log(tagDoc.data())
                 array=(tagDoc.data());
                 //console.log(array.Events);
-                result=result.concat(array.Events);
+                result=result.concat(array.events);
                 //console.log(result);
             }
         })   
@@ -45,10 +48,11 @@ const filterTags = async (req, res) => {
     {
         result = result.slice(0,21);
     }
+    //console.log(result)
     let resultData = [];
     for(let i = 0;i < result.length; i++){
         await database.collection('Events').doc(result[i]).get().then((event) => {
-            if(event.exists&&!event.data().has_ended) {
+            if(event.exists) {
                 //console.log(event.data());
                 resultData.push(event.data());
             }
@@ -64,17 +68,17 @@ const updateTags = (oldTags, newTags, eventID) => {
     let removeTags = oldTags.filter(x => !newTags.includes(x)); //things that are in the old tags but not in the new tags need to be removed
     for(let i = 0;i < removeTags.length; i++) //remove each tag that needs to be removed
     {
-        let eventRef = database.collection('Tags').doc(removeTags[i]);
+        let eventRef = database.collection('Tags').doc(TAGS.get(removeTags[i]));
         eventRef.update({
-            "Events": FieldValue.arrayRemove(eventID)
+            "events": FieldValue.arrayRemove(eventID)
         })
     }
     //then use unionarray to add the new tags to the tag doc
     for(let i=0;i<addTags.length;i++) //remove each tag that needs to be removed
     {
-        let eventRef=database.collection('Tags').doc(addTags[i]);
+        let eventRef=database.collection('Tags').doc(TAGS.get(addTags[i]));
         eventRef.update({
-            "Events": FieldValue.arrayUnion(eventID)
+            "events": FieldValue.arrayUnion(eventID)
         })
     }
 }
@@ -113,9 +117,22 @@ const filterPopularity= async (req,res)=>{
 
 }
 
+const getTags=async(req,res)=>
+{
+console.log(TAGS)
+const tags=[]
+for(const key of TAGS.keys()){
+    tags.push(key)
+}
+res.status(200).json({
+Tags: tags
+}) 
+}
+
 module.exports={
 filterTags,
 updateTags,
 filterPopularity,
-sortByPop
+sortByPop,
+getTags
 }
