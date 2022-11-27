@@ -62,6 +62,7 @@ const filterTags = async (req, res) => {
 }
 
 const updateTags = (oldTags, newTags, eventID) => {
+    console.log("tagging")
     let addTags = newTags.filter(x => !oldTags.includes(x)); //things that are in the new tags but not the old tags need to be added
     let removeTags = oldTags.filter(x => !newTags.includes(x)); //things that are in the old tags but not in the new tags need to be removed
     for(let i = 0;i < removeTags.length; i++) //remove each tag that needs to be removed
