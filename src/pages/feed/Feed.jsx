@@ -1,4 +1,4 @@
-import {useMemo, useState} from 'react';
+import {useState} from 'react';
 import styled from "styled-components";
 import EventCard from './EventCard'
 import Events from '../../constants/events.json';
@@ -7,26 +7,25 @@ import FilterChip from "./FilterChip";
 
 function Feed({toggleTheme}) {
   const [selectedTags, setSelectedTags] = useState([])
-  const [filter, setFilter] = useState(() => () => true);
-  const eventCards = useMemo(() => buildEventCards(filter), [filter]);
+  function filter(element) {
+    for(let tagId of selectedTags) {
+      if(!element.tags.includes(tagId)) return false;
+    }
+
+    return true;
+  }
 
   return (
     <Scaffold>
       <Wrapper>
         <div>
-          <button onClick={() => setFilter(() => () => true)}>
-            Show All
-          </button>
-          <button onClick={() => setFilter(() => () => false)}>
-            Show None
-          </button>
           <button onClick={toggleTheme}>Toggle Theme</button>
         </div>
         <FilterRow>
           {TagFilters(selectedTags, setSelectedTags)}
         </FilterRow>
         <h1>Popular Events <span style={{color: "#a4a4a4"}}>at UCLA</span></h1>
-        <EventView>{eventCards}</EventView>
+        <EventView>{buildEventCards(filter)}</EventView>
       </Wrapper>
     </Scaffold>
   );
@@ -35,18 +34,18 @@ function Feed({toggleTheme}) {
 function buildEventCards(filter) {
   const cards = [];
   const events = [...Events].filter(filter);
-  for (let i = 0; i < events.length; i++) {
+  for (let event of events) {
     cards.push(
       <EventCard
-        key={i}
-        title={Events[i].title}
-        organizer={Events[i].organizer}
-        image={Events[i].image}
-        description={Events[i].description}
-        attendees={Events[i].attendees}
-        location={Events[i].location}
-        price={Events[i].price}
-        tags={Events[i].tags}
+        key={event.id}
+        title={event.title}
+        organizer={event.organizer}
+        image={event.image}
+        description={event.description}
+        attendees={event.attendees}
+        location={event.location}
+        price={event.price}
+        tags={event.tags}
         date="Mon, Nov 1, 12:32pm"
       />
     );
