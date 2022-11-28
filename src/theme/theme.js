@@ -22,6 +22,7 @@ export const lightTheme = {
   body: 'rgb(247, 247, 247)',
   text: 'black',
   card: 'white',
+  highlightCard: 'white',
   brightness: 'light',
 }
 
@@ -30,5 +31,6 @@ export const darkTheme = {
   body: 'rgb(21,25,37)',
   text: 'white',
   card: 'rgb(32,37,45)',
+  highlightCard: 'rgb(43, 49, 59)',
   brightness: 'dark',
 }

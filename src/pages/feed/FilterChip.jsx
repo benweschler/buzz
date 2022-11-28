@@ -4,7 +4,8 @@ import Color from "color";
 export default function FilterChip(props) {
   return (
     <FilterChipStyle selected={props.selected} onClick={props.onClick}>
-      <div className="icon">{props.icon}</div> {props.name}
+      <div className="icon">{props.icon}</div>
+      {props.name}
     </FilterChipStyle>
   )
 }
@@ -23,16 +24,20 @@ const FilterChipStyle = styled.button`
 
   border: ${props => props.selected ?
           `${Color(props.theme.main).alpha(0.5)} 1px solid`
-          : "black 1px solid"};
+          : `${props.theme.brightness === "light"
+                  ? "black"
+                  : props.theme.highlightCard}
+            1px solid`};
   background: ${props => props.selected
           ? Color(props.theme.main).alpha(0.5)
-          : "white"};
+          : props.theme.highlightCard};
+  color: ${props => props.theme.text};
 
   &:hover {
     cursor: pointer;
-    background: ${props => props.selected
-            ? null
-            : "#f3f3f3"};
+    filter: brightness(
+            ${props => props.theme.brightness === "light" ? 92.5 : 150}%
+    );
   }
 
   .icon {

@@ -6,15 +6,13 @@ import Constants from '../../constants/Constants'
 import FilterChip from "./FilterChip";
 
 function Feed({toggleTheme}) {
+  const [selectedTags, setSelectedTags] = useState([])
   const [filter, setFilter] = useState(() => () => true);
   const eventCards = useMemo(() => buildEventCards(filter), [filter]);
 
   return (
     <Scaffold>
       <Wrapper>
-        <FilterRow>
-          {TagFilters()}
-        </FilterRow>
         <div>
           <button onClick={() => setFilter(() => () => true)}>
             Show All
@@ -24,34 +22,14 @@ function Feed({toggleTheme}) {
           </button>
           <button onClick={toggleTheme}>Toggle Theme</button>
         </div>
+        <FilterRow>
+          {TagFilters(selectedTags, setSelectedTags)}
+        </FilterRow>
         <h1>Popular Events <span style={{color: "#a4a4a4"}}>at UCLA</span></h1>
         <EventView>{eventCards}</EventView>
       </Wrapper>
     </Scaffold>
   );
-}
-
-function TagFilters() {
-  const [selectedTags, setSelectedTags] = useState([])
-
-  let filters = []
-  for (let [id, tag] of Object.entries(Constants.tags)) {
-    filters.push(
-      <FilterChip
-        key={id}
-        selected={selectedTags.includes(id)}
-        icon={tag.icon}
-        name={tag.name}
-        onClick={() => setSelectedTags(
-          selectedTags.includes(id)
-            ? selectedTags.filter(e => e !== id)
-            : [...selectedTags, id]
-        )}
-      />
-    )
-  }
-
-  return filters;
 }
 
 function buildEventCards(filter) {
@@ -75,6 +53,27 @@ function buildEventCards(filter) {
   }
 
   return cards;
+}
+
+function TagFilters(selectedTags, setSelectedTags) {
+  let filters = []
+  for (let [id, tag] of Object.entries(Constants.tags)) {
+    filters.push(
+      <FilterChip
+        key={id}
+        selected={selectedTags.includes(id)}
+        icon={tag.icon}
+        name={tag.name}
+        onClick={() => setSelectedTags(
+          selectedTags.includes(id)
+            ? selectedTags.filter(e => e !== id)
+            : [...selectedTags, id]
+        )}
+      />
+    )
+  }
+
+  return filters;
 }
 
 // This is a placeholder for the rest of the app scaffolding this page.
