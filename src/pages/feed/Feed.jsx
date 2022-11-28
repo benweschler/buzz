@@ -2,6 +2,8 @@ import {useMemo, useState} from 'react';
 import styled from "styled-components";
 import EventCard from './EventCard'
 import Events from '../../constants/events.json';
+import Constants from '../../constants/Constants'
+import FilterChip from "./FilterChip";
 
 function Feed({toggleTheme}) {
   const [filter, setFilter] = useState(() => () => true);
@@ -10,6 +12,9 @@ function Feed({toggleTheme}) {
   return (
     <Scaffold>
       <Wrapper>
+        <FilterRow>
+          {TagFilters()}
+        </FilterRow>
         <div>
           <button onClick={() => setFilter(() => () => true)}>
             Show All
@@ -24,6 +29,29 @@ function Feed({toggleTheme}) {
       </Wrapper>
     </Scaffold>
   );
+}
+
+function TagFilters() {
+  const [selectedTags, setSelectedTags] = useState([])
+
+  let filters = []
+  for (let [id, tag] of Object.entries(Constants.tags)) {
+    filters.push(
+      <FilterChip
+        key={id}
+        selected={selectedTags.includes(id)}
+        icon={tag.icon}
+        name={tag.name}
+        onClick={() => setSelectedTags(
+          selectedTags.includes(id)
+            ? selectedTags.filter(e => e !== id)
+            : [...selectedTags, id]
+        )}
+      />
+    )
+  }
+
+  return filters;
 }
 
 function buildEventCards(filter) {
@@ -70,6 +98,12 @@ const EventView = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
   gap: 1.5rem;
+`;
+
+const FilterRow = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  gap: 1rem;
 `;
 
 export default Feed;

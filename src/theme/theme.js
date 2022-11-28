@@ -4,7 +4,7 @@ export const GlobalStyles = createGlobalStyle`
   body {
     background: ${({theme}) => theme.body};
     color: ${({theme}) => theme.text};
-    transition: background 200ms ease-in, color 200ms ease-in;
+    transition: all 200ms ease-in;
   }
 
   .card {
