@@ -71,12 +71,12 @@ export const StyledNavBackground = styled.div`
         #ffa700,
         #ffdf00
     );
-    height: 4rem;
-    width: 4rem;
+    height: 2rem;
+    width: 2rem;
     }
     z-index: 700;
-    transform: ${(props) => (props.clicked ? "scale(80)" : "scale(0)")};
-    transition: transform 0.8s;
+    transform: ${(props) => (props.clicked ? "scale(90)" : "scale(0)")};
+    transition: transform 0.5s;
 `
 
 export const StyledNavigation = styled.nav`
