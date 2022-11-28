@@ -21,6 +21,7 @@ const FilterChipStyle = styled.button`
   width: 4rem;
   height: 4rem;
   font-size: 0.75rem;
+  transition: color 200ms ease-in;
 
   border: ${props => props.selected ?
           `${Color(props.theme.main).alpha(0.5)} 1px solid`

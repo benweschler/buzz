@@ -9,7 +9,7 @@ export const GlobalStyles = createGlobalStyle`
 
   .card {
     background: ${({theme}) => theme.card};
-    transition: all 200ms ease-in;
+    transition: background 200ms ease-in;
   }
 `;
 
