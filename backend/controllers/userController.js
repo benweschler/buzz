@@ -119,17 +119,27 @@ const readUser = async (req, res) => {
     const {id} = req.params;
     const userRef = database.collection('Users').doc(id);
     
-    userRef.get().then((userDoc) => {
+    userRef.get().then(async (userDoc) => {
         if (userDoc.exists) {
-            res.status(200).json(userDoc.data())
+                events=[]
+                for(let i=0;i<userDoc.data().events_registered.length;i++){
+                    eventRef=database.collection('Events').doc(userDoc.data().events_registered[i])
+                    await eventRef.get().then((event)=>{
+                        events.push(event.data())
+                    })
+                }
+                const user={...userDoc.data(), events_registered: events}
+                //console.log(events)
+                console.log(user)
+            res.status(200).json(user)
         } else {
             res.status(404).json({
                 error: 'Document does not exist'
             })
         }
-    }).catch((error) => {
+    }).catch((error)=>{
         res.status(500).json({
-            error: error
+            error:error
         })
     })
 }

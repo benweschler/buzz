@@ -8,7 +8,8 @@ const {
     readOrganizationByName,
     updateOrganization,
     deleteOrganization,
-    getAllOrganizationEvents
+    getAllOrganizationEvents,
+    getAllActiveEvents
 } = require('../controllers/organizationController'); //import the Controller functions
 
 const router = express.Router(); //initiate express router
@@ -16,6 +17,8 @@ const router = express.Router(); //initiate express router
 router.post('/', upload.single('file'), createOrganization);
 
 router.get(/getall$/, getAllOrganizationEvents);
+
+router.get(/active$/, getAllActiveEvents)
 
 router.get('/:id', readOrganization);
 
