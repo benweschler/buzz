@@ -168,6 +168,38 @@ const getAllOrganizationEvents = async (req, res) => {
     })
 }
 
+const getAllActiveEvents =async(req, res)=>{
+    const {id} = req.body;
+    console.log(id);
+    let eventsArr = [];
+    if(id=="")
+    {
+        res.status(400).json({
+            error: "did not pass an organization ID"
+        })
+    }
+    const org=await database.collection('Organizations').doc(id).get()
+        if(!org.exists){
+        res.status(404).json({
+            error:"organization not found"
+        })
+        return
+    }
+    database.collection('Events').where("organization", "==", id).where("has_ended", "==", false).orderBy('date').get().then((snapshot) => {
+        snapshot.forEach((doc) => {
+            //eventsJSON[doc.id] = doc.data();
+            eventsArr.push(doc.data());
+        });
+        res.status(200).json({
+            events_array: eventsArr
+        });
+    }).catch((error) => {
+        res.status(500).json({
+            error: error
+        })
+    })
+}
+
 const uploadOrganizationImage = async (req, res) => {
     if (req.body.id == undefined || req.file == undefined) {
         res.status(400).json({
@@ -210,5 +242,6 @@ module.exports = {
     updateOrganization,
     deleteOrganization,
     getAllOrganizationEvents,
+    getAllActiveEvents,
     uploadOrganizationImage
 };
