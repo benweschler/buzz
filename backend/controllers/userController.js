@@ -112,6 +112,10 @@ const readUser = async (req, res) => {
                 error: 'Document does not exist'
             })
         }
+    }).catch((error)=>{
+        res.status(500).json({
+            error:error
+        })
     })
 }
 

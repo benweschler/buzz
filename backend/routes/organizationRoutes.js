@@ -9,6 +9,7 @@ const {
     updateOrganization,
     deleteOrganization,
     getAllOrganizationEvents,
+    getAllActiveEvents,
     uploadOrganizationImage,
 } = require('../controllers/organizationController'); //import the Controller functions
 
@@ -17,6 +18,8 @@ const router = express.Router(); //initiate express router
 router.post('/', createOrganization);
 
 router.get(/getall$/, getAllOrganizationEvents);
+
+router.get(/active$/, getAllActiveEvents)
 
 router.post('/upload', upload.single('file'), uploadOrganizationImage);
 
