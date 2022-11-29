@@ -1,7 +1,7 @@
 import { ThemeProvider } from "styled-components";
+import Navbar from "./components/global/Navbar";
 import GlobalStyles from "./components/styles/Global";
-import OrganizationPage from "./Pages/OrganizationPage/OrganizationPage";
-
+import EventPage from "./Pages/EventPage/EventPage"
 const theme = {
   colors: {
     header: '#fff',
@@ -14,7 +14,8 @@ function App() {
   return (
     <ThemeProvider theme= {theme}>
       <GlobalStyles />
-      <OrganizationPage />
+      <Navbar />
+      <EventPage />
     </ThemeProvider>
     
   );
