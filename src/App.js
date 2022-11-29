@@ -1,6 +1,6 @@
 import { ThemeProvider } from "styled-components";
 import Navbar from "./components/global/Navbar";
-import GlobalStyles from "./components/global/global/styles/Global";
+import GlobalStyles from "./components/global//styles/Global";
 import EventPage from "./Pages/EventPage/EventPage"
 const theme = {
   colors: {
