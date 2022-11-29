@@ -521,13 +521,8 @@ const unfollowOrg = async (req, res)=>{
 }
 
 const getFeed = async (req, res)=>{
-    if (!req.body.user) {
-        res.status(400).json({
-            error: "user missing from body of request"
-        })
-        return
-    }
-    database.collection('Users').doc(req.body.user).get().then(async (user)=>{
+    const {id} = req.params
+    database.collection('Users').doc(id).get().then(async (user)=>{
         if(!user.exists){
             res.status(404).json({
                 error: "user not found"
@@ -548,7 +543,7 @@ const getFeed = async (req, res)=>{
                 if(org.exists){
                     for(let i=0;i<org.data().events.length;i++){
                         let event = await database.collection('Events').doc(org.data().events[i]).get()
-                        if(event.exists&&!event.data().date>Date.now())
+                        if(event.exists && (event.data().date>Date.now()))
                             results.push(event.data())
                     }
                 }
@@ -605,57 +600,45 @@ const generateUserOTP = async (req, res) => {
 }
 
 const validateUserOTP = async (req, res) => {
-    let missingFields = [];
-    VERIFICATION_KEYS.forEach((element) => {
-        if (!Object.keys(req.body).includes(element)) {
-            missingFields.push(element);
-        }
-    })
+    const {id, hmac} = req.params;
 
-    if (missingFields.length > 0) {
+    const userRef = database.collection('Users').doc(id);
+    
+    const userDoc = await userRef.get();
+    if (!userDoc.exists) {
         res.status(400).json({
-            error: "One or more missing keys",
-            missing_fields: missingFields
+            error: "User does not exist"
         })
     } else {
-        const userRef = database.collection('Users').doc(req.body.id);
-        
-        const userDoc = await userRef.get();
-        if (!userDoc.exists) {
-            res.status(400).json({
-                error: "User does not exist"
+        const secret = new Uint8Array(userDoc.data().secret);
+    
+        const currentTime = Date.now() / 1000;
+
+        const sequenceValue = Math.floor(currentTime)
+
+        let hmacWindowArray = [];
+        for (let i = 0; i < WINDOW_TIME; i++) {
+            // Get current time in seconds
+            // Date.now() returns milliseconds
+            const iteratedTime = sequenceValue - i;
+
+            // Do HMAC-SHA1 with the secret
+            const hmac = new jsSHA("SHA-1", "HEX");
+            hmac.setHMACKey(secret, "UINT8ARRAY");
+            hmac.update(iteratedTime.toString(16));
+            
+            const hmacString = hmac.getHMAC('HEX');
+            hmacWindowArray.push(hmacString);
+        }
+
+        if (hmacWindowArray.includes(hmac)) {
+            res.status(200).json({
+                authentication: true
             })
         } else {
-            const secret = new Uint8Array(userDoc.data().secret);
-        
-            const currentTime = Date.now() / 1000;
-
-            const sequenceValue = Math.floor(currentTime)
-
-            let hmacWindowArray = [];
-            for (let i = 0; i < WINDOW_TIME; i++) {
-                // Get current time in seconds
-                // Date.now() returns milliseconds
-                const iteratedTime = sequenceValue - i;
-
-                // Do HMAC-SHA1 with the secret
-                const hmac = new jsSHA("SHA-1", "HEX");
-                hmac.setHMACKey(secret, "UINT8ARRAY");
-                hmac.update(iteratedTime.toString(16));
-                
-                const hmacString = hmac.getHMAC('HEX');
-                hmacWindowArray.push(hmacString);
-            }
-
-            if (hmacWindowArray.includes(req.body.hmac)) {
-                res.status(200).json({
-                    authentication: true
-                })
-            } else {
-                res.status(200).json({
-                    authentication: false
-                })
-            }
+            res.status(200).json({
+                authentication: false
+            })
         }
     }
 }

@@ -2,7 +2,6 @@ const admin = require('firebase-admin');
 const { database, storage } = require('../firebase-admin/index');
 const { INITIAL_EVENT_KEYS } = require('../constants/eventConstants.js');
 const { FieldValue } = require('@google-cloud/firestore');
-const { updateTags } = require("./utilityController");
 const axios = require('axios');
 const { v4 } = require('uuid');
 
@@ -100,8 +99,6 @@ const createEvent = async (req, res) => {
                     tagsArray[index] = element.trim();
                 })
     
-                updateTags([],tagsArray, eventRef.id);
-    
                 database.collection('Events').doc(eventRef.id).update({
                     "tags": tagsArray
                 });
@@ -194,8 +191,6 @@ const updateEvent = async (req, res) => {
         tagsArray.forEach((element, index) => {
             tagsArray[index] = element.trim();
         })
-
-        updateTags(oldTags, tagsArray, id);
 
         database.collection('Events').doc(id).update({
             "tags": tagsArray

@@ -31,10 +31,10 @@ router.get('/token/:token', verifyToken);
 router.get('/generateOTP/:id', generateUserOTP);
 
 // Validate OTP QRCode
-router.get(/validateOTP$/, validateUserOTP);
+router.get('/validateOTP/:id/:hmac', validateUserOTP);
 
 // get feed
-router.get(/feed$/, getFeed);
+router.get('/feed/:id', getFeed);
 
 // Create a user in Firestore and in Firebase Auth
 router.post('/', upload.single('file'), createUser);
