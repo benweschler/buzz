@@ -13,12 +13,10 @@ const createOrganization = async (req, res) => {
         }
     })
 
-    const fileUndefined = (req.file == undefined)
-    if ((missingFields.length !== 0) || (fileUndefined)) {
+    if (missingFields.length !== 0) {
         res.status(400).json({
             error: 'One or more fields are missing',
-            missing_fields: missingFields,
-            file_undefined: fileUndefined
+            missing_fields: missingFields
         })
     } else {
         // Have to check the database if there is the same name in the organization
@@ -42,49 +40,23 @@ const createOrganization = async (req, res) => {
         })
 
         // If not, then add the organization
+
         if (!alreadyInDatabase) {
-            const docRef = database.collection('Organizations').doc();
-            await docRef.set({
+            database.collection('Organizations').add({
                 ...req.body,
-                "members": [],
                 "events": [],
                 "followers": [],
-                "image": "",
-                "id": docRef.id
+                "image": ""
+            }).then((docRef) => {
+                console.log('Created organization document with id: ' + docRef.id);
+                res.status(200).json({
+                    id: docRef.id
+                })
             }).catch((error) => {
                 res.status(500).json({
                     error: error
                 })
             });
-
-            console.log('Created organization document with id: ' + docRef.id);
-
-            const bucket = storage.bucket();
-            const fullPath = `OrganizationImages/${v4()}`;
-            const bucketFile = bucket.file(fullPath);
-
-            await bucketFile.save(req.file.buffer, {
-                contentType: req.file.mimetype,
-                gzip: true
-            });
-
-            const [url] = await bucketFile.getSignedUrl({
-                action: 'read',
-                expires: '01-01-2030'
-            });
-
-            await database.collection('Organizations').doc(docRef.id).update({
-                image: url
-            }).catch((error) => {
-                res.status(500).json({
-                    error: error
-                })
-            })
-
-            res.status(200).json({
-                id: docRef.id,
-                url: url
-            })
         }
     }
 }
@@ -130,64 +102,23 @@ const updateOrganization = async (req, res)=>{
     const {id} = req.params;
     const orgRef = database.collection('Organizations').doc(id);
 
-    if ((Object.keys(req.body).length == 0) && (req.file == undefined)) {
-        res.status(400).json({
-            error: "No keys have been entered"
-        })
-    } else {
-        const orgDoc = await orgRef.get().catch((error) => {
-            res.status(500).json({
-                error: error
-            })
-        })
-
+    orgRef.get().then((orgDoc) => {
         if (orgDoc.exists) {
-            if (Object.keys(req.body).length !== 0) {
-                await orgRef.update(req.body).catch((error) => {
-                    res.status(500).json({
-                        error: error
-                    })
-                })
-            }
-
-            if (req.file == undefined) {
+            orgRef.update(req.body).then(() => {
                 res.status(200).json({
                     id: id
                 })
-            } else {
-                const bucket = storage.bucket();
-                const fullPath = `OrganizationImages/${v4()}`;
-                const bucketFile = bucket.file(fullPath);
-    
-                await bucketFile.save(req.file.buffer, {
-                    contentType: req.file.mimetype,
-                    gzip: true
-                });
-    
-                const [url] = await bucketFile.getSignedUrl({
-                    action: 'read',
-                    expires: '01-01-2030'
-                });
-    
-                await orgRef.update({
-                    image: url
-                }).catch((error) => {
-                    res.status(500).json({
-                        error: error
-                    })
-                })
-    
-                res.status(200).json({
-                    id: id,
-                    url: url
-                })
-            }
+            })
         } else {
             res.status(404).json({
-                error: 'Document does not exist'
+                error: 'Organization could not be found'
             })
         }
-    }
+    }).catch((error) => {
+        res.status(500).json({
+            error: error
+        })
+    })
 };
 
 const deleteOrganization = async (req, res)=>{
@@ -221,28 +152,20 @@ const getAllOrganizationEvents = async (req, res) => {
     const {id} = req.body;
     console.log(id);
 
-    const organizationRef = database.collection('Users').doc(id).get();
-
-    if (!organizationRef.exists) {
-        res.status(400).json({
-            error: 'Organization does not exist'
+    let eventsArr = [];
+    database.collection('Events').where("organization", "==", id).orderBy('date').get().then((snapshot) => {
+        snapshot.forEach((doc) => {
+            //eventsJSON[doc.id] = doc.data();
+            eventsArr.push(doc.data());
+        });
+        res.status(200).json({
+            events_array: eventsArr
+        });
+    }).catch((error) => {
+        res.status(500).json({
+            error: error
         })
-    } else {
-        let eventsArr = [];
-        database.collection('Events').where("organization", "==", id).orderBy('date', 'desc').get().then((snapshot) => {
-            snapshot.forEach((doc) => {
-                //eventsJSON[doc.id] = doc.data();
-                eventsArr.push(doc.data());
-            });
-            res.status(200).json({
-                events_array: eventsArr
-            });
-        }).catch((error) => {
-            res.status(500).json({
-                error: error
-            })
-        })
-    }
+    })
 }
 
 const getAllActiveEvents =async(req, res)=>{
@@ -262,7 +185,7 @@ const getAllActiveEvents =async(req, res)=>{
         })
         return
     }
-    database.collection('Events').where("organization", "==", id).where("has_ended", "==", false).orderBy('date').get().then((snapshot) => {
+    database.collection('Events').where("organization", "==", id).where("date", ">", Date.now()).orderBy('date').get().then((snapshot) => {
         snapshot.forEach((doc) => {
             //eventsJSON[doc.id] = doc.data();
             eventsArr.push(doc.data());
@@ -277,6 +200,41 @@ const getAllActiveEvents =async(req, res)=>{
     })
 }
 
+const uploadOrganizationImage = async (req, res) => {
+    if (req.body.id == undefined || req.file == undefined) {
+        res.status(400).json({
+            error: 'One or more fields are missing'
+        })
+    } else {
+
+        const bucket = storage.bucket();
+        const fullPath = `OrganizationImages/${v4()}`;
+        const bucketFile = bucket.file(fullPath);
+
+        await bucketFile.save(req.file.buffer, {
+            contentType: req.file.mimetype,
+            gzip: true
+        });
+
+        const [url] = await bucketFile.getSignedUrl({
+            action: 'read',
+            expires: '01-01-2030'
+        });
+
+        axios.patch(`http://localhost:${process.env.PORT}/api/organizations/${req.body.id}`, {
+            image: url
+        }).then(() => {
+            res.status(200).json({
+                url: url
+            })
+        }).catch((error) => {
+            res.status(500).json({
+                error: error
+            })
+        })
+    }
+}
+
 module.exports = {
     createOrganization,
     readOrganization,
@@ -284,5 +242,6 @@ module.exports = {
     updateOrganization,
     deleteOrganization,
     getAllOrganizationEvents,
-    getAllActiveEvents
+    getAllActiveEvents,
+    uploadOrganizationImage
 };

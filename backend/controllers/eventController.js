@@ -74,7 +74,6 @@ const createEvent = async (req, res) => {
                     "ticketed": ticketedBool,
                     "date": dateNum,
                     "attendees": [],
-                    "has_ended": false,
                     "id": eventRef.id
                 }).catch((error) => {
                     res.status(500).json({
@@ -253,30 +252,6 @@ const deleteEvent = async (req, res) => {
     })
 };
 
-const endEvent = async(req, res) => {
-    const {id} = req.params;
-    const eventRef = database.collection('Events').doc(id);
-
-    eventRef.get().then((eventDoc) => {
-        if (eventDoc.exists) {
-            eventRef.update({
-                has_ended: true
-            }).then(() => {
-                res.status(200).json({
-                    id: id
-                })
-            }).catch((error) => {
-                res.status(500).json({
-                    error: error
-                })
-            })
-        } else {
-            res.status(400).json({
-                error: 'Event could not be found'
-            })
-        }
-    })
-}
 
 /* lastDoc can't be passed to the front-end and sent to the back-end to start pagination from that doc
     because it will be passed in the response as a JSON instead of an object that can utilize Firestore
@@ -368,5 +343,4 @@ module.exports = {
     updateEvent,
     deleteEvent,
     paginateEvents,
-    endEvent
 };
