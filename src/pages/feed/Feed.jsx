@@ -4,6 +4,7 @@ import EventCard from './EventCard'
 import Events from '../../constants/events.json';
 import Constants from '../../constants/Constants'
 import FilterChip from "./FilterChip";
+import TonightButton from "./TonightButton"
 
 function Feed({toggleTheme}) {
   const [selectedTags, setSelectedTags] = useState([])
@@ -18,13 +19,11 @@ function Feed({toggleTheme}) {
   return (
     <Scaffold>
       <Wrapper>
-        <div>
-          <button onClick={toggleTheme}>Toggle Theme</button>
-        </div>
+        <h1>Popular Events <span style={{color: "#a4a4a4"}}>at UCLA</span></h1>
+        <TonightButton toggleTheme={toggleTheme}/>
         <FilterRow>
           {TagFilters(selectedTags, setSelectedTags)}
         </FilterRow>
-        <h1>Popular Events <span style={{color: "#a4a4a4"}}>at UCLA</span></h1>
         <EventView>{buildEventCards(filter)}</EventView>
       </Wrapper>
     </Scaffold>
@@ -89,7 +88,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  width: 90%
+  width: 70%
 `;
 
 const EventView = styled.div`

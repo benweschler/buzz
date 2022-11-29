@@ -14,7 +14,6 @@ const FilterChipStyle = styled.button`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background: white;
   border-radius: 0.5rem;
   align-self: start;
   padding: 0.5rem;
@@ -36,9 +35,7 @@ const FilterChipStyle = styled.button`
 
   &:hover {
     cursor: pointer;
-    filter: brightness(
-            ${props => props.theme.brightness === "light" ? 92.5 : 150}%
-    );
+    filter: brightness(${props => props.theme.brightness === "light" ? 92.5 : 150}%);
   }
 
   .icon {

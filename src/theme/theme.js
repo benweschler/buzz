@@ -10,8 +10,8 @@ export const GlobalStyles = createGlobalStyle`
   .card {
     background: ${({theme}) => theme.card};
     transition: background 200ms ease-in,
-                box-shadow 200ms ease-in,
-                transform 200ms ease-in;
+    box-shadow 200ms ease-in,
+    transform 200ms ease-in;
   }
 `;
 
