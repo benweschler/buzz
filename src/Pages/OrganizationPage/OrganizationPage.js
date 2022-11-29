@@ -27,6 +27,7 @@ const OrganizationPage = () => {
         <StyledOrgLeftColumn>
           <Container>
             <StyledOrganizationDescription>
+              <h2> About </h2>
               <p>
                 Welcome to Royce Theater Club! <br />
                 We are happy you're here, Please check out our events!!
