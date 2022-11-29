@@ -39,13 +39,13 @@ const filterTags = async (req, res) => {
                 result=result.concat(array.events);
                 //console.log(result);
             }
-        })   
+        }).catch((error)=>{
+            res.status(500).json({
+                error: error
+            })
+        })  
     }
     result = byElementCount(result);
-    if(result.length > 20) //if over 20 we trim it down to 20
-    {
-        result = result.slice(0,21);
-    }
     //console.log(result)
     let resultData = [];
     for(let i = 0;i < result.length; i++){
@@ -54,6 +54,11 @@ const filterTags = async (req, res) => {
                 //console.log(event.data());
                 resultData.push(event.data());
             }
+        }).catch((error)=>{
+            res.status(500).json({
+                error: error
+            })
+            return
         })
     }
     res.status(200).json({
@@ -100,7 +105,7 @@ const filterPopularity= async (req,res)=>{
         let i=0
         let val=sortedEvents.map(event=>event.attendees)
         results=[]
-        while(i<=10&&i!=sortedEvents.length)
+        while(i!=sortedEvents.length)
         {
             if(Object.keys(val[i]).length==0)
                 break;
@@ -109,6 +114,10 @@ const filterPopularity= async (req,res)=>{
         }
         res.status(200).json({
             Events: results
+        })
+    }).catch((error)=>{
+        res.status(500).json({
+            error: error
         })
     })
 

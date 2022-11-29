@@ -10,7 +10,6 @@ const {
     deleteUser,
     authenticateUser,
     verifyToken,
-    uploadUserImage,
     addUserToOrg,
     generateUserOTP,
     validateUserOTP,
@@ -37,11 +36,8 @@ router.get(/validateOTP$/, validateUserOTP);
 // get feed
 router.get(/feed$/, getFeed);
 
-// Upload image to Firebase Storage
-router.post('/upload', upload.single('file'), uploadUserImage);
-
 // Create a user in Firestore and in Firebase Auth
-router.post('/', createUser);
+router.post('/', upload.single('file'), createUser);
 
 // Read a user
 router.get('/:id', readUser);
@@ -59,10 +55,10 @@ router.patch(/unfollow$/, unfollowOrg);
 router.patch(/follow$/, followOrg);
 
 //Add user to event
-router.patch(/register$/,addUserToEvent)
+router.patch(/register$/, addUserToEvent)
 
 // Update a user
-router.patch('/:id', updateUser);
+router.patch('/:id', upload.single('file'), updateUser);
 
 // Delete a user
 router.delete('/:id', deleteUser);

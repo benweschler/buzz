@@ -9,6 +9,7 @@ const { FieldValue } = require('@google-cloud/firestore');
 const { signInWithEmailAndPassword } = require('firebase/auth');
 const axios = require('axios');
 const jsSHA = require('jssha');
+const {v4} = require('uuid');
 const crypto = require('crypto');
 const {sortByPop} = require('./utilityController');
 const { INITIAL_USER_KEYS } = require('../constants/userConstants.js');
@@ -31,60 +32,84 @@ const createUser = async (req, res) => {
         }
     })
 
-    if (missingFields.length !== 0) {
+    const fileUndefined = (req.file == undefined)
+    if ((missingFields.length !== 0) || (fileUndefined)) {
         res.status(400).json({
             error: 'One or more fields are missing',
-            missing_fields: missingFields
+            missing_fields: missingFields,
+            file_undefined: fileUndefined
         });
     } else {
         const email = req.body.email;
         const password = req.body.password;
 
-        adminAuth.createUser({
+        const record = await adminAuth.createUser({
             email: email,
             password: password
-        }).then((record) => {
-            // Don't want the password to be included in the document
-            delete req.body.password;
-
-            // Create the shared secret
-            const secret = new Uint8Array(20);
-            crypto.getRandomValues(secret);
-
-            database.collection('Users').doc(record.uid).set({
-                ...req.body,
-                "clubs_following": [],
-                "events_registered": [],
-                "interests": [],
-                "organizations": [],
-                "secret": secret
-            }).then(() => {
-                console.log('Created user document with id: ' + record.uid);
-
-                // Sign in the user and return the token to the front-end
-                signInWithEmailAndPassword(clientAuth, email, password)
-                .then((userCredential) => {
-                    // Get the token that firebase generates and return it
-                    res.status(200).json({
-                        id: record.uid,
-                        token: userCredential.user.stsTokenManager.accessToken
-                    })
-                }).catch((error) => {
-                    res.status(400).json({
-                        error: error
-                    })
-                })
-            }).catch((error) => {
-                console.log('Error creating user document in Firestore');
-                res.status(500).json({
-                    error: error
-                })
-            })
-
         }).catch((error) => {
             res.status(500).json({
                 error: error
             })
+        })
+
+        // Don't want the password to be included in the document
+        delete req.body.password;
+
+        // Create the shared secret
+        const secret = new Uint8Array(20);
+        crypto.getRandomValues(secret);
+
+        await database.collection('Users').doc(record.uid).set({
+            ...req.body,
+            "clubs_following": [],
+            "events_registered": [],
+            "interests": [],
+            "organizations": [],
+            "secret": secret,
+            "id": record.uid
+        }).catch((error) => {
+            console.log('Error creating user document in Firestore');
+            res.status(500).json({
+                error: error
+            })
+        })
+
+        console.log('Created user document with id: ' + record.uid);
+
+        const bucket = storage.bucket();
+        const fullPath = `UserImages/${v4()}`;
+        const bucketFile = bucket.file(fullPath);
+
+        await bucketFile.save(req.file.buffer, {
+            contentType: req.file.mimetype,
+            gzip: true
+        });
+
+        const [url] = await bucketFile.getSignedUrl({
+            action: 'read',
+            expires: '01-01-2030'
+        });
+
+        await database.collection('Users').doc(record.uid).update({
+            image: url
+        }).catch((error) => {
+            res.status(500).json({
+                error: error
+            })
+        })
+
+
+        // Sign in the user and return the token to the front-end
+        const userCredential = await signInWithEmailAndPassword(clientAuth, email, password).catch((error) => {
+            res.status(400).json({
+                error: error
+            })
+        })
+
+        res.status(200).json({
+            id: record.uid,
+            url: url,
+            token: userCredential.user.stsTokenManager.accessToken
         })
     }
 }
@@ -146,28 +171,64 @@ const readUserByEmail = async (req, res) => {
 const updateUser = async (req, res) => {
     const {id} = req.params;
     const userRef = database.collection('Users').doc(id);
-
-    userRef.get().then((userDoc) => {
+    if ((Object.keys(req.body).length == 0) && (req.file == undefined)) {
+        res.status(400).json({
+            error: "No keys have been entered"
+        })
+    } else {
+        const userDoc = await userRef.get().catch((error) => {
+            res.status(500).json({
+                error: error
+            })
+        })
+        
         if (userDoc.exists) {
-            userRef.update(req.body).then(() => {
-                res.json({
+            if (Object.keys(req.body).length !== 0) {
+                await userRef.update(req.body).catch((error) => {
+                    res.status(500).json({
+                        error: error
+                    })
+                });
+            }
+
+            if (req.file == undefined) {
+                res.status(200).json({
                     id: id
                 })
-            }).catch((error) => {
-                res.status(500).json({
-                    error: error
+            } else {
+                const bucket = storage.bucket();
+                const fullPath = `UserImages/${v4()}`;
+                const bucketFile = bucket.file(fullPath);
+    
+                await bucketFile.save(req.file.buffer, {
+                    contentType: req.file.mimetype,
+                    gzip: true
+                });
+    
+                const [url] = await bucketFile.getSignedUrl({
+                    action: 'read',
+                    expires: '01-01-2030'
+                });
+    
+                await userRef.update({
+                    image: url
+                }).catch((error) => {
+                    res.status(500).json({
+                        error: error
+                    })
                 })
-            })
+    
+                res.status(200).json({
+                    id: id,
+                    url: url
+                })
+            }
         } else {
             res.status(404).json({
                 error: 'Document does not exist'
             })
         }
-    }).catch((error) => {
-        res.status(500).json({
-            error: error
-        })
-    })
+    }
 }
 
 const deleteUser = async (req, res) => {
@@ -244,41 +305,6 @@ const verifyToken = async (req, res) => {
     }
 }
 
-const uploadUserImage = async (req, res) => {
-    if (req.body.id == undefined || req.file == undefined) {
-        res.status(400).json({
-            error: 'One or more fields are missing'
-        })
-    } else {
-
-        const bucket = storage.bucket();
-        const fullPath = `UserImages/${v4()}`;
-        const bucketFile = bucket.file(fullPath);
-
-        await bucketFile.save(req.file.buffer, {
-            contentType: req.file.mimetype,
-            gzip: true
-        });
-
-        const [url] = await bucketFile.getSignedUrl({
-            action: 'read',
-            expires: '01-01-2030'
-        });
-
-        axios.patch(`http://localhost:${process.env.PORT}/api/users/${req.body.id}`, {
-            image: url
-        }).then(() => {
-            res.status(200).json({
-                url: url
-            })
-        }).catch((error) => {
-            res.status(500).json({
-                error: error
-            })
-        })
-    }
-}
-
 const addUserToOrg = async (req, res)=>{
 if(!req.body.user||!req.body.organization)
     {
@@ -322,6 +348,10 @@ if(!req.body.user||!req.body.organization)
                 })
             })
         }
+    }).catch((error)=>{
+        res.status(500).json({
+            error: error
+        })
     })
 }
 
@@ -351,7 +381,22 @@ const addUserToEvent = async (req, res)=>{
                     })
                     return
                 }
-                else{
+                else {
+                    const capacity=eventDoc.data().capacity
+                    const attendees=eventDoc.data().attendees.length
+                    if(attendees > capacity)
+                    {
+                        res.status(500).json({
+                            error:"Event at capacity"})
+                        return
+                    }
+                    if(eventDoc.data().has_ended)
+                    {
+                        res.status(500).json({
+                            error: "Event has already ended"
+                        })
+                        return
+                    }
                     eventRef.update({
                         "attendees": FieldValue.arrayUnion(req.body.user)
                     })
@@ -362,8 +407,16 @@ const addUserToEvent = async (req, res)=>{
                         "success":true
                     })
                 }
+            }).catch((error)=>{
+                res.status(500).json({
+                    error: error
+                })
             })
         }
+    }).catch((error)=>{
+        res.status(500).json({
+            error: error
+        })
     })
 }
 
@@ -404,8 +457,16 @@ const followOrg = async (req, res)=> {
                         "success":true
                     })
                 }
+            }).catch((error)=>{
+                res.status(500).json({
+                    error: error
+                })
             })
         }
+    }).catch((error)=>{
+        res.status(500).json({
+            error: error
+        })
     })
 }    
 
@@ -446,8 +507,16 @@ const unfollowOrg = async (req, res)=>{
                         "success":true
                     })
                 }
+            }).catch((error)=>{
+                res.status(500).json({
+                    error: error
+                })
             })
         }
+    }).catch((error)=>{
+        res.status(500).json({
+            error: error
+        })
     })
 }
 
@@ -468,7 +537,7 @@ const getFeed = async (req, res)=>{
         const orgNum=user.data().clubs_following.length
         if(orgNum==0){
             res.status(400).json({
-                message:"user is not following any clubs"
+                error:"user is not following any clubs"
             })
             return
         }
@@ -483,6 +552,10 @@ const getFeed = async (req, res)=>{
                             results.push(event.data())
                     }
                 }
+            }).catch((error)=>{
+                res.status(500).json({
+                    error: error
+                })
             })
         }
         results=sortByPop(results)
@@ -595,7 +668,6 @@ module.exports = {
     deleteUser,
     authenticateUser,
     verifyToken,
-    uploadUserImage,
     addUserToOrg,
     generateUserOTP,
     validateUserOTP,
