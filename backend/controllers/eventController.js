@@ -62,6 +62,12 @@ const createEvent = async (req, res) => {
                     dateNum = parseInt(req.body.date);
                 }
 
+                // Parse Price
+                let priceNum = 0;
+                if (parseInt(req.body.price) !== NaN) {
+                    priceNum = parseInt(req.body.price);
+                }
+
                 const orgName = orgDoc.data().name;
 
                 await eventRef.set({
@@ -73,6 +79,7 @@ const createEvent = async (req, res) => {
                     "organization_name": orgName,
                     "ticketed": ticketedBool,
                     "date": dateNum,
+                    "price": priceNum,
                     "attendees": [],
                     "has_ended": false,
                     "id": eventRef.id
