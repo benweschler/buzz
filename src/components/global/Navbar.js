@@ -4,7 +4,7 @@ import {
   StyledNavMenu,
   StyledHamburger,
   StyledNavBackground,
-  Logo
+  Logo,
 } from "./styles/Navbar.styled";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { useState } from "react";

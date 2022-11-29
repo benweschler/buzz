@@ -11,12 +11,11 @@ export const StyledNavbar = styled.div`
   position: fixed;
   z-index: 700;
   background-color: white;
-  
 `;
 
 export const Logo = styled.h1`
   margin-right: auto;
-  font-family: 'Permanent Marker', cursive;
+  font-family: "Permanent Marker", cursive;
 `;
 
 export const StyledNavMenu = styled.ul`
