@@ -11,7 +11,7 @@ const axios = require('axios');
 const jsSHA = require('jssha');
 const {v4} = require('uuid');
 const crypto = require('crypto');
-const {sortByPop} = require('./utilityController');
+const {sortByRecency} = require('./utilityController');
 const { INITIAL_USER_KEYS } = require('../constants/userConstants.js');
 const { WINDOW_TIME, VERIFICATION_KEYS } = require('../constants/utilityConstants');
 
@@ -390,7 +390,7 @@ const addUserToEvent = async (req, res)=>{
                             error:"Event at capacity"})
                         return
                     }
-                    if(eventDoc.data().has_ended)
+                    if(eventDoc.data<Date.now())
                     {
                         res.status(500).json({
                             error: "Event has already ended"
@@ -548,7 +548,7 @@ const getFeed = async (req, res)=>{
                 if(org.exists){
                     for(let i=0;i<org.data().events.length;i++){
                         let event = await database.collection('Events').doc(org.data().events[i]).get()
-                        if(event.exists&&!event.data().has_ended)
+                        if(event.exists&&!event.data().date>Date.now())
                             results.push(event.data())
                     }
                 }
@@ -558,7 +558,7 @@ const getFeed = async (req, res)=>{
                 })
             })
         }
-        results=sortByPop(results)
+        results=sortByRecency(results)
         res.status(200).json({
             events: results
         })
