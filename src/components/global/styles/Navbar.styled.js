@@ -1,10 +1,5 @@
 import styled from "styled-components";
 
-// const COLORS = {
-//     primaryLight: "#ffa700",
-//     primaryDark: "#ffdf00"
-// };
-
 export const StyledNavbar = styled.div`
   width: 100%;
   height: 60px;
@@ -22,9 +17,6 @@ export const StyledNavbar = styled.div`
 export const Logo = styled.h1`
   margin-right: auto;
   font-family: 'Permanent Marker', cursive;
-  /* @media(max-width: ${({ theme }) => theme.mobile}) {
-        margin-bottom: 40px;    
-    } */
 `;
 
 export const StyledNavMenu = styled.ul`

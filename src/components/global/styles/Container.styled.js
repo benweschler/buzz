@@ -6,12 +6,6 @@ export const Container = styled.div`
   margin: 0 auto;
   padding: 0 20px;
   justify-content: center;
-  /* display: flex;
-
-  @media (max-width: ${({ theme }) => theme.mobile}) {
-    flex-direction: column;
-  } */
-
-`;
+`
 
 

@@ -30,10 +30,6 @@ const GlobalStyles = createGlobalStyle`
   a:hover {
     color: #ffba00
   }
-
-  /* h1{
-    font-family: 'Permanent Marker', cursive;
-  } */
 `
 
 export default GlobalStyles
