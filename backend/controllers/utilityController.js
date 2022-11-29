@@ -126,10 +126,41 @@ Tags: tags
 }) 
 }
 
+const eventsTonight =async (req, res)=>{
+    results=[]
+    const curr=new Date(Date.now())
+    //console.log(curr.getTime())
+   const currHour=curr.getHours()
+   let max=new Date(curr.getTime())
+    max.setHours(6,0,0,0)
+    //console.log(curr.getTime())
+    if(currHour>=6){
+        max.setDate(curr.getDate()+1)
+    }
+    //console.log(max.getTime())
+   const events=await database.collection("Events").where("has_ended", "==", false).where("date", "<=", max.getTime()).where("date", ">", curr.getTime()).get()
+   if(events.empty)
+   {
+    res.status(404).json({
+        error:"no events found"
+    })
+    return
+   }
+   events.forEach(doc=>{
+    results.push(doc.data())
+})
+results=sortByPop(results)
+res.status(200).json({
+    events: results
+})
+}
+
+
 module.exports={
 filterTags,
 updateTags,
 filterPopularity,
 sortByPop,
-getTags
+getTags,
+eventsTonight
 }
