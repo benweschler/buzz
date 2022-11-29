@@ -17,6 +17,7 @@ export const StyledNavbar = styled.div`
 
 export const Logo = styled.h1`
   margin-right: auto;
+  font-family: 'Permanent Marker', cursive;
   /* @media(max-width: ${({ theme }) => theme.mobile}) {
         margin-bottom: 40px;    
     } */
@@ -64,15 +65,15 @@ export const StyledHamburger = styled.div`
 export const StyledNavBackground = styled.div`
   @media (max-width: ${({ theme }) => theme.mobile}) {
     position: fixed;
-    top: 0.1rem;
-    right: 0.1rem;
+    top: 0.2rem;
+    right: 0.2rem;
     background-image: radial-gradient(#ffa700, #ffdf00);
-    height: 4rem;
-    width: 4rem;
+    height: 1.5rem;
+    width: 1.5rem;
   }
   z-index: 700;
   transform: ${(props) => (props.clicked ? "scale(80)" : "scale(0)")};
-  transition: transform 0.8s;
+  transition: transform 0.5s;
 `;
 
 export const StyledNavigation = styled.nav`

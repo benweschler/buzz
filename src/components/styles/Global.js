@@ -31,9 +31,9 @@ const GlobalStyles = createGlobalStyle`
     color: #ffba00
   }
 
-  h1{
+  /* h1{
     font-family: 'Permanent Marker', cursive;
-  }
+  } */
 `
 
 export default GlobalStyles
