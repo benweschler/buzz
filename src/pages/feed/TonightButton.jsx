@@ -22,7 +22,7 @@ export default function TonightButton({toggleTheme}) {
         <button
           onClick={() => {
             toggleTheme()
-            if(theme.brightness === "light") explode()
+            if (theme.brightness === "light") explode()
           }}>
           <h1>What's Happening Tonight</h1>
         </button>
@@ -44,13 +44,17 @@ const StyledTonightButton = styled.div`
     top: 50%;
     transform: translate(-50%, -50%);
     transition: color 200ms ease-in;
+    border-radius: 0.5rem;
     pointer-events: all;
-
-    /* Make button transparent */
-    background: transparent;
-    border: none !important;
-    color: ${({theme}) => theme.text};
     cursor: pointer;
+
+    border: ${({theme}) => theme.brightness === "light"
+            ? "black"
+            : "rgba(99,76,245,0.5)"} 1px solid;
+    background: ${({theme}) => theme.brightness === "light"
+            ? theme.highlightCard
+            : "rgba(99,76,245,0.5)"};
+    color: ${({theme}) => theme.text};
   }
 `
 
