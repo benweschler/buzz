@@ -1,19 +1,15 @@
-import GlobalStyles from "../../components/styles/Global"
-import Navbar from "../../components/global/Navbar"
-import UserMain from "../../components/UserPage/UserMain"
+import GlobalStyles from "../../components/styles/Global";
+import Navbar from "../../components/global/Navbar";
+import UserMain from "../../components/UserPage/UserMain";
 
-
-function UserPage (){
+function UserPage() {
   return (
     <>
-    <GlobalStyles />
-    <Navbar />
-    <UserMain />
+      <GlobalStyles />
+      <Navbar />
+      <UserMain />
     </>
-  )
+  );
 }
 
-export default UserPage
-
-
-
+export default UserPage;

@@ -35,7 +35,6 @@ const GlobalStyles = createGlobalStyle`
   h1{
     font-family: 'Permanent Marker', cursive;
   }
-`
+`;
 
-export default GlobalStyles
-
+export default GlobalStyles;
