@@ -1,5 +1,5 @@
 import { ThemeProvider } from "styled-components";
-import GlobalStyles from "./components/styles/Global";
+import GlobalStyles from "./components/global/styles/Global";
 import OrganizationPage from "./Pages/OrganizationPage/OrganizationPage";
 
 const theme = {

@@ -1,5 +1,5 @@
 import Navbar from "../../components/global/Navbar";
-import { Container } from "../../components/styles/Container.styled";
+import { Container } from "../../components/global/styles/Container.styled";
 import {
   StyledBanner,
   StyledBannerImage,
@@ -10,7 +10,7 @@ import {
   StyledOrgContainer,
   StyledOrgLeftColumn,
   StyledOrgRightColumn,
-} from "../../components/styles/OrganizationPage.styled";
+} from "./styles/OrganizationPage.styled";
 import RoyceHall from "../../assets/images/Royce-Hall.jpg";
 
 const OrganizationPage = () => {
