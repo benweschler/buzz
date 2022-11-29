@@ -7,21 +7,21 @@ const {
     readEvent,
     updateEvent,
     deleteEvent,
-    uploadEventImage,
-    paginateEvents
+    paginateEvents,
+    endEvent
 }=require('../controllers/eventController'); //import the Controller functions
 
 const router=express.Router(); //initiate express router
 
-router.post('/', createEvent);
-
-router.post('/upload', upload.single('file'), uploadEventImage);
+router.post('/', upload.single('file'), createEvent);
 
 router.get(/paginate$/, paginateEvents);
 
 router.get('/:id', readEvent);
 
-router.patch('/:id', updateEvent);
+router.patch('/end/:id', endEvent);
+
+router.patch('/:id', upload.single('file'), updateEvent);
 
 router.delete('/:id', deleteEvent);
 

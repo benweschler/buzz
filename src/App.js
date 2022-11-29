@@ -12,20 +12,14 @@ function App() {
   const [file, setFile] = useState("");
 
   const handleChange = (event) => {
-    setFile(event.target.files[0]);
-    //console.log(event.target.files[0]);
 
     let data = new FormData();
     data.append('file', event.target.files[0], event.target.files[0].name);
-    data.append('id', 'BWzNWfeXebT4knBnu1bEdB19PNN2')
-    console.log(data);
-    axios.post('http://localhost:4000/api/organizers/upload', data, {
+
+    axios.patch('http://localhost:4000/api/users/HdpDQpkdDSTUYA0wVz3Up82KfGG3', data, {
       headers: {
-        'accept': 'application/json',
-        'Accept-Language': 'en-US,en;q=0.8',
-        'Content-Type': `multipart/form-data; boundary=${data._boundary}`,
-      },
-      transformRequest: formData => formData
+        'Content-Type': `multipart/form-data`,
+      }
     }).then((response) => {
       console.log(response);
     }).catch((error) => {
@@ -49,13 +43,13 @@ function App() {
   }
 
   const createUser = () => {
-    const params = {
-      email: "jaredvel08@gmail.com",
-      password: "password123",
+    const body = {
+      email: "JaredUserTest25@gmail.com",
+      password: "password",
       major: "Computer Science and Engineering"
     }
-    console.log(params)
-    axios.post('http://localhost:4000/api/users/', params).then((result) => {
+    console.log(body)
+    axios.post('http://localhost:4000/api/users/', body).then((result) => {
       console.log(result)
     }).catch((error) => {
       console.log(error)
@@ -74,7 +68,7 @@ function App() {
   return (
     <div>
       <input type="file" accept="image/*" onChange={handleChange} />
-      <button onClick={handleClick}>Upload to Firebase</button>
+      <button onClick={handleChange}>Upload to Firebase</button>
       <button onClick={createUser}>Create User</button>
       <button onClick={verifyUserLoggedIn}>Get Current User</button>
     </div>

@@ -8,23 +8,20 @@ const {
     readOrganizationByName,
     updateOrganization,
     deleteOrganization,
-    getAllOrganizationEvents,
-    uploadOrganizationImage,
+    getAllOrganizationEvents
 } = require('../controllers/organizationController'); //import the Controller functions
 
 const router = express.Router(); //initiate express router
 
-router.post('/', createOrganization);
+router.post('/', upload.single('file'), createOrganization);
 
 router.get(/getall$/, getAllOrganizationEvents);
-
-router.post('/upload', upload.single('file'), uploadOrganizationImage);
 
 router.get('/:id', readOrganization);
 
 router.get('*', readOrganizationByName);
 
-router.patch('/:id', updateOrganization);
+router.patch('/:id', upload.single('file'), updateOrganization);
 
 router.delete('/:id', deleteOrganization);
 
