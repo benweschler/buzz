@@ -13,7 +13,7 @@ const sortByPop = (events) => {
 
 const sortByRecency=(events=>{
   return events.sort((event1,event2)=>
-  event1.date < event2.date ? 1 : event1.date > event2.date ? -1 : 0)
+  event1.date > event2.date ? 1 : event1.date < event2.date ? -1 : 0)
 })
 
 const eventsTonight = async () => {
