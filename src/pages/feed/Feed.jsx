@@ -1,16 +1,14 @@
-import {useEffect, useState} from 'react';
-import {useTheme} from "styled-components";
+import {useState} from 'react';
 import EventCard from './EventCard'
 import Events from '../../constants/events.json';
 import Constants from '../../constants/Constants'
 import FilterChip from "./FilterChip";
 import TonightButton from "./TonightButton"
-import axios from "axios";
 import {EventView, FilterRow, Scaffold, Wrapper} from "./styles/Feed.styled";
 
 export default function Feed({toggleTheme}) {
   const [selectedTags, setSelectedTags] = useState([])
-  const theme = useTheme()
+  /*
   useEffect(() => {
     async function getEvents() {
       const events = await axios.put(
@@ -22,14 +20,8 @@ export default function Feed({toggleTheme}) {
       );
       console.log(events.data)
     }
-
-    getEvents()
-
-    return (() => {
-      if(theme.brightness === "dark")
-        toggleTheme()
-    })
-  }, [selectedTags, theme.brightness, toggleTheme])
+  })
+   */
 
 
   function filter(element) {
