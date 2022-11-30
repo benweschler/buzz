@@ -29,7 +29,7 @@ export default function Feed({toggleTheme}) {
       if(theme.brightness === "dark")
         toggleTheme()
     })
-  }, [selectedTags, theme.brightness])
+  }, [selectedTags, theme.brightness, toggleTheme])
 
 
   function filter(element) {
