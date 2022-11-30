@@ -27,7 +27,7 @@ export const StyledNavMenu = styled.ul`
     flex-direction: column;
     justify-content: center;
     width: 100%;
-    height: 100vh;
+    height: 100%;
     z-index: 800;
     text-align: center;
     scale: ${(props) => (props.clicked ? "100%" : "0")};

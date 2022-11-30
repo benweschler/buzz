@@ -8,6 +8,11 @@ export const StyledUserProfile = styled.div`
   align-items: center;
   margin-bottom: 80px;
 
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    flex-direction: column;
+    gap: 30px;
+  }
+
 `;
 
 export const StyledUserAvatar = styled.img`

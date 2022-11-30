@@ -27,16 +27,22 @@ export const StyledBannerImageBlurred = styled.img`
 
 export const StyledBannerImage = styled.img`
   overflow: hidden;
-  width: 30%;
   margin-left: 80px;
   top: 40%;
   border-radius: 5px;
   outline: none;
   display: block;
-  margin-top: -10%;
+  margin-top: -50px;
   z-index: 200;
   height: 15rem;
   width: 15rem;
+ 
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    width: 20rem;
+    height: 20rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
 `;
 
 export const StyledBannerText = styled.h2`
@@ -58,7 +64,7 @@ export const StyledOrganizationEvents = styled.div`
 `;
 
 export const StyledOrganizationDescription = styled.div`
-  padding-top: 10px;
+  margin-top: 10px;
   display: flex;
   flex-direction: column;
 `;
@@ -68,6 +74,7 @@ export const StyledOrgContainer = styled.div`
   display: flex;
   @media (max-width: ${({ theme }) => theme.mobile}) {
     flex-direction: column;
+    padding-top: 30px;
   }
 
 `;

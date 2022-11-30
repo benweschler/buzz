@@ -10,9 +10,10 @@ export const StyledEventContainer = styled.div`
 export const StyledEventLeftColumn = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   margin-top: 100px;
   width: 30%;
+  
   @media (max-width: ${({ theme }) => theme.mobile}) {
     width: 100%;
   }
@@ -25,9 +26,12 @@ export const StyledEventRightColumn = styled.div`
   width: 70%;
   @media (max-width: ${({ theme }) => theme.mobile}) {
     margin-top: 20px;
-    margin-left: 30px;
+    margin-left: 0px;
   }
 `;
+
+export const StyledEventImageDiv = styled.div`
+`
 
 export const StyledEventImage = styled.img`
   aspect-ratio: 4/4;
@@ -84,11 +88,22 @@ export const StyledRsvpDiv = styled.div`
   flex-direction: row;
   padding: 10px;
   padding-left: 30px;
-  border-radius: 5px;
+  border-radius: 8px;
   align-items: center;
   justify-content: space-between;
   margin-top: 30px;
-  background: rgba(238, 238, 238, 10);
+  background: ${({theme}) => theme.card};
+  box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    position: fixed;
+    bottom: 10px; 
+    width: 90%;
+    margin: auto;
+    z-index: 200;
+   
+    
+  }
 `;
 
 export const StyledRsvpAbout = styled.div`
@@ -153,4 +168,5 @@ export const StyledEventDescription = styled.div`
   display: flex;
   flex-direction: column;
   padding-top: 150px;
+  margin-bottom: 200px;
 `;

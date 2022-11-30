@@ -2,6 +2,7 @@ import {
   StyledEventContainer,
   StyledEventDate,
   StyledEventDescription,
+  StyledEventImageDiv,
   StyledEventLeftColumn,
   StyledEventLocation,
   StyledEventOrganizer,
@@ -22,7 +23,10 @@ const EventPage = () => {
   return (
     <StyledEventContainer>
       <StyledEventLeftColumn>
-        <StyledEventImage src={DJClub} />
+        <StyledEventImageDiv>
+          <StyledEventImage src={DJClub} />
+        </StyledEventImageDiv>
+        
         <StyledSecurityMessage>
           Buzz takes your privacy and security seriously. <br />
           Your tickets are secured by advanced encryption and stored in a
@@ -45,10 +49,12 @@ const EventPage = () => {
           </StyledEventDate>
           <StyledRsvpDiv>
             <StyledRsvpAbout>
-            <h4> Pricing: Free</h4>
-            <StyledRsvpMessage>No upfront costs, or cheeky data mining 👀</StyledRsvpMessage>  
+              <h4> Pricing: Free</h4>
+              <StyledRsvpMessage>
+                No upfront costs, or cheeky data mining 👀
+              </StyledRsvpMessage>
             </StyledRsvpAbout>
-               
+
             <StyledRsvpButton>RSVP</StyledRsvpButton>
           </StyledRsvpDiv>
         </StyledEventMainInfo>
