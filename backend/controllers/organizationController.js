@@ -150,7 +150,7 @@ const deleteOrganization = async (req, res)=>{
 };
 
 const getAllOrganizationEvents = async (req, res) => {
-    const {id} = req.params;
+    const {id} = params.id;
     console.log(id);
 
     let eventsArr = [];

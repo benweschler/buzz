@@ -3,21 +3,21 @@ const multer = require('multer');
 const upload = multer();
 
 const {
-    createUser,
-    readUser,
-    readUserByEmail,
-    updateUser,
-    deleteUser,
-    authenticateUser,
-    verifyToken,
-    revokeToken,
-    addUserToOrg,
-    generateUserOTP,
-    validateUserOTP,
-    addUserToEvent,
-    followOrg,
-    unfollowOrg,
-    getFeed
+  createUser,
+  readUser,
+  readUserByEmail,
+  updateUser,
+  deleteUser,
+  authenticateUser,
+  verifyToken,
+  revokeToken,
+  addUserToOrg,
+  generateUserOTP,
+  validateUserOTP,
+  addUserToEvent,
+  followOrg,
+  unfollowOrg,
+  getFeed
 } = require('../controllers/userController');
 
 const router = express.Router();
@@ -66,7 +66,6 @@ router.patch('/:id', upload.single('file'), updateUser);
 
 // Delete a user
 router.delete('/:id', deleteUser);
-
 
 
 module.exports = router;

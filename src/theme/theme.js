@@ -4,7 +4,7 @@ export const GlobalStyles = createGlobalStyle`
   body {
     background: ${({theme}) => theme.body};
     color: ${({theme}) => theme.text};
-    transition: all 200ms ease-in;
+    transition: color 200ms ease-in, background 200ms ease-in;
     
     font-family: 'Monserrat', 'Poppins', sans-serif;
     font-size: 1.15em;
@@ -28,7 +28,7 @@ export const GlobalStyles = createGlobalStyle`
     margin: 0;
   }
   p {
-    opacity: 0.6;
+    opacity: 0.9;
     line-height: 1.5;
   }
   img {
