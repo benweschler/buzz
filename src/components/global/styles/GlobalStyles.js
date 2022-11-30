@@ -6,7 +6,7 @@ const GlobalStyles = createGlobalStyle`
     box-sizing: border-box;
   }
   body {
-    background: ${({ theme }) => theme.colors.body};
+     background: white;
     color: hsl(192, 100%, 9%);
     font-family: 'Monserrat', 'Poppins', sans-serif;
     font-size: 1.15em;
