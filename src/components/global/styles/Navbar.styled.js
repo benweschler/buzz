@@ -37,8 +37,47 @@ export const StyledNavMenu = styled.ul`
     a:hover {
       color: #708097;
     }
+
+                  
+li { 
+  position: relative; 
+  padding: 15px 0;
+}
+
+a {
+  color: #fff;
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: 0.15em;
+  display: inline-block;
+  padding: 15px 20px;
+  position: relative;
+}
+
+a::after { 
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  display: block;
+  background: none repeat scroll 0 0 transparent;
+  height: 2px;
+  width: 0;
+  background: white;
+  transition: width 0.3s ease 0s, left 0.3s ease 0s;
+}
+
+a:hover::after { 
+  width: 100%; 
+  left: 0; 
+}
+    
+
+    
   }
 `;
+
+
 export const StyledNavItem = styled.li`
   padding: 1rem;
 
