@@ -15,7 +15,6 @@ import RoyceHall from "../../assets/images/Royce-Hall.jpg";
 const OrganizationPage = () => {
   return (
     <>
-   
       <StyledBanner>
         <StyledBannerImageBlurred src={RoyceHall} />
         <StyledBannerText>Royce Theater Club</StyledBannerText>

@@ -1,6 +1,6 @@
 import { ThemeProvider } from "styled-components";
 import Navbar from "./components/global/Navbar";
-import GlobalStyles from "./components/global/styles/GlobalStyles";
+import GlobalStyles from "./theme/GlobalStyles"
 import EventPage from "./pages/event-page/EventPage"
 import { Route, Routes } from "react-router-dom";
 import { Container } from "./components/global/styles/Container.styled";

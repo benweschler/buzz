@@ -93,3 +93,5 @@ export const StyledOrgRightColumn = styled.div`
     padding-left: 0px;
   }
 `;
+
+

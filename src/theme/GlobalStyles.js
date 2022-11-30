@@ -30,6 +30,9 @@ const GlobalStyles = createGlobalStyle`
   a:hover {
     color: #ffba00
   }
+  button {
+    font-family: 'Monserrat', 'Poppins', sans-serif;
+  }
 `
 
 export default GlobalStyles
