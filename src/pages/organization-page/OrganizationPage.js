@@ -11,7 +11,7 @@ import {
   StyledOrgRightColumn,
 } from "./styles/OrganizationPage.styled";
 import RoyceHall from "../../assets/images/Royce-Hall.jpg";
-import { IoLocationOutline } from "react-icons/io"
+
 const OrganizationPage = () => {
   return (
     <>

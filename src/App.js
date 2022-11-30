@@ -1,11 +1,11 @@
 import { ThemeProvider } from "styled-components";
 import Navbar from "./components/global/Navbar";
 import GlobalStyles from "./components/global/styles/GlobalStyles";
-import EventPage from "./Pages/event-page/EventPage"
+import EventPage from "./pages/event-page/EventPage"
 import { Route, Routes } from "react-router-dom";
 import { Container } from "./components/global/styles/Container.styled";
-import OrganizationPage from "./Pages/organization-page/OrganizationPage";
-import UserPage from "./Pages/user-page/UserPage"
+import OrganizationPage from "./pages/organization-page/OrganizationPage";
+import UserPage from "./pages/user-page/UserPage"
 import { baseTheme } from "./theme/theme";
 
 

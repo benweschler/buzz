@@ -38,5 +38,6 @@ export const StyledUserInfo = styled.div`
   @media (max-width: ${({ theme }) => theme.mobile}) {
     font-size: 0.95rem;
     padding-left: 15px;
+    
   }
 `;
