@@ -254,14 +254,6 @@ const deleteEvent = async (req, res) => {
     })
 };
 
-
-/* lastDoc can't be passed to the front-end and sent to the back-end to start pagination from that doc
-    because it will be passed in the response as a JSON instead of an object that can utilize Firestore
-    functions. lastDoc has to be stored in the back-end, but the front-end can reset the lastDoc by
-    using the resetPagination function
-*/
-let lastDoc = null;
-
 const paginateEvents = async (req, res) => {
     // Need last document from the previous pagination and number to limit by
 
@@ -280,6 +272,7 @@ const paginateEvents = async (req, res) => {
             missing_fields: missingFields
         })
     } else {
+        const curr = new Date(Date.now())
         let lastDoc = 0;
         let lastDate = 0;
         // startAfter() needs a query snapshot of the document
@@ -301,7 +294,7 @@ const paginateEvents = async (req, res) => {
         }
 
         if (!lastDoc) {
-            database.collection('Events').orderBy('date', 'desc').limit(req.body.limit).get().then((snapshot) => {
+            database.collection('Events').where("date", ">", curr.getTime()).limit(req.body.limit).get().then((snapshot) => {
                 let queryArray = [];
                 snapshot.forEach((doc) => {
                     queryArray.push(doc.data());
@@ -309,7 +302,7 @@ const paginateEvents = async (req, res) => {
                 var lastVisible = snapshot.docs[snapshot.docs.length - 1];
                 lastDoc = lastVisible;
                 res.status(200).json({
-                    documents: queryArray
+                    events: queryArray
                 })
             }).catch((error) => {
                 res.status(500).json({
@@ -317,7 +310,7 @@ const paginateEvents = async (req, res) => {
                 })
             })
         } else {
-            database.collection('Events').orderBy('date', 'desc').limit(req.body.limit)
+            database.collection('Events').where("date", ">", curr.getTime()).limit(req.body.limit)
             .startAfter(lastDoc).get().then((snapshot) => {
                 //console.log('snapshot')
                 let queryArray = [];
@@ -328,7 +321,7 @@ const paginateEvents = async (req, res) => {
                 //console.log(lastVisible);
                 lastDoc = lastVisible;
                 res.status(200).json({
-                    documents: queryArray
+                    events: queryArray
                 })
             }).catch((error) => {
                 res.status(500).json({

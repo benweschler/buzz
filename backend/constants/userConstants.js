@@ -10,7 +10,7 @@ const PROFILE_PICTURE = "profile_picture";
 const ORGANIZATIONS = "organizations";
 const PASSWORD = "password";
 
-const INITIAL_USER_KEYS = [EMAIL, PASSWORD, MAJOR];
+const INITIAL_USER_KEYS = [EMAIL, PASSWORD, MAJOR, NAME];
 
 module.exports = {
     INITIAL_USER_KEYS
