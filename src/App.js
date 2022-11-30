@@ -7,13 +7,14 @@ import EventPage from "./pages/event-page/EventPage"
 import {Navigate, Route, Routes} from "react-router-dom";
 import { Container } from "./components/global/styles/Container.styled";
 import OrganizationPage from "./pages/organization-page/OrganizationPage";
-import UserPage from "./pages/user-page/UserPage"
+import UserPage from "./pages/user-page/UserPage";
+import LogRegCtrl from "./pages/form-pages/LogRegCtrl";
+import CreateEvent from "./pages/form-pages/CreateEvent";
 
 function App() {
   const [theme, setTheme] = useState(lightTheme);
   const toggleTheme = () =>
     setTheme(theme.brightness === 'light' ? darkTheme : lightTheme);
-
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyles />
@@ -25,6 +26,8 @@ function App() {
           <Route path="/event-page" element={<EventPage />} />
           <Route path="/organization-page" element={<OrganizationPage />} />
           <Route path="/user-page" element={<UserPage />} />
+          <Route path="/log-or-sign-in" element={<LogRegCtrl/>} />
+          <Route path="/create-event" element={<CreateEvent/>} />
         </Routes>
       </Container>
     </ThemeProvider>
