@@ -1,5 +1,6 @@
 const { database, storage } = require('../firebase-admin/index');
 const { INITIAL_ORGANIZATION_KEYS, UPLOAD_KEYS } = require('../constants/organizationConstants.js');
+const sortByRecency=require("./utilityController")
 const axios = require('axios');
 const { v4 } = require('uuid');
 
@@ -149,7 +150,7 @@ const deleteOrganization = async (req, res)=>{
 };
 
 const getAllOrganizationEvents = async (req, res) => {
-    const {id} = req.body;
+    const {id} = req.params;
     console.log(id);
 
     let eventsArr = [];
@@ -169,7 +170,7 @@ const getAllOrganizationEvents = async (req, res) => {
 }
 
 const getAllActiveEvents =async(req, res)=>{
-    const {id} = req.body;
+    const {id} = req.params;
     console.log(id);
     let eventsArr = [];
     if(id=="")
