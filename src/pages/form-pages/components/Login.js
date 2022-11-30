@@ -8,8 +8,7 @@ import {
   StyledInput,
   StyledSpan,
   StyledButton,
-} from './styles/Form.styled';
-import logo from '../images/BUZZ.png';
+} from '../Form.styled';
 
 
 function Login(props) {

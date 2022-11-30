@@ -1,6 +1,6 @@
 import { react, useState } from 'react';
-import Login from '../components/Login';
-import Register from '../components/Register';
+import Login from './components/Login';
+import Register from './components/Register';
 
 function LogRegCtrl(props){
     const [ curForm, setCurForm ] = useState('Login');

@@ -183,15 +183,13 @@ export const HiddenInput = styled.input`
   }
 `;
 
-const StyledSelect = styled.select`
+export const StyledSelect = styled.select`
   width: 100%;
   height: 35px;
-  background: white;
+  background: rgb(247,247,247);
   color: gray;
-  padding-left: 5px;
   font-size: 14px;
-  border: none;
-  margin-left: 10px;
+  border: 2px solid #b3b3b3;
 
   option {
     color: black;

@@ -13,7 +13,7 @@ import {
     StyledLabel,
     StyledSwitch,
     StyledSelect,
-  } from '../components/styles/Form.styled';
+  } from './Form.styled';
 
   function CreateEvent() {
     const [eventInfo, setEvent] = useState({});
@@ -84,6 +84,16 @@ import {
             onChange={handleChange}/>
             <StyledSpan/>
           </Div1>
+
+          <StyledSelect>
+            <option value="" hidden>
+              Tags
+            </option>
+            <option value="1">Rock</option>
+            <option value="2">Metal</option>
+            <option value="3">Pop</option>
+            <option value="4">Opera</option>
+          </StyledSelect>
 
           <StyledButton type="submit">
             Submit

@@ -9,7 +9,7 @@ import {
   StyledInput,
   StyledSpan,
   StyledButton,
-} from './styles/Form.styled';
+} from '../Form.styled';
 
 function Register(props) {
   const [{name, email, password, school, major}, setState] = useState({
