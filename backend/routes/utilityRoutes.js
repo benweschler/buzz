@@ -6,7 +6,7 @@ const {
 
 const router=express.Router();
 
-router.get('/filter', filter)
+router.put('/filter', filter)
 
 
 module.exports=router
