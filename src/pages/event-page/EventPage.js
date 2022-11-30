@@ -8,7 +8,6 @@ import {
 } from "./styles/EventPage.styled";
 import DJClub from "../../assets/images/dj-club.jpg";
 import { StyledEventImage } from "./styles/EventPage.styled";
-import { StyledEventDescription } from "./styles/EventPage.styled";
 import { StyledEventHeader } from "./styles/EventPage.styled";
 import { StyledEventMainInfo } from "./styles/EventPage.styled";
 import { IoCalendarClearOutline } from "react-icons/io5"
