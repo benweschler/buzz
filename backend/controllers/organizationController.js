@@ -1,6 +1,7 @@
 const { database, storage } = require('../firebase-admin/index');
 const { INITIAL_ORGANIZATION_KEYS, UPLOAD_KEYS } = require('../constants/organizationConstants.js');
-const sortByRecency=require("./utilityController")
+const sortByRecency=require("./utilityController");
+const { FieldValue } = require('@google-cloud/firestore');
 const axios = require('axios');
 const { v4 } = require('uuid');
 
@@ -43,21 +44,42 @@ const createOrganization = async (req, res) => {
         // If not, then add the organization
 
         if (!alreadyInDatabase) {
-            database.collection('Organizations').add({
-                ...req.body,
-                "events": [],
-                "followers": [],
-                "image": ""
-            }).then((docRef) => {
-                console.log('Created organization document with id: ' + docRef.id);
-                res.status(200).json({
-                    id: docRef.id
+            const userRef = await database.collection('Users').doc(req.body.member).get()
+            if (!userRef.exists) {
+                res.status(400).json({
+                    error: 'User does not exist'
                 })
-            }).catch((error) => {
-                res.status(500).json({
-                    error: error
-                })
-            });
+            } else {
+                const memberID = req.body.member;
+                let membersArray = [];
+                membersArray.push(memberID);
+
+                delete req.body.member;
+                database.collection('Organizations').add({
+                    ...req.body,
+                    "events": [],
+                    "followers": [],
+                    "members": membersArray,
+                    "image": ""
+                }).then((docRef) => {
+                    console.log('Created organization document with id: ' + docRef.id);
+                    database.collection('Users').doc(memberID).update({
+                        "organizations": FieldValue.arrayUnion(docRef.id)
+                    }).then(() => {
+                        res.status(200).json({
+                            id: docRef.id
+                        })
+                    }).catch((error) => {
+                        res.status(500).json({
+                            error: error
+                        })
+                    })
+                }).catch((error) => {
+                    res.status(500).json({
+                        error: error
+                    })
+                });
+            }
         }
     }
 }
