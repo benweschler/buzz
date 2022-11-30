@@ -21,9 +21,9 @@ export const Logo = styled.h1`
 export const StyledNavMenu = styled.ul`
   display: flex;
 
-  @media (max-width: ${({ theme }) => theme.mobile}) {
+  @media (max-width: ${({theme}) => theme.mobile}) {
     position: fixed;
-    top: 0px;
+    top: 0;
     flex-direction: column;
     justify-content: center;
     width: 100%;
@@ -36,6 +36,11 @@ export const StyledNavMenu = styled.ul`
     transition: width 0.3s, opacity 0.8s;
     a:hover {
       color: black;
+    }
+    
+    li {
+      position: relative;
+      padding: 15px 0;
     }
 
     li {
@@ -76,7 +81,7 @@ export const StyledNavMenu = styled.ul`
 export const StyledNavItem = styled.li`
   padding: 1rem;
 
-  @media (max-width: ${({ theme }) => theme.mobile}) {
+  @media (max-width: ${({theme}) => theme.mobile}) {
     margin: 1.5rem;
     justify-content: center;
     font-size: 1.8rem;
@@ -86,13 +91,13 @@ export const StyledNavItem = styled.li`
 export const StyledHamburger = styled.div`
   display: none;
   z-index: 1000;
-  @media (max-width: ${({ theme }) => theme.mobile}) {
+  @media (max-width: ${({theme}) => theme.mobile}) {
     display: flex;
   }
 `;
 
 export const StyledNavBackground = styled.div`
-  @media (max-width: ${({ theme }) => theme.mobile}) {
+  @media (max-width: ${({theme}) => theme.mobile}) {
     position: fixed;
     top: 0.2rem;
     right: 0.2rem;

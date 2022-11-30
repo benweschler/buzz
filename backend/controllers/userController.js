@@ -344,9 +344,9 @@ if(!req.body.user||!req.body.organization)
         })
         return
     }
-    
-    userRef=database.collection('Users').doc(req.body.user)
-    orgRef=database.collection('Organizations').doc(req.body.organization)
+
+    let userRef = database.collection('Users').doc(req.body.user)
+    let orgRef = database.collection('Organizations').doc(req.body.organization)
     userRef.get().then((userDoc)=>{
         if (!userDoc.exists){
             res.status(404).json({
@@ -394,9 +394,9 @@ const addUserToEvent = async (req, res)=>{
         })
         return
     }
-    
-    userRef=database.collection('Users').doc(req.body.user)
-    eventRef=database.collection('Events').doc(req.body.event)
+
+    let userRef = database.collection('Users').doc(req.body.user)
+    let eventRef = database.collection('Events').doc(req.body.event)
     userRef.get().then((userDoc)=>{
         if (!userDoc.exists){
             res.status(404).json({
@@ -459,9 +459,9 @@ const followOrg = async (req, res)=> {
         })
         return
     }
-    
-    userRef=database.collection('Users').doc(req.body.user)
-    orgRef=database.collection('Organizations').doc(req.body.organization)
+
+    let userRef = database.collection('Users').doc(req.body.user)
+    let orgRef = database.collection('Organizations').doc(req.body.organization)
     userRef.get().then((userDoc)=>{
         if (!userDoc.exists){
             res.status(404).json({
@@ -568,7 +568,7 @@ const getFeed = async (req, res)=>{
             return
         }
         const orgs=user.data().clubs_following
-        results=[]
+        let results = []
         for(let i =0;i<orgNum;i++){
             await database.collection('Organizations').doc(orgs[i]).get().then(async(org)=>{
                 if(org.exists){

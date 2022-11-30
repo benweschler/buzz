@@ -45,7 +45,7 @@ const createEvent = async (req, res) => {
 
                 // Parse capacity
                 let capacityNum = 0;
-                if (parseInt(req.body.capacity) !== NaN) {
+                if (!isNaN(parseInt(req.body.capacity))) {
                     capacityNum = parseInt(req.body.capacity);
                 }
 
@@ -57,13 +57,13 @@ const createEvent = async (req, res) => {
 
                 // Parse date
                 let dateNum = 0;
-                if (parseInt(req.body.date) !== NaN) {
+                if (!isNaN(parseInt(req.body.date))) {
                     dateNum = parseInt(req.body.date);
                 }
 
                 // Parse Price
                 let priceNum = 0;
-                if (parseInt(req.body.price) !== NaN) {
+                if (!isNaN(parseInt(req.body.price))) {
                     priceNum = parseInt(req.body.price);
                 }
 
@@ -299,8 +299,7 @@ const paginateEvents = async (req, res) => {
                 snapshot.forEach((doc) => {
                     queryArray.push(doc.data());
                 })
-                var lastVisible = snapshot.docs[snapshot.docs.length - 1];
-                lastDoc = lastVisible;
+                lastDoc = snapshot.docs[snapshot.docs.length - 1];
                 res.status(200).json({
                     events: queryArray
                 })
@@ -317,9 +316,8 @@ const paginateEvents = async (req, res) => {
                 snapshot.forEach((doc) => {
                     queryArray.push(doc.data());
                 })
-                var lastVisible = snapshot.docs[snapshot.docs.length - 1];
                 //console.log(lastVisible);
-                lastDoc = lastVisible;
+                lastDoc = snapshot.docs[snapshot.docs.length - 1];
                 res.status(200).json({
                     events: queryArray
                 })
