@@ -27,18 +27,16 @@ const eventsTonight = async () => {
   const currHour = curr.getHours();
   let max = new Date(curr.getTime());
   max.setHours(6, 0, 0, 0);
-
   if (currHour >= 6) {
     max.setDate(curr.getDate() + 1);
   }
-
   const events = await database
     .collection("Events")
     .where("date", "<=", max.getTime())
     .where("date", ">", curr.getTime())
     .get();
   if (events.empty) {
-    return events;
+    return [];
   }
   events.forEach((doc) => {
     results.push(doc.data());

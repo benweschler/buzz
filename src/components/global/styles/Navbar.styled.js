@@ -10,7 +10,8 @@ export const StyledNavbar = styled.div`
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
   position: fixed;
   z-index: 700;
-  background-color: white;
+  background-color: ${({theme}) => theme.body};
+  transition: background-color 200ms ease-in;
 `;
 
 export const Logo = styled.h1`

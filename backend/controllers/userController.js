@@ -142,6 +142,7 @@ const createUser = async (req, res) => {
     }
   }
 }
+}
 
 const readUser = async (req, res) => {
   // req.params is the extra information at the end of the URL

@@ -4,7 +4,7 @@ import {ThemeProvider} from "styled-components";
 import {GlobalStyles, lightTheme, darkTheme} from "./theme/theme";
 import Navbar from "./components/global/Navbar";
 import EventPage from "./pages/event-page/EventPage"
-import { Route, Routes } from "react-router-dom";
+import {Navigate, Route, Routes} from "react-router-dom";
 import { Container } from "./components/global/styles/Container.styled";
 import OrganizationPage from "./pages/organization-page/OrganizationPage";
 import UserPage from "./pages/user-page/UserPage"
@@ -20,6 +20,7 @@ function App() {
       <Navbar />
       <Container>
         <Routes>
+          <Route path="/" element={<Navigate to="/feed" />} />
           <Route path="feed" element={<Feed toggleTheme={toggleTheme}/>}/>
           <Route path="/event-page" element={<EventPage />} />
           <Route path="/organization-page" element={<OrganizationPage />} />

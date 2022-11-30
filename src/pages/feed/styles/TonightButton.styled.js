@@ -25,6 +25,10 @@ export const StyledTonightButton = styled.div`
   : "rgba(239,71,161,0.5)"};
     color: ${({theme}) => theme.text};
   }
+  
+  .explosion {
+    z-index: 300000;
+  }
 `
 
 export const Container = styled.div`

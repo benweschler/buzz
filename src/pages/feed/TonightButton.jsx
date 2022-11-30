@@ -9,7 +9,7 @@ export default function TonightButton({toggleTheme}) {
   const theme = useTheme();
 
   const explode = () => {
-    if(explosionSize === "0")
+    if (explosionSize === "0")
       setExplosionSize("350")
     else
       setRepeatDelay(repeatDelay === 0 ? 1 : 0)
@@ -19,6 +19,7 @@ export default function TonightButton({toggleTheme}) {
     <Container>
       <StyledTonightButton className="button">
         <Explosion
+          className="explosion"
           color={theme.main}
           size={explosionSize}
           delay={0}
