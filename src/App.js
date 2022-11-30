@@ -1,7 +1,13 @@
 import {useState} from "react";
 import Feed from "./pages/feed/Feed";
-import {GlobalStyles, lightTheme, darkTheme} from "./theme/theme";
 import {ThemeProvider} from "styled-components";
+import {GlobalStyles, lightTheme, darkTheme} from "./theme/theme";
+import Navbar from "./components/global/Navbar";
+import EventPage from "./pages/event-page/EventPage"
+import { Route, Routes } from "react-router-dom";
+import { Container } from "./components/global/styles/Container.styled";
+import OrganizationPage from "./pages/organization-page/OrganizationPage";
+import UserPage from "./pages/user-page/UserPage"
 
 function App() {
   const [theme, setTheme] = useState(lightTheme);
@@ -10,9 +16,18 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <GlobalStyles/>
-      <Feed toggleTheme={toggleTheme}/>
+      <GlobalStyles />
+      <Navbar />
+      <Container>
+        <Routes>
+          <Route path="feed" element={<Feed toggleTheme={toggleTheme}/>}/>
+          <Route path="/event-page" element={<EventPage />} />
+          <Route path="/organization-page" element={<OrganizationPage />} />
+          <Route path="/user-page" element={<UserPage />} />
+        </Routes>
+      </Container>
     </ThemeProvider>
+
   );
 }
 
