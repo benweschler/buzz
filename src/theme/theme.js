@@ -28,7 +28,7 @@ export const GlobalStyles = createGlobalStyle`
     margin: 0;
   }
   p {
-    opacity: 0.6;
+    opacity: 0.9;
     line-height: 1.5;
   }
   img {

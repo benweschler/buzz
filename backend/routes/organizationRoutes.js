@@ -16,9 +16,9 @@ const router = express.Router(); //initiate express router
 
 router.post('/', upload.single('file'), createOrganization);
 
-router.get(/getall$/, getAllOrganizationEvents);
+router.get("/getall/:id", getAllOrganizationEvents);
 
-router.get(/active$/, getAllActiveEvents)
+router.get("/active/:id", getAllActiveEvents)
 
 router.get('/:id', readOrganization);
 

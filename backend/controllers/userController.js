@@ -80,7 +80,29 @@ const createUser = async (req, res) => {
         })
       })
 
-      console.log('Created user document with id: ' + recordObj.uid);
+        if (userCreated) {
+            // Don't want the password to be included in the document
+            delete req.body.password;
+
+            // Create the shared secret
+            const secret = new Uint8Array(20);
+            crypto.getRandomValues(secret);
+
+            await database.collection('Users').doc(recordObj.uid).set({
+                ...req.body,
+                "clubs_following": [],
+                "events_registered": [],
+                "organizations": [],
+                "secret": secret,
+                "id": recordObj.uid
+            }).catch((error) => {
+                console.log('Error creating user document in Firestore');
+                res.status(500).json({
+                    error: error
+                })
+            })
+
+            console.log('Created user document with id: ' + recordObj.uid);
 
       const bucket = storage.bucket();
       const fullPath = `UserImages/${v4()}`;

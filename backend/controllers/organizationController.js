@@ -1,8 +1,7 @@
-const {database, storage} = require('../firebase-admin/index');
-const {
-  INITIAL_ORGANIZATION_KEYS,
-  UPLOAD_KEYS
-} = require('../constants/organizationConstants.js');
+const { database, storage } = require('../firebase-admin/index');
+const { INITIAL_ORGANIZATION_KEYS, UPLOAD_KEYS } = require('../constants/organizationConstants.js');
+const sortByRecency=require("./utilityController");
+const { FieldValue } = require('@google-cloud/firestore');
 const axios = require('axios');
 const {v4} = require('uuid');
 
@@ -42,7 +41,48 @@ const createOrganization = async (req, res) => {
       })
     })
 
-    // If not, then add the organization
+        // If not, then add the organization
+
+        if (!alreadyInDatabase) {
+            const userRef = await database.collection('Users').doc(req.body.member).get()
+            if (!userRef.exists) {
+                res.status(400).json({
+                    error: 'User does not exist'
+                })
+            } else {
+                const memberID = req.body.member;
+                let membersArray = [];
+                membersArray.push(memberID);
+
+                delete req.body.member;
+                database.collection('Organizations').add({
+                    ...req.body,
+                    "events": [],
+                    "followers": [],
+                    "members": membersArray,
+                    "image": ""
+                }).then((docRef) => {
+                    console.log('Created organization document with id: ' + docRef.id);
+                    database.collection('Users').doc(memberID).update({
+                        "organizations": FieldValue.arrayUnion(docRef.id)
+                    }).then(() => {
+                        res.status(200).json({
+                            id: docRef.id
+                        })
+                    }).catch((error) => {
+                        res.status(500).json({
+                            error: error
+                        })
+                    })
+                }).catch((error) => {
+                    res.status(500).json({
+                        error: error
+                    })
+                });
+            }
+        }
+    }
+}
 
     if (!alreadyInDatabase) {
       database.collection('Organizations').add({
@@ -152,32 +192,55 @@ const deleteOrganization = async (req, res) => {
 };
 
 const getAllOrganizationEvents = async (req, res) => {
-  const {id} = req.body;
-  console.log(id);
+    const {id} = req.params;
+    console.log(id);
 
-  let eventsArr = [];
-  database.collection('Events').where("organization", "==", id).orderBy('date').get().then((snapshot) => {
-    snapshot.forEach((doc) => {
-      //eventsJSON[doc.id] = doc.data();
-      eventsArr.push(doc.data());
-    });
-    res.status(200).json({
-      events_array: eventsArr
-    });
-  }).catch((error) => {
-    res.status(500).json({
-      error: error
+    let eventsArr = [];
+    database.collection('Events').where("organization", "==", id).orderBy('date').get().then((snapshot) => {
+        snapshot.forEach((doc) => {
+            //eventsJSON[doc.id] = doc.data();
+            eventsArr.push(doc.data());
+        });
+        res.status(200).json({
+            events_array: eventsArr
+        });
+    }).catch((error) => {
+        res.status(500).json({
+            error: error
+        })
     })
   })
 }
 
-const getAllActiveEvents = async (req, res) => {
-  const {id} = req.body;
-  console.log(id);
-  let eventsArr = [];
-  if (id == "") {
-    res.status(400).json({
-      error: "did not pass an organization ID"
+const getAllActiveEvents =async(req, res)=>{
+    const {id} = req.params;
+    console.log(id);
+    let eventsArr = [];
+    if(id=="")
+    {
+        res.status(400).json({
+            error: "did not pass an organization ID"
+        })
+    }
+    const org=await database.collection('Organizations').doc(id).get()
+        if(!org.exists){
+        res.status(404).json({
+            error:"organization not found"
+        })
+        return
+    }
+    database.collection('Events').where("organization", "==", id).where("date", ">", Date.now()).orderBy('date').get().then((snapshot) => {
+        snapshot.forEach((doc) => {
+            //eventsJSON[doc.id] = doc.data();
+            eventsArr.push(doc.data());
+        });
+        res.status(200).json({
+            events_array: eventsArr
+        });
+    }).catch((error) => {
+        res.status(500).json({
+            error: error
+        })
     })
   }
   const org = await database.collection('Organizations').doc(id).get()
