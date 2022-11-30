@@ -43,74 +43,81 @@ const createUser = async (req, res) => {
         const email = req.body.email;
         const password = req.body.password;
 
-        const record = await adminAuth.createUser({
+        let userCreated = false;
+        let recordObj = {}
+        await adminAuth.createUser({
             email: email,
             password: password
+        }).then((record) => {
+            userCreated = true;
+            recordObj = record
         }).catch((error) => {
             res.status(500).json({
                 error: error
             })
         })
 
-        // Don't want the password to be included in the document
-        delete req.body.password;
+        if (userCreated) {
+            // Don't want the password to be included in the document
+            delete req.body.password;
 
-        // Create the shared secret
-        const secret = new Uint8Array(20);
-        crypto.getRandomValues(secret);
+            // Create the shared secret
+            const secret = new Uint8Array(20);
+            crypto.getRandomValues(secret);
 
-        await database.collection('Users').doc(record.uid).set({
-            ...req.body,
-            "clubs_following": [],
-            "events_registered": [],
-            "interests": [],
-            "organizations": [],
-            "secret": secret,
-            "id": record.uid
-        }).catch((error) => {
-            console.log('Error creating user document in Firestore');
-            res.status(500).json({
-                error: error
+            await database.collection('Users').doc(recordObj.uid).set({
+                ...req.body,
+                "clubs_following": [],
+                "events_registered": [],
+                "interests": [],
+                "organizations": [],
+                "secret": secret,
+                "id": recordObj.uid
+            }).catch((error) => {
+                console.log('Error creating user document in Firestore');
+                res.status(500).json({
+                    error: error
+                })
             })
-        })
 
-        console.log('Created user document with id: ' + record.uid);
+            console.log('Created user document with id: ' + recordObj.uid);
 
-        const bucket = storage.bucket();
-        const fullPath = `UserImages/${v4()}`;
-        const bucketFile = bucket.file(fullPath);
+            const bucket = storage.bucket();
+            const fullPath = `UserImages/${v4()}`;
+            const bucketFile = bucket.file(fullPath);
 
-        await bucketFile.save(req.file.buffer, {
-            contentType: req.file.mimetype,
-            gzip: true
-        });
+            await bucketFile.save(req.file.buffer, {
+                contentType: req.file.mimetype,
+                gzip: true
+            });
 
-        const [url] = await bucketFile.getSignedUrl({
-            action: 'read',
-            expires: '01-01-2030'
-        });
+            const [url] = await bucketFile.getSignedUrl({
+                action: 'read',
+                expires: '01-01-2030'
+            });
 
-        await database.collection('Users').doc(record.uid).update({
-            image: url
-        }).catch((error) => {
-            res.status(500).json({
-                error: error
+            await database.collection('Users').doc(recordObj.uid).update({
+                image: url
+            }).catch((error) => {
+                res.status(500).json({
+                    error: error
+                })
             })
-        })
 
 
-        // Sign in the user and return the token to the front-end
-        const userCredential = await signInWithEmailAndPassword(clientAuth, email, password).catch((error) => {
-            res.status(400).json({
-                error: error
+            // Sign in the user and return the token to the front-end
+            const userCredential = await signInWithEmailAndPassword(clientAuth, email, password).catch((error) => {
+                res.status(400).json({
+                    error: error
+                })
             })
-        })
 
-        res.status(200).json({
-            id: record.uid,
-            url: url,
-            token: userCredential.user.stsTokenManager.accessToken
-        })
+            res.status(200).json({
+                id: recordObj.uid,
+                url: url,
+                token: userCredential.user.stsTokenManager.accessToken
+            })
+        }
     }
 }
 

@@ -79,8 +79,12 @@ const filter = async (req, res)=>{
   if(req.body.tags && (req.body.tags.length > 0)){
     events = filterTags(events, req.body.tags)
   }
-  events = sortByPop(events)
-
+  if(req.body.recent){
+    events=sortByRecency(events)
+  }
+  else{
+    events = sortByPop(events)
+  }
   res.status(200).json({
     events: events
   })
