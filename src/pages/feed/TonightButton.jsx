@@ -4,16 +4,22 @@ import {useState} from "react";
 
 export default function TonightButton({toggleTheme}) {
   const [repeatDelay, setRepeatDelay] = useState(0);
+  const [explosionSize, setExplosionSize] = useState("0");
   const theme = useTheme();
 
-  const explode = () => setRepeatDelay(repeatDelay === 0 ? 1 : 0);
+  const explode = () => {
+    if(explosionSize === "0")
+      setExplosionSize("350")
+    else
+      setRepeatDelay(repeatDelay === 0 ? 1 : 0)
+  }
 
   return (
     <Container>
       <StyledTonightButton className="button">
         <Explosion
           color={theme.main}
-          size="350"
+          size={explosionSize}
           delay={0}
           repeatDelay={repeatDelay}
           repeat={0}
