@@ -1,6 +1,5 @@
 import {IoPeople} from "react-icons/io5";
 import {ImLocation2} from "react-icons/im"
-import Constants from "../../constants/Constants.js";
 import {
   Attendees,
   Card,
@@ -20,9 +19,7 @@ export default function EventCard({title, image, date, organizer, location, atte
         <Organizer className="overflow-field">{organizer}</Organizer>
         <Location><ImLocation2/>{" " + location}</Location>
         <Attendees><IoPeople/>{" " + attendees} attending</Attendees>
-        <Tags>
-          {tags.map((id) => Constants.tags[id].name).join(" • ")}
-        </Tags>
+        <Tags>{tags.join(" • ")}</Tags>
         {price !== 0 ? <PriceChip>{"$" + price}</PriceChip> : null}
       </EventCardBody>
     </Card>

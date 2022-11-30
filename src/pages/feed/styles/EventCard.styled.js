@@ -9,7 +9,7 @@ export const Card = styled.div`
   flex-direction: column;
   justify-content: start;
   cursor: pointer;
-  min-height: 25rem;
+  height: 25rem;
 
   img {
     height: 45%;
