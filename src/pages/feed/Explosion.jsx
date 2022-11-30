@@ -10,7 +10,7 @@ import gsap, {Power4} from "gsap";
 const STROKE_WIDTH = 0.5;
 const RADIUS = 47.5;
 const COUNT = 16;
-const DURATIONS = [0.6, 1];
+const DURATIONS = [0.8, 1.33];
 
 let TIME_LINE = null;
 

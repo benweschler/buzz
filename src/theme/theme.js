@@ -16,7 +16,7 @@ export const GlobalStyles = createGlobalStyle`
 `;
 
 const baseTheme = {
-  main: "#d5563b",
+  main: "#FFA700",
 }
 
 export const lightTheme = {

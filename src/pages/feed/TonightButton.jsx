@@ -12,8 +12,7 @@ export default function TonightButton({toggleTheme}) {
     <Container>
       <StyledTonightButton className="button">
         <Explosion
-          className="explosion"
-          color="orange"
+          color={theme.main}
           size="350"
           delay={0}
           repeatDelay={repeatDelay}
@@ -24,7 +23,7 @@ export default function TonightButton({toggleTheme}) {
             toggleTheme()
             if (theme.brightness === "light") explode()
           }}>
-          <h1>What's Happening Tonight</h1>
+          <h2>What's Buzzin' Tonight</h2>
         </button>
       </StyledTonightButton>
     </Container>
@@ -50,10 +49,10 @@ const StyledTonightButton = styled.div`
 
     border: ${({theme}) => theme.brightness === "light"
             ? "black"
-            : "rgba(99,76,245,0.5)"} 1px solid;
+            : "rgba(239,71,161,0.5)"} 1px solid;
     background: ${({theme}) => theme.brightness === "light"
             ? theme.highlightCard
-            : "rgba(99,76,245,0.5)"};
+            : "rgba(239,71,161,0.5)"};
     color: ${({theme}) => theme.text};
   }
 `

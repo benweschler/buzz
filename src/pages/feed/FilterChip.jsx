@@ -35,7 +35,7 @@ const FilterChipStyle = styled.button`
 
   &:hover {
     cursor: pointer;
-    filter: brightness(${props => props.theme.brightness === "light" ? 92.5 : 150}%);
+    filter: brightness(${props => props.theme.brightness === "light" ? 92.5 : 115}%);
   }
 
   .icon {
