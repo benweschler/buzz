@@ -4,9 +4,10 @@ export const StyledUserProfile = styled.div`
   display: flex;
   flex-direction: row;
   padding: 10px;
-  margin-top: 80px;
+  padding-top: 130px;
   align-items: center;
   margin-bottom: 80px;
+
 `;
 
 export const StyledUserAvatar = styled.img`

@@ -8,6 +8,7 @@ import {
 } from "./styles/Navbar.styled";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [click, setClick] = useState(false);
@@ -19,18 +20,18 @@ const Navbar = () => {
       <Logo>Buzz</Logo>
       <StyledNavMenu clicked={click}>
         <StyledNavItem>
-          <a href="/">See What's Buzzin'</a>
+          <Link to="/organization-page">See What's Buzzin'</Link>
         </StyledNavItem>
         {click && (
           <StyledNavItem>
-            <a href="/">QR Scanner</a>
+            <a href="/event-page">QR Scanner</a>
           </StyledNavItem>
         )}
         <StyledNavItem>
-          <a href="/">My Account</a>
+          <Link to="/user-page">My Account</Link>
         </StyledNavItem>
         <StyledNavItem>
-          <a href="/">Log Out</a>
+          <Link to="/event-page">Log Out</Link>
         </StyledNavItem>
       </StyledNavMenu>
       <StyledNavBackground clicked={click}>&nbsp;</StyledNavBackground>

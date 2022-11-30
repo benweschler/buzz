@@ -16,6 +16,10 @@ export const StyledEventRightColumn = styled.div`
   padding-top: 100px;
   padding-left: 80px;
   width: 70%;
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    padding-top: 20px;
+    padding-left: 30px;
+  }
 `;
 
 export const StyledEventImage = styled.img`
@@ -46,3 +50,12 @@ export const StyledSecurityMessage = styled.p`
   font-size: 0.8rem;
   padding-left: 10px;
 `;
+
+export const StyledEventTags =styled.div`
+`
+
+export const StyledEventLocation = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`

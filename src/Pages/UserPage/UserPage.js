@@ -4,14 +4,13 @@ import {
   StyledRightColumn,
   StyledUserAvatar,
   StyledUserInfo,
-} from "../styles/UserProfile.styled";
+} from "./styles/UserProfile.styled";
 // import ExampleEvents from "../../assets/ExampleEvents.json"
 // import UserEventCard from "../../components/UserPage/UserEventCard"
-import { Container } from "../../components/styles/Container.styled";
 
 const UserPage = () => {
   return (
-    <Container>
+    <>
       <StyledUserProfile>
         <StyledUserAvatar src="https://avatars.dicebear.com/api/initials/Julius Dunfoy.svg" />
         <StyledUserInfo>
@@ -32,7 +31,7 @@ const UserPage = () => {
       {/* {ExampleEvents.map((item, index) => (
         <UserEventCard key={index} item={item } />
       ))} */}
-    </Container>
+    </>
   );
 };
 

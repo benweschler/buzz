@@ -1,4 +1,3 @@
-import Navbar from "../../components/global/Navbar";
 import { Container } from "../../components/global/styles/Container.styled";
 import {
   StyledBanner,
@@ -12,11 +11,10 @@ import {
   StyledOrgRightColumn,
 } from "./styles/OrganizationPage.styled";
 import RoyceHall from "../../assets/images/Royce-Hall.jpg";
-
+import { IoLocationOutline } from "react-icons/io"
 const OrganizationPage = () => {
   return (
     <>
-      <Navbar />
       <StyledBanner>
         <StyledBannerImageBlurred src={RoyceHall} />
         <StyledBannerText>Royce Theater Club</StyledBannerText>

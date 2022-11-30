@@ -9,6 +9,8 @@ export const StyledBanner = styled.div`
   border-radius: 3px;
   margin: auto;
   height: 500px;
+  
+
 `;
 
 export const StyledBannerImageBlurred = styled.img`
