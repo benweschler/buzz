@@ -31,7 +31,7 @@ const EventPage = () => {
             <StyledEventHeader>Russian Techno Night</StyledEventHeader>
             <StyledEventLocation>
               <IoLocationOutline />
-              <h3>  Royce Hall </h3>
+              <h3> Royce Hall </h3>
             </StyledEventLocation>
             
             <StyledEventDate> Thu, 4 Nov, 9:30pm</StyledEventDate>
