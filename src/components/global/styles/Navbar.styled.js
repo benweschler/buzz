@@ -35,48 +35,43 @@ export const StyledNavMenu = styled.ul`
     opacity: ${(props) => (props.clicked ? "1" : "0")};
     transition: width 0.3s, opacity 0.8s;
     a:hover {
-      color: #708097;
+      color: black;
     }
 
-                  
-li { 
-  position: relative; 
-  padding: 15px 0;
-}
+    li {
+      position: relative;
+      padding: 15px 0;
+    }
 
-a {
-  color: #fff;
-  text-transform: uppercase;
-  text-decoration: none;
-  letter-spacing: 0.15em;
-  display: inline-block;
-  padding: 15px 20px;
-  position: relative;
-}
+    a {
+      color: black;
+      text-transform: uppercase;
+      text-decoration: none;
+      letter-spacing: 0.15em;
+      display: inline-block;
+      padding: 15px 20px;
+      position: relative;
+    }
 
-a::after { 
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  display: block;
-  background: none repeat scroll 0 0 transparent;
-  height: 2px;
-  width: 0;
-  background: white;
-  transition: width 0.3s ease 0s, left 0.3s ease 0s;
-}
+    a::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      display: block;
+      background: none repeat scroll 0 0 transparent;
+      height: 2px;
+      width: 0;
+      background: black;
+      transition: width 0.3s ease 0s, left 0.3s ease 0s;
+    }
 
-a:hover::after { 
-  width: 100%; 
-  left: 0; 
-}
-    
-
-    
+    a:hover::after {
+      width: 100%;
+      left: 0;
+    }
   }
 `;
-
 
 export const StyledNavItem = styled.li`
   padding: 1rem;

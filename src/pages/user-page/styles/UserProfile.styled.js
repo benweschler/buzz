@@ -4,7 +4,7 @@ export const StyledUserProfile = styled.div`
   display: flex;
   flex-direction: row;
   padding: 10px;
-  padding-top: 130px;
+  padding-top: 100px;
   align-items: center;
   margin-bottom: 80px;
 

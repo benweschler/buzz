@@ -38,12 +38,18 @@ export const StyledEventHeader = styled.h1`
   font-family: "Montserrat", sans-serif;
 `;
 
-export const StyledEventDescription = styled.div``;
+export const StyledEventDescription = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 export const StyledEventDate = styled.h2`
   color: #ffba00;
   font-size: 2rem;
-  margin-top: -30px;
+  margin-top: -20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 `;
 
 export const StyledSecurityMessage = styled.p`
