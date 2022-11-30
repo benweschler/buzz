@@ -1,13 +1,37 @@
-import {useState} from 'react';
-import styled from "styled-components";
+import {useEffect, useState} from 'react';
+import {useTheme} from "styled-components";
 import EventCard from './EventCard'
 import Events from '../../constants/events.json';
 import Constants from '../../constants/Constants'
 import FilterChip from "./FilterChip";
 import TonightButton from "./TonightButton"
+import axios from "axios";
+import {EventView, FilterRow, Scaffold, Wrapper} from "./styles/Feed.styled";
 
-function Feed({toggleTheme}) {
+export default function Feed({toggleTheme}) {
   const [selectedTags, setSelectedTags] = useState([])
+  const theme = useTheme()
+  useEffect(() => {
+    async function getEvents() {
+      const events = await axios.put(
+        "http://localhost:4000/api/utilities/filter",
+        {
+          tags: selectedTags,
+          tonight: theme.brightness === "light"
+        }
+      );
+      console.log(events.data)
+    }
+
+    getEvents()
+
+    return (() => {
+      if(theme.brightness === "dark")
+        toggleTheme()
+    })
+  }, [selectedTags, theme.brightness])
+
+
   function filter(element) {
     for(let tagId of selectedTags) {
       if(!element.tags.includes(tagId)) return false;
@@ -73,35 +97,3 @@ function TagFilters(selectedTags, setSelectedTags) {
 
   return filters;
 }
-
-// This is a placeholder for the rest of the app scaffolding this page.
-const Scaffold = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-flow: row wrap;
-  width: 100%;
-  height: 100%;
-  padding-top: 3rem;
-`;
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  width: 100%;
-`;
-
-const EventView = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-  gap: 1.5rem;
-  
-`;
-
-const FilterRow = styled.div`
-  display: flex;
-  flex-flow: row wrap;
-  gap: 1rem;
-`;
-
-export default Feed;

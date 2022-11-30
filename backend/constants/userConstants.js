@@ -13,5 +13,5 @@ const PASSWORD = "password";
 const INITIAL_USER_KEYS = [EMAIL, PASSWORD, MAJOR, NAME];
 
 module.exports = {
-    INITIAL_USER_KEYS
+  INITIAL_USER_KEYS
 }
