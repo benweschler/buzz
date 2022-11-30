@@ -1,6 +1,7 @@
 import {
   StyledEventContainer,
   StyledEventDate,
+  StyledEventDescription,
   StyledEventLeftColumn,
   StyledEventLocation,
   StyledEventOrganizer,
@@ -8,6 +9,7 @@ import {
   StyledRsvpAbout,
   StyledRsvpButton,
   StyledRsvpDiv,
+  StyledRsvpMessage,
   StyledSecurityMessage,
 } from "./styles/EventPage.styled";
 import DJClub from "../../assets/images/dj-club.jpg";
@@ -44,7 +46,7 @@ const EventPage = () => {
           <StyledRsvpDiv>
             <StyledRsvpAbout>
             <h4> Pricing: Free</h4>
-            <p>No upfront costs, or cheeky data mining 👀</p>  
+            <StyledRsvpMessage>No upfront costs, or cheeky data mining 👀</StyledRsvpMessage>  
             </StyledRsvpAbout>
                
             <StyledRsvpButton>RSVP</StyledRsvpButton>

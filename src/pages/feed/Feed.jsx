@@ -88,13 +88,14 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  width: 70%
+  width: 100%;
 `;
 
 const EventView = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
   gap: 1.5rem;
+  
 `;
 
 const FilterRow = styled.div`

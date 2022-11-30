@@ -6,7 +6,7 @@ export const StyledEventContainer = styled.div`
   @media (max-width: ${({ theme }) => theme.mobile}) {
     flex-direction: column;
   }
-`
+`;
 export const StyledEventLeftColumn = styled.div`
   display: flex;
   flex-direction: column;
@@ -41,61 +41,65 @@ export const StyledSecurityMessage = styled.p`
   padding-left: 10px;
 `;
 
-
 export const StyledEventMainInfo = styled.div`
   padding-top: 10px;
 `;
 
 export const StyledEventHeader = styled.h1`
   font-size: 2.5rem;
-  margin-bottom: 10px;
+
+  margin-top: 10px;
   font-family: "Montserrat", sans-serif;
 `;
 
 export const StyledEventOrganizer = styled.h2`
   margin-left: 30px;
-  margin-top: 10px;
+  margin-top: 5px;
   font-size: 1.6rem;
   font-weight: 400;
-`
-
+`;
 
 export const StyledEventLocation = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
   margin-left: 6px;
-`
+  margin-top: 50px;
+`;
 
 export const StyledEventDate = styled.h2`
   color: #ffba00;
   font-size: 2rem;
-  margin-top: -20px;
   display: flex;
   align-items: center;
   gap: 10px;
-  
 `;
 
+export const StyledEventTags = styled.div``;
 
-export const StyledEventTags =styled.div`
-`
-
-
-export const StyledEventLocationHeader = styled.h3`
-
-`
+export const StyledEventLocationHeader = styled.h3``;
 
 export const StyledRsvpDiv = styled.div`
   display: flex;
   flex-direction: row;
+  padding: 10px;
+  padding-left: 30px;
+  border-radius: 5px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 30px;
+  background: rgba(238, 238, 238, 10);
+`;
 
-`
-
-export const StyledRsvpAbout  =styled.div`
+export const StyledRsvpAbout = styled.div`
   display: flex;
   flex-direction: column;
-`
+`;
+
+export const StyledRsvpMessage = styled.p`
+  font-size: 0.8rem;
+  color: black;
+`;
 
 export const StyledRsvpButton = styled.button`
   /* display: flex;
@@ -107,15 +111,15 @@ export const StyledRsvpButton = styled.button`
   margin-left: 60%;
   font-size: 20px;
   background-color: #f33; */
-  background: #FF4742;
-  border: 1px solid #FF4742;
+  background: #ff4742;
+  border: 1px solid #ff4742;
   border-radius: 6px;
   box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
   box-sizing: border-box;
-  color: #FFFFFF;
+  color: #ffffff;
   cursor: pointer;
   display: inline-block;
-  font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+  font-family: nunito, roboto, proxima-nova, "proxima nova", sans-serif;
   font-size: 16px;
   font-weight: 800;
   line-height: 16px;
@@ -131,7 +135,8 @@ export const StyledRsvpButton = styled.button`
   touch-action: manipulation;
   vertical-align: middle;
   margin-left: 30%;
-  :hover, :active {
+  :hover,
+  :active {
     /* background-color: initial;
     background-position: 0 0;
     color: #FF4742; */
@@ -140,12 +145,12 @@ export const StyledRsvpButton = styled.button`
   }
 
   :active {
-    opacity: .5;
+    opacity: 0.5;
   }
-`
-
+`;
 
 export const StyledEventDescription = styled.div`
   display: flex;
   flex-direction: column;
+  padding-top: 150px;
 `;
