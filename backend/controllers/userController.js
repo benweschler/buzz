@@ -382,17 +382,35 @@ const addUserToOrg = async (req, res) => {
             error: "Organization not found"
           })
           return
-        } else {
+        }
+        let message=""
+        if(orgDoc.data().members.includes(req.body.user)){
+            if(orgDoc.data().members.length==1){
+                res.status(400).json({
+                    error:"User is the last member of organization and they cannot be removed"
+                })
+                return
+            }
+            orgRef.update({
+                "members": FieldValue.arrayRemove(req.body.user)
+              })
+              userRef.update({
+                "organizations": FieldValue.arrayRemove(req.body.organization)
+              }) 
+            message="User successfully left organization"
+        }
+        else {
           orgRef.update({
             "members": FieldValue.arrayUnion(req.body.user)
           })
           userRef.update({
             "organizations": FieldValue.arrayUnion(req.body.organization)
           })
-          res.status(200).json({
-            "success": true
-          })
+          message="User successfully added to organization"
         }
+          res.status(200).json({
+            "success": message
+          })
       }).catch((error) => {
         res.status(500).json({
           error: error
@@ -432,26 +450,39 @@ const addUserToEvent = async (req, res) => {
         } else {
           const capacity = eventDoc.data().capacity
           const attendees = eventDoc.data().attendees.length
-          if (attendees > capacity) {
-            res.status(500).json({
-              error: "Event at capacity"
-            })
-            return
-          }
           if (eventDoc.data < Date.now()) {
             res.status(500).json({
               error: "Event has already ended"
             })
             return
           }
+          let message=""
+          if(!eventDoc.data().attendees.includes(req.body.user)){
+            if (attendees >= capacity) {
+                res.status(500).json({
+                  error: "Event at capacity"
+                })
+                return
+              }
           eventRef.update({
             "attendees": FieldValue.arrayUnion(req.body.user)
           })
           userRef.update({
             "events_registered": FieldValue.arrayUnion(req.body.event)
           })
+          message="user added to event"
+        }
+        else{
+            eventRef.update({
+                "attendees": FieldValue.arrayRemove(req.body.user)
+            })
+            userRef.update({
+                "events_registered": FieldValue.arrayRemove(req.body.event)
+            })
+            message="removed user from event"
+        }
           res.status(200).json({
-            "success": true
+            "success": message
           })
         }
       }).catch((error) => {
@@ -470,7 +501,7 @@ const addUserToEvent = async (req, res) => {
 const followOrg = async (req, res) => {
   if (!req.body.user || !req.body.organization) {
     res.status(400).json({
-      error: "Cannot follow organization because organization or user are missing from body of request"
+      error: "Cannot follow/unfollow organization because organization or user are missing from body of request"
     })
     return
   }
@@ -490,64 +521,29 @@ const followOrg = async (req, res) => {
             error: "Organization not found"
           })
           return
-        } else {
+        }
+       let message=""
+        if(orgDoc.data().followers.includes(req.body.user)){
+            orgRef.update({
+                "followers": FieldValue.arrayRemove(req.body.user)
+              })
+              userRef.update({
+                "clubs_following": FieldValue.arrayRemove(req.body.organization)
+              })
+              message="User successfully unfollowed organization"
+        }
+         else {
           orgRef.update({
             "followers": FieldValue.arrayUnion(req.body.user)
           })
           userRef.update({
             "clubs_following": FieldValue.arrayUnion(req.body.organization)
           })
-          res.status(200).json({
-            "success": true
-          })
+          message="User successfully followed organization"
         }
-      }).catch((error) => {
-        res.status(500).json({
-          error: error
-        })
-      })
-    }
-  }).catch((error) => {
-    res.status(500).json({
-      error: error
-    })
-  })
-}
-
-const unfollowOrg = async (req, res) => {
-  if (!req.body.user || !req.body.organization) {
-    res.status(400).json({
-      error: "Cannot unfollow organization because user or organization are missing from body of request"
-    })
-    return
-  }
-
-  userRef = database.collection('Users').doc(req.body.user)
-  orgRef = database.collection('Organizations').doc(req.body.organization)
-  userRef.get().then((userDoc) => {
-    if (!userDoc.exists) {
-      res.status(404).json({
-        error: "User not found"
-      })
-      return
-    } else {
-      orgRef.get().then((orgDoc) => {
-        if (!orgDoc.exists) {
-          res.status(404).json({
-            error: "Organization not found"
-          })
-          return
-        } else {
-          orgRef.update({
-            "followers": FieldValue.arrayRemove(req.body.user)
-          })
-          userRef.update({
-            "clubs_following": FieldValue.arrayRemove(req.body.organization)
-          })
           res.status(200).json({
-            "success": true
+            "success": message
           })
-        }
       }).catch((error) => {
         res.status(500).json({
           error: error
@@ -698,6 +694,5 @@ module.exports = {
   validateUserOTP,
   addUserToEvent,
   followOrg,
-  unfollowOrg,
   getFeed
 }

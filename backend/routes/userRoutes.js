@@ -16,7 +16,6 @@ const {
   validateUserOTP,
   addUserToEvent,
   followOrg,
-  unfollowOrg,
   getFeed
 } = require('../controllers/userController');
 
@@ -51,9 +50,6 @@ router.get('*', readUserByEmail);
 
 //Add user as member to organization
 router.patch(/add$/, addUserToOrg);
-
-//unfollow org
-router.patch(/unfollow$/, unfollowOrg);
 
 //follow org
 router.patch(/follow$/, followOrg);
