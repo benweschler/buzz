@@ -1,12 +1,12 @@
 const express = require('express');
 
 const {
- filter
-     }=require('../controllers/utilityController');
+  filter
+} = require('../controllers/utilityController');
 
-const router=express.Router();
+const router = express.Router();
 
-router.get('/filter', filter)
+router.put('/filter', filter)
 
 
-module.exports=router
+module.exports = router
