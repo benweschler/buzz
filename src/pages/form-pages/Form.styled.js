@@ -176,7 +176,7 @@ export const Label = styled.label`
 export const Switch = styled.div`
   position: relative;
   width: 60px;
-  height: 28px;
+  height: 38px;
   background: #b3b3b3;
   border-radius: 32px;
   padding: 4px;

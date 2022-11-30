@@ -55,7 +55,7 @@ import {
       var completed = true;
       for (const entry in eventInfo){
         if (!eventInfo[entry]){
-          console.log("missing field: " + entry);
+          console.log("Not entered: " + entry);
           completed = false;
         }
       }
@@ -67,6 +67,21 @@ import {
       if (!file){
         setError("No file uploaded!");
         return;
+      }
+
+      const Event = new FormData()
+      Event.append('title', eventInfo.title);
+      Event.append('date', Date.parse(eventInfo.date));
+      Event.append('location', eventInfo.location);
+      Event.append('organization', eventInfo.organization);
+      Event.append('capacity', eventInfo.capacity);
+      Event.append('price', eventInfo.price);
+      Event.append('description', eventInfo.description);
+      Event.append('ticketed',ticketed);
+      Event.append('file',file);
+      console.log("FormData:");
+      for(var entry of Event.entries()) {
+        console.log(entry[0]+ ': '+ entry[1]); 
       }
     }
 
@@ -143,6 +158,10 @@ import {
               accept="image/*, image/HEIC"
               onChange={handleFile}/>
           </FileInputWrapper>
+
+          <Block style={{padding: "0px 10px 0px", color: "red"}}>
+            {error ? error : ''}
+          </Block>
 
           <Button type="submit">
             Submit
