@@ -35,7 +35,7 @@ export const StyledNavMenu = styled.ul`
     opacity: ${(props) => (props.clicked ? "1" : "0")};
     transition: width 0.3s, opacity 0.8s;
     a:hover {
-      color: #708097;
+      color: black;
     }
     
     li {
@@ -43,8 +43,13 @@ export const StyledNavMenu = styled.ul`
       padding: 15px 0;
     }
 
+    li {
+      position: relative;
+      padding: 15px 0;
+    }
+
     a {
-      color: #fff;
+      color: black;
       text-transform: uppercase;
       text-decoration: none;
       letter-spacing: 0.15em;
@@ -62,7 +67,7 @@ export const StyledNavMenu = styled.ul`
       background: none repeat scroll 0 0 transparent;
       height: 2px;
       width: 0;
-      background: white;
+      background: black;
       transition: width 0.3s ease 0s, left 0.3s ease 0s;
     }
 
@@ -72,7 +77,6 @@ export const StyledNavMenu = styled.ul`
     }
   }
 `;
-
 
 export const StyledNavItem = styled.li`
   padding: 1rem;

@@ -10,7 +10,7 @@ import DJClub from "../../assets/images/dj-club.jpg";
 import { StyledEventImage } from "./styles/EventPage.styled";
 import { StyledEventHeader } from "./styles/EventPage.styled";
 import { StyledEventMainInfo } from "./styles/EventPage.styled";
-
+import { IoCalendarClearOutline } from "react-icons/io5"
 import { IoLocationOutline } from "react-icons/io5"
 const EventPage = () => {
   return (
@@ -33,8 +33,17 @@ const EventPage = () => {
               <h3> Royce Hall </h3>
             </StyledEventLocation>
             
-            <StyledEventDate> Thu, 4 Nov, 9:30pm</StyledEventDate>
+            <StyledEventDate> 
+              <IoCalendarClearOutline />
+              Thu, 4 Nov, 9:30pm
+            </StyledEventDate>
           </StyledEventMainInfo>
+          <StyledEventDescription>
+            <h2> About </h2>
+            <p>
+              Example event description.
+            </p>
+          </StyledEventDescription>
         </StyledEventRightColumn>
       </Container>
     </>
