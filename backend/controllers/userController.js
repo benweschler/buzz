@@ -267,17 +267,21 @@ const authenticateUser = async (req, res) => {
         // since firebase on the client side is v9
         signInWithEmailAndPassword(clientAuth, email, password)
             .then((userCredential) => {
+                console.log(userCredential);
                 // Get the token that firebase generates and return it
                 res.status(200).json({
+                    success: true,
                     token: userCredential.user.stsTokenManager.accessToken
                 })
             }).catch((error) => {
                 res.status(400).json({
+                    success: false,
                     error: error
                 })
             })
     } catch (error) {
         res.status(400).json({
+            success: false,
             error: error
         })
     }
@@ -286,12 +290,13 @@ const authenticateUser = async (req, res) => {
 const verifyToken = async (req, res) => {
     if (!Object.keys(req.params).includes("token")) {
         res.status(400).json({
-            error: "User ID is missing"
+            error: "Token is missing"
         })
     } else {
         const {token} = req.params;
-        //console.log(token);
-        adminAuth.verifyIdToken(token).then((claims) => {
+        
+        const checkRevoked = true;
+        adminAuth.verifyIdToken(token, checkRevoked).then((claims) => {
             console.log('Token verified!');
             res.status(200).json({
                 "success": true
@@ -300,6 +305,25 @@ const verifyToken = async (req, res) => {
             console.log('Token not verified!');
             res.status(400).json({
                 "success": false
+            })
+        })
+    }
+}
+
+const revokeToken = async (req, res) => {
+    if (!Object.keys(req.params).includes("id")) {
+        res.status(400).json({
+            error: "User ID is missing"
+        })
+    } else {
+        const {id} = req.params;
+        adminAuth.revokeRefreshTokens(id).then(() => {
+            res.status(200).json({
+                id: id
+            })
+        }).catch((error) => {
+            res.status(500).json({
+                error: error
             })
         })
     }
@@ -651,6 +675,7 @@ module.exports = {
     deleteUser,
     authenticateUser,
     verifyToken,
+    revokeToken,
     addUserToOrg,
     generateUserOTP,
     validateUserOTP,

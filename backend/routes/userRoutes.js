@@ -10,6 +10,7 @@ const {
     deleteUser,
     authenticateUser,
     verifyToken,
+    revokeToken,
     addUserToOrg,
     generateUserOTP,
     validateUserOTP,
@@ -22,10 +23,13 @@ const {
 const router = express.Router();
 
 // Authenticate a user and respond with the authentication token
-router.get(/signin$/, authenticateUser);
+router.post(/signin$/, authenticateUser);
 
 // Verify Token
 router.get('/token/:token', verifyToken);
+
+// Revoke Token
+router.get('/signout/:id', revokeToken);
 
 // Generate OTP QRCode
 router.get('/generateOTP/:id', generateUserOTP);
