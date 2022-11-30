@@ -1,32 +1,35 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import EventCard from './EventCard'
-import Events from '../../constants/events.json';
 import Constants from '../../constants/Constants'
 import FilterChip from "./FilterChip";
 import TonightButton from "./TonightButton"
 import {EventView, FilterRow, Scaffold, Wrapper} from "./styles/Feed.styled";
+import {useTheme} from "styled-components";
+import axios from "axios";
 
 export default function Feed({toggleTheme}) {
   const [selectedTags, setSelectedTags] = useState([])
-  /*
+  const [events, setEvents] = useState([])
+  const theme = useTheme()
   useEffect(() => {
     async function getEvents() {
-      const events = await axios.put(
+      const response = await axios.put(
         "http://localhost:4000/api/utilities/filter",
         {
-          tags: selectedTags,
-          tonight: theme.brightness === "light"
+          tags: [],
+          tonight: theme.brightness === "dark"
         }
-      );
-      console.log(events.data)
+      )
+      setEvents(response["data"].events)
     }
-  })
-   */
+
+    getEvents().catch((e) => console.log("ERROR WITH FETCHING EVENTS:", e))
+  }, [theme.brightness])
 
 
   function filter(element) {
-    for(let tagId of selectedTags) {
-      if(!element.tags.includes(tagId)) return false;
+    for(let tag of selectedTags) {
+      if(!element.tags.includes(tag)) return false;
     }
 
     return true;
@@ -40,48 +43,48 @@ export default function Feed({toggleTheme}) {
         <FilterRow>
           {TagFilters(selectedTags, setSelectedTags)}
         </FilterRow>
-        <EventView>{buildEventCards(filter)}</EventView>
+        <EventView>{buildEventCards(events, filter)}</EventView>
       </Wrapper>
     </Scaffold>
   );
 }
 
-function buildEventCards(filter) {
+function buildEventCards(events, filter) {
   const cards = [];
-  const events = [...Events].filter(filter);
+  if(events.length === 0) return cards
+  events = events.filter(filter)
   for (let event of events) {
     cards.push(
       <EventCard
         key={event.id}
         title={event.title}
-        organizer={event.organizer}
+        organizer={event.organization_name}
         image={event.image}
         description={event.description}
-        attendees={event.attendees}
+        attendees={event.attendees.length}
         location={event.location}
         price={event.price}
         tags={event.tags}
-        date="Mon, Nov 1, 12:32pm"
+        date={event.date}
       />
     );
   }
-
   return cards;
 }
 
 function TagFilters(selectedTags, setSelectedTags) {
   let filters = []
-  for (let [id, tag] of Object.entries(Constants.tags)) {
+  for (let [name, icon] of Object.entries(Constants.tags)) {
     filters.push(
       <FilterChip
-        key={id}
-        selected={selectedTags.includes(id)}
-        icon={tag.icon}
-        name={tag.name}
+        key={name}
+        selected={selectedTags.includes(name)}
+        icon={icon}
+        name={name}
         onClick={() => setSelectedTags(
-          selectedTags.includes(id)
-            ? selectedTags.filter(e => e !== id)
-            : [...selectedTags, id]
+          selectedTags.includes(name)
+            ? selectedTags.filter(e => e !== name)
+            : [...selectedTags, name]
         )}
       />
     )
