@@ -1,26 +1,23 @@
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 
-/* divs that has absolutely-positioned child */
-export const Div1 = styled.div`
+/* normal container: 
+supports absolutely-positioned children */
+export const Block = styled.div`
   position: relative;
   margin: 10px 0;
 `
 
-/* divs as flex containers */
-export const Div2 = styled.div`
+/* flex container: 
+centers vertically spread horizontally */
+export const Flex = styled.div`
   position: relative; 
   display: flex;
   justify-content: space-between;
-`
-
-export const Div3 = styled.div`
-  display: flex;
   align-items: center;
-  position: relative;
   margin: 10px 0;
 `
 
-export const StyledFormWrapper = styled.div`
+export const FormWrapper = styled.div`
   display: flex;
 	justify-content: center;
 	align-items: center;
@@ -28,7 +25,7 @@ export const StyledFormWrapper = styled.div`
 	padding: 0 20px;
 `;
 
-export const StyledForm = styled.form`
+export const Form = styled.form`
 	width: 100%;
 	max-width: 700px;
   min-width: 400px;
@@ -44,14 +41,14 @@ export const StyledForm = styled.form`
   }
 `;
 
-export const StyledLink = styled.a`
+export const Link = styled.a`
   color: rgb(201, 66, 16);
   &: hover{
     text-decoration: underline;
   }
 `
 
-export const StyledInput = styled.input`
+export const Input = styled.input`
 	display: block;
 	width: 100%;
   height: 4rem;
@@ -71,7 +68,7 @@ export const StyledInput = styled.input`
   }
 `;
 
-export const StyledTextArea = styled.textarea`
+export const TextArea = styled.textarea`
   resize: none;
   width: 100%;
   height: 100%;
@@ -91,8 +88,20 @@ export const StyledTextArea = styled.textarea`
   }
 `;
 
-export const StyledSpan = styled.span`
-  ${StyledInput} + &{
+export const FileInputWrapper = styled.div`
+  border-left: 4px solid rgb(204,204,204);
+  padding: 5px 10px 15px;
+  color: grey;
+  font-size: 1.8rem;
+  gap: 0.5rem;
+  position: relative; 
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`
+
+export const Span = styled.span`
+  ${Input} + &{
     position: absolute;
     bottom: 0;
     left: 50%; 
@@ -101,14 +110,13 @@ export const StyledSpan = styled.span`
     background-color: rgb(201, 66, 16); 
     transition: 0.4s;
   }
-  ${StyledInput}:focus + &{
+  ${Input}:focus + &{
     width: 100%; 
     transition: 0.4s; 
     left: 0;
   }
 
-  ${StyledTextArea} + &{
-    console.log("after StyledTextArea");
+  ${TextArea} + &{
     position: absolute;
     height: 100%;
     bottom: 0;
@@ -116,7 +124,22 @@ export const StyledSpan = styled.span`
     width: 0;
     transition: 0.4s;
   }
-  ${StyledTextArea}:focus + &{
+  ${TextArea}:focus + &{
+    width: 100%;
+    transition: 0.4s;
+    box-sizing: border-box;
+    border: 4px solid rgb(201, 66, 16);
+  }
+
+  ${FileInputWrapper} > &{
+    position: absolute;
+    height: 100%;
+    bottom: 0;
+    left: 0;
+    width: 0;
+  }
+
+  ${FileInputWrapper}:hover > &{
     width: 100%;
     transition: 0.4s;
     box-sizing: border-box;
@@ -124,7 +147,7 @@ export const StyledSpan = styled.span`
   }
 `;
 
-export const StyledButton = styled.button`
+export const Button = styled.button`
 	display: block;
 	width: 100%;
 	background-color: rgb(201, 66, 16);
@@ -142,7 +165,7 @@ export const StyledButton = styled.button`
 	}
 `;
 
-export const StyledLabel = styled.label`
+export const Label = styled.label`
   display: flex;
   align-items: center;
   gap: 10px;
@@ -150,7 +173,7 @@ export const StyledLabel = styled.label`
   cursor: pointer;
 `;
 
-export const StyledSwitch = styled.div`
+export const Switch = styled.div`
   position: relative;
   width: 60px;
   height: 28px;
@@ -175,7 +198,7 @@ export const StyledSwitch = styled.div`
 
 export const HiddenInput = styled.input`
   display: none;
-  &:checked + ${StyledSwitch} {
+  &:checked + ${Switch} {
     background: green;
     &:before {
       transform: translate(32px, -50%);
@@ -183,7 +206,7 @@ export const HiddenInput = styled.input`
   }
 `;
 
-export const StyledSelect = styled.select`
+export const Select = styled.select`
   width: 100%;
   height: 35px;
   background: rgb(247,247,247);
@@ -198,5 +221,13 @@ export const StyledSelect = styled.select`
     white-space: pre;
     min-height: 20px;
     padding: 0px 2px 1px;
+  }
+`;
+
+export const FileInput = styled.input`
+  height: 2rem;
+
+  file-upload-button{
+    color: red;
   }
 `;

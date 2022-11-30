@@ -1,61 +1,80 @@
-import React, {useState} from "react";
+import {React,useState} from "react";
 import {
-  Div1,
-  Div2,
-  StyledFormWrapper,
-  StyledForm,
-  StyledLink,
-  StyledInput,
-  StyledSpan,
-  StyledButton,
+  Block,
+  Flex,
+  FormWrapper,
+  Form,
+  Link,
+  Input,
+  Span,
+  Button,
 } from '../Form.styled';
 
 
 function Login(props) {
-  const [{email, password}, setState] = useState({email: 'email', password: 'password'});
+  const [userInfo, setUserInfo] = useState({email: '', password: ''});
+  const [error, setError] = useState(null);
 
-  function handleChange({ target: {name, value} }) {
-    setState(prevState => ({ ...prevState, [name]: value}));
+  function handleChange({target: {name, value}}){
+    setUserInfo({...userInfo, [name]: value});
   }
 
   function handleSubmit(e) {
     e.preventDefault();
-    localStorage.setItem('user', email);
+    setError(null);
+    setUserInfo({email: "", password: ""});
+    
+    if (!userInfo.email || !userInfo.password){
+      setError("Missing input fields!");
+      return;
+    }
+
+    const login = new FormData();
+    login.append('email', userInfo.email);
+    login.append('password', userInfo.password);
+
+    console.log("FormData:")
+    for (const entry of login.entries()){
+      console.log(entry[0] + ': ' + entry[1]);
+    }
   }
 
   return(
-    <StyledFormWrapper>
-      <StyledForm onSubmit={handleSubmit}>
-        <Div2>
-          <Div1>
-            <h1>Log in</h1>
-          </Div1>
-          <Div1>
-            <StyledLink onClick={() => props.switchForm('Register')}>
-              Sign up
-            </StyledLink>
-          </Div1>
-        </Div2>
+    <FormWrapper>
+      <Form onSubmit={handleSubmit}>
+        <Flex>
+          <h1>Log in</h1>
+          <Link onClick={() => props.switchForm('Register')}>
+            Sign up
+          </Link>
+        </Flex>
 
-        <Div1>
-          <StyledInput type="email" name="email"
-            placeholder={email}
+        <Block>
+          <Input type="email" name="email"
+            placeholder="Email"
+            value={userInfo.email}
             onChange={handleChange}/>
-        <StyledSpan/>
-        </Div1>
+          <Span/>
+        </Block>
 
-        <Div1>
-          <StyledInput type="password" name="password"
-            placeholder={password}
+        <Block>
+          <Input type="password" name="password"
+            placeholder="Password"
+            value={userInfo.password}
             onChange={handleChange}/>
-          <StyledSpan/>
-        </Div1>
+          <Span/>
+        </Block>
 
-        <StyledButton type="submit">
+        <Block style={{padding: "0px 10px 0px", color: "red"}}>
+          {error ? error : ''}
+        </Block>
+
+        <Button type="submit">
           Log in
-        </StyledButton>
-      </StyledForm>
-    </StyledFormWrapper>
+        </Button>
+
+      </Form>
+    </FormWrapper>
     )
 }
   

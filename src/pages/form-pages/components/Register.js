@@ -1,76 +1,133 @@
 import React, {useState} from "react";
 import {
-  Div1,
-  Div2,
-  Div3,
-  StyledFormWrapper,
-  StyledForm,
-  StyledLink,
-  StyledInput,
-  StyledSpan,
-  StyledButton,
+  Block,
+  Flex,
+  FileInputWrapper,
+  FormWrapper,
+  Form,
+  Link,
+  Input,
+  Span,
+  Button,
+  FileInput
 } from '../Form.styled';
 
+const initUserInfo = {
+  name: '', email: '', password: '', major: ''
+};
+
+const initFile = '';
+
 function Register(props) {
-  const [{name, email, password, school, major}, setState] = useState({
-    name: 'name', email: 'email', password: 'password', school: 'school', major:'major'});
+  const [userInfo, setUserInfo] = useState(initUserInfo);
+  const [file, setFile] = useState(initFile);
+  const [error, setError] = useState('');
+
 
   function handleChange({ target: {name, value} }) {
-    setState(prevState => ({ ...prevState, [name]: value}));
+    setUserInfo({...userInfo, [name]: value});
+  }
+
+  function handleFile(input){
+    setFile(input.target.files[0]);
   }
 
   function handleSubmit(e) {
     e.preventDefault();
-    localStorage.setItem('user', email);
+    setUserInfo(initUserInfo);
+    setFile(initFile);
+    setError('');
+
+    var completed = true;
+    for (const entry in userInfo){
+      if (!userInfo[entry]){
+        console.log("missing field: " + entry);
+        completed = false;
+      }
+    }
+    if (!completed){
+      setError("Input fields incompleted!");
+      return;
+    }
+
+    if (!file){
+      setError("No file uploaded!");
+      return;
+    }
+
+
+    const Register = new FormData();
+    Register.append("name", userInfo.name);
+    Register.append("email", userInfo.email);
+    Register.append("password", userInfo.password);
+    Register.append("major", userInfo.major);
+    Register.append("file", file);
+    
+    console.log("FormData:")
+    for(var entry of Register.entries()) {
+      console.log(entry[0]+ ': '+ entry[1]); 
+    }
   }
 
   return(
-    <StyledFormWrapper>
-      <StyledForm onSubmit={handleSubmit}>
-        <Div2>
-          <Div1>
-            <h1>Sign up</h1>
-          </Div1>
-          <Div1 display="flex" align-items="center">
-            <StyledLink onClick={() => props.switchForm('Login')}>
-              Log in
-            </StyledLink>
-          </Div1>
-        </Div2>
+    <FormWrapper>
+      <Form onSubmit={handleSubmit}>
+        <Flex>
+          <h1>Sign up</h1>
+          <Link onClick={() => props.switchForm('Login')}>
+            Log in
+          </Link>
+        </Flex>
 
-        <Div1>
-          <StyledInput type="name" name="name"
-            placeholder={name}
+        <Block>
+          <Input type="name" name="name"
+            placeholder="name"
+            value={userInfo.name}
             onChange={handleChange}/>
-          <StyledSpan/>
-        </Div1>
+          <Span/>
+        </Block>
 
-        <Div1>
-          <StyledInput type="email" name="email"
-            placeholder={email}
+        <Block>
+          <Input style={{fontSize: "1.3rem"}}
+            type="email" name="email"
+            placeholder="email"
+            value={userInfo.email}
             onChange={handleChange}/>
-          <StyledSpan/>
-        </Div1>
+          <Span/>
+        </Block>
 
-        <Div1>
-          <StyledInput type="password" name="password"
-            placeholder={password}
+        <Block>
+          <Input type="password" name="password"
+            placeholder="password"
+            value={userInfo.password}
             onChange={handleChange}/>
-          <StyledSpan/>
-        </Div1>
+          <Span/>
+        </Block>
 
-        <Div1>
-          <StyledInput type="text" name="major"
-            placeholder={major}
+        <Block>
+          <Input type="text" name="major"
+            placeholder="major"
+            value={userInfo.major}
             onChange={handleChange}/>
-          <StyledSpan/>
-        </Div1>
+          <Span/>
+        </Block>
 
-        <StyledButton type="submit">
+        <FileInputWrapper>
+          <label htmlFor="file">Upload a profile pic</label>
+          <FileInput type="file" name="file"
+            accept="image/*, image/HEIC"
+            onChange={handleFile}/>
+        </FileInputWrapper>
+
+        <Block style={{padding: "0px 10px 0px", color: "red"}}>
+          {error ? error : ''}
+        </Block>
+
+        <Button type="submit">
           Sign up
-        </StyledButton>
-      </StyledForm>
-    </StyledFormWrapper>
+        </Button>
+      </Form>
+    </FormWrapper>
     )
 }
   

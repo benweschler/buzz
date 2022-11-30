@@ -1,105 +1,154 @@
-import { react, useState } from "react";
+import react, { useState } from "react";
 import {
-    Div1,
-    Div2,
-    Div3,
-    StyledFormWrapper,
-    StyledForm,
-    StyledInput,
+    Block,
+    Flex,
+    FormWrapper,
+    Form,
+    Input,
     HiddenInput,
-    StyledSpan,
-    StyledButton,
-    StyledTextArea,
-    StyledLabel,
-    StyledSwitch,
-    StyledSelect,
+    Span,
+    Button,
+    TextArea,
+    FileInputWrapper,
+    FileInput,
+    Label,
+    Switch,
+    Select
   } from './Form.styled';
 
+  const initialState = {
+      title: '',
+      date: '',
+      location: '',
+      organization: '',
+      capacity: '',
+      price: '',
+      description: '',
+    };
+
+
   function CreateEvent() {
-    const [eventInfo, setEvent] = useState({});
+    const [eventInfo, setEventInfo] = useState(initialState);
     const [ticketed, setTicketed] = useState(false);
+    const [file, setFile] = useState('');
+    const [error, setError] = useState('');
   
     function handleChange({ target: {name, value} }) {
-      setEvent(prevState => ({ ...prevState, [name]: value}));
+      setEventInfo({...eventInfo, [name]: value});
     }
 
-    const handleCheck = ({target: {checked}}) => setTicketed(checked)
+    function handleCheck({target: {checked}}){
+      setTicketed(checked);
+    }
 
-  
+    function handleFile(input){
+      setFile(input.target.files[0]);
+    }
+
     function handleSubmit(e) {
       e.preventDefault();
-      console.log(eventInfo);
+      setEventInfo(initialState);
+      setTicketed(false);
+      setFile('');
+      setError('');
+
+      var completed = true;
+      for (const entry in eventInfo){
+        if (!eventInfo[entry]){
+          console.log("missing field: " + entry);
+          completed = false;
+        }
+      }
+      if (!completed){
+        setError("Input fields incompleted!");
+        return;
+      }
+  
+      if (!file){
+        setError("No file uploaded!");
+        return;
+      }
     }
 
-    const Input = (name, type) => {
+    const BlockInput = (name, type) => {
       return(
-        <Div1>
-            <StyledInput type={type} name={name.toLowerCase()}
-            placeholder= {name}
-            onChange={handleChange}/>
-            <StyledSpan/>
-        </Div1>
+        <Block>
+            <Input type={type} 
+              value={eventInfo[name.toString().toLowerCase()]}
+              name={name.toString().toLowerCase()} 
+              placeholder= {name} onChange={handleChange}/>
+            <Span/>
+        </Block>
       )
     }
   
     return(
-      <StyledFormWrapper>
-        <StyledForm onSubmit={handleSubmit}>
-          <Div2>
-            <Div3>
-              <h1 style={{fontSize:"3rem"}}>Create an event</h1>
-            </Div3>
-            <Div3>
-              <input type="reset"/>
-            </Div3>
-          </Div2>
+      <FormWrapper>
+        <Form onSubmit={handleSubmit}>
+          <Flex>
+            <h1 style={{fontSize:"3rem"}}>Create an event</h1>
+            <input type="reset"/>
+          </Flex>
 
-          {Input("Title", "text")}
+          {BlockInput("Title", "text")}
 
-          <Div1>
-            <StyledInput type="datetime-local" name="date"
-            onChange={handleChange}/>
-            <StyledSpan/>
-          </Div1>
+          <Block>
+            <Input type="datetime-local"
+              value={eventInfo.date}
+              name="date" onChange={handleChange}
+              style={{color:"grey"}}/>
+            <Span/>
+          </Block>
 
-          {Input("Location", "text")}
+          {BlockInput("Location", "text")}
 
-          {Input("Organization", "text")}
+          {BlockInput("Organization", "text")}
 
-          <Div2>
-            {Input("Capacity", "number")}
-            {Input("Price","number")}
-            <StyledLabel>
+          <Flex>
+            {BlockInput("Capacity", "number")}
+            {BlockInput("Price","number")}
+            <Label>
               <span style={{fontSize:"2rem",color:"grey"}}>
                 {ticketed? "Ticketed" : "Ticketed?"}
               </span>
-              <HiddenInput type="checkbox" checked={ticketed} onChange={handleCheck}/>
-              <StyledSwitch/>
-            </StyledLabel>
-          </Div2>
+              <HiddenInput type="checkbox" 
+                checked={ticketed} onChange={handleCheck}/>
+              <Switch/>
+            </Label>
+          </Flex>
 
-          <Div1 style={{height: "15rem"}}>
-            <StyledTextArea name="description"
+          <Block style={{height: "15rem"}}>
+            <TextArea name="description"
             placeholder= "describe your event."
+            value={eventInfo.description}
             onChange={handleChange}/>
-            <StyledSpan/>
-          </Div1>
+            <Span/>
+          </Block>
 
-          <StyledSelect>
-            <option value="" hidden>
-              Tags
-            </option>
-            <option value="1">Rock</option>
-            <option value="2">Metal</option>
-            <option value="3">Pop</option>
-            <option value="4">Opera</option>
-          </StyledSelect>
+          <Block>
+            <Select>
+              <option value="" hidden>
+                Tags
+              </option>
+              <option value="1">Rock</option>
+              <option value="2">Metal</option>
+              <option value="3">Pop</option>
+              <option value="4">Opera</option>
+            </Select>
+          </Block>
 
-          <StyledButton type="submit">
+          <FileInputWrapper>
+            <label htmlFor="file">Upload a photo</label>
+            <FileInput type="file" name="file"
+              accept="image/*, image/HEIC"
+              onChange={handleFile}/>
+          </FileInputWrapper>
+
+          <Button type="submit">
             Submit
-          </StyledButton>
-        </StyledForm>
-      </StyledFormWrapper>
+          </Button>
+        </Form>
+      </FormWrapper>
       )
   }
     
