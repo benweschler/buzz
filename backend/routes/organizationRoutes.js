@@ -3,13 +3,13 @@ const multer = require('multer');
 const upload = multer();
 
 const {
-    createOrganization,
-    readOrganization,
-    readOrganizationByName,
-    updateOrganization,
-    deleteOrganization,
-    getAllOrganizationEvents,
-    getAllActiveEvents
+  createOrganization,
+  readOrganization,
+  readOrganizationByName,
+  updateOrganization,
+  deleteOrganization,
+  getAllOrganizationEvents,
+  getAllActiveEvents
 } = require('../controllers/organizationController'); //import the Controller functions
 
 const router = express.Router(); //initiate express router
@@ -29,5 +29,5 @@ router.patch('/:id', upload.single('file'), updateOrganization);
 router.delete('/:id', deleteOrganization);
 
 
-module.exports=router;
+module.exports = router;
 

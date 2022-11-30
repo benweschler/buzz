@@ -20,7 +20,10 @@ const Navbar = () => {
       <Logo>Buzz</Logo>
       <StyledNavMenu clicked={click}>
         <StyledNavItem>
-          <Link to="/organization-page">See What's Buzzin'</Link>
+          <Link to="/feed">See What's Buzzin'</Link>
+        </StyledNavItem>
+        <StyledNavItem>
+          <Link to="/organization-page">Organization</Link>
         </StyledNavItem>
         {click && (
           <StyledNavItem>

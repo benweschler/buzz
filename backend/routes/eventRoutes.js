@@ -3,14 +3,14 @@ const multer = require('multer');
 const upload = multer();
 
 const {
-    createEvent,
-    readEvent,
-    updateEvent,
-    deleteEvent,
-    paginateEvents
-}=require('../controllers/eventController'); //import the Controller functions
+  createEvent,
+  readEvent,
+  updateEvent,
+  deleteEvent,
+  paginateEvents
+} = require('../controllers/eventController'); //import the Controller functions
 
-const router=express.Router(); //initiate express router
+const router = express.Router(); //initiate express router
 
 router.post('/', upload.single('file'), createEvent);
 
@@ -23,5 +23,5 @@ router.patch('/:id', upload.single('file'), updateEvent);
 
 router.delete('/:id', deleteEvent);
 
-module.exports=router;
+module.exports = router;
 

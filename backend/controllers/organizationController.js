@@ -3,6 +3,7 @@ const { INITIAL_ORGANIZATION_KEYS, UPLOAD_KEYS } = require('../constants/organiz
 const sortByRecency=require("./utilityController")
 const axios = require('axios');
 const { v4 } = require('uuid');
+const { FieldValue } = require('@google-cloud/firestore');
 
 const createOrganization = async (req, res) => {
     
@@ -31,6 +32,7 @@ const createOrganization = async (req, res) => {
                 res.status(400).json({
                     error: 'Organization with the same name is already in database'
                 })
+                return;
             }
         }).catch((error) => {
             // To prevent the 200 status header being set after this is sent to the client
@@ -38,26 +40,76 @@ const createOrganization = async (req, res) => {
             res.status(500).json({
                 error: error
             })
+            return;
         })
 
         // If not, then add the organization
 
         if (!alreadyInDatabase) {
-            database.collection('Organizations').add({
-                ...req.body,
-                "events": [],
-                "followers": [],
-                "image": ""
-            }).then((docRef) => {
-                console.log('Created organization document with id: ' + docRef.id);
+            let organizationID = "";
+            let member = req.body.member;
+
+            const userRef = await database.collection('Users').doc(member).get()
+            if (userRef.exists) {
+                delete req.body.member;
+                let organizationMembers = []
+                organizationMembers.push(member);
+                await database.collection('Organizations').add({
+                    ...req.body,
+                    "events": [],
+                    "followers": [],
+                    "members": organizationMembers,
+                    "image": ""
+                }).then((docRef) => {
+                    console.log('Created organization document with id: ' + docRef.id);
+                    organizationID = docRef.id;
+                }).catch((error) => {
+                    res.status(500).json({
+                        error: error
+                    })
+                    return;
+                });
+
+                await database.collection('Users').doc(member).update({
+                    organizations: FieldValue.arrayUnion(organizationID)
+                }).catch((error) => {
+                    res.status(500).json({
+                        error: error
+                    })
+                    return;
+                })
+    
+                const bucket = storage.bucket();
+                const fullPath = `OrganizationImages/${v4()}`;
+                const bucketFile = bucket.file(fullPath);
+    
+                await bucketFile.save(req.file.buffer, {
+                    contentType: req.file.mimetype,
+                    gzip: true
+                });
+    
+                const [url] = await bucketFile.getSignedUrl({
+                    action: 'read',
+                    expires: '01-01-2030'
+                });
+    
+                await database.collection('Organizations').doc(organizationID).update({
+                    image: url
+                }).catch((error) => {
+                    res.status(500).json({
+                        error: error
+                    })
+                    return;
+                })
+    
                 res.status(200).json({
-                    id: docRef.id
+                    id: organizationID
                 })
-            }).catch((error) => {
-                res.status(500).json({
-                    error: error
+            } else {
+                res.status(400).json({
+                    error: 'User does not exist'
                 })
-            });
+            }
         }
     }
 }
@@ -150,7 +202,7 @@ const deleteOrganization = async (req, res)=>{
 };
 
 const getAllOrganizationEvents = async (req, res) => {
-    const {id} = req.params;
+    const {id} = params.id;
     console.log(id);
 
     let eventsArr = [];
