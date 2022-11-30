@@ -69,7 +69,6 @@ const createUser = async (req, res) => {
                 ...req.body,
                 "clubs_following": [],
                 "events_registered": [],
-                "interests": [],
                 "organizations": [],
                 "secret": secret,
                 "id": recordObj.uid

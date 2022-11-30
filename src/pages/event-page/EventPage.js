@@ -5,6 +5,7 @@ import {
   StyledEventLocation,
   StyledEventRightColumn,
   StyledSecurityMessage,
+  StyledEventDescription,
 } from "./styles/EventPage.styled";
 import DJClub from "../../assets/images/dj-club.jpg";
 import { StyledEventImage } from "./styles/EventPage.styled";
