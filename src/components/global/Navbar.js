@@ -36,13 +36,10 @@ const Navbar = () => {
           <Link to="/user-page">My Account</Link>
         </StyledNavItem>
         <StyledNavItem>
-          <Link to="/log-or-sign-in">Log In</Link>
+          <Link to="/log-or-sign-up">Log In</Link>
         </StyledNavItem>
         <StyledNavItem>
           <Link to="/create-event">Create Event</Link>
-        </StyledNavItem>
-        <StyledNavItem>
-          <Link to="/event-page">Event Page</Link>
         </StyledNavItem>
       </StyledNavMenu>
       <StyledNavMenuBackground clicked={click}>&nbsp;</StyledNavMenuBackground>

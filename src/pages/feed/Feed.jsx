@@ -5,14 +5,17 @@ import FilterChip from "./FilterChip";
 import TonightButton from "./TonightButton"
 import {EventView, FilterRow, Scaffold, Wrapper} from "./styles/Feed.styled";
 import {useTheme} from "styled-components";
-//import axios from "axios";
+import axios from "axios";
+
 
 export default function Feed({toggleTheme}) {
+
+
   const [selectedTags, setSelectedTags] = useState([])
   const [events, setEvents] = useState([])
   const theme = useTheme()
   useEffect(() => {
-    /*
+    
     async function getEvents() {
       return axios.put(
         "http://localhost:4000/api/utilities/filter",
@@ -20,9 +23,9 @@ export default function Feed({toggleTheme}) {
       ).then((response) => setEvents(response["data"].events))
     }
 
-     */
+     
     setEvents([])
-    //getEvents().catch((e) => console.log("ERROR WITH FETCHING EVENTS:", e))
+    getEvents().catch((e) => console.log("ERROR WITH FETCHING EVENTS:", e))
   }, [theme.brightness])
 
 
@@ -65,6 +68,12 @@ function buildEventCards(events, filter) {
         price={event.price}
         tags={event.tags}
         date={event.date}
+        //extras for passing to event-page
+        organizationId={event.organization}
+        capacity={event.capacity}
+        ticketed={event.ticketed}
+        eventId={event.id}
+        
       />
     );
   }

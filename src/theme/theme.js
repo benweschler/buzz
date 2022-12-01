@@ -45,7 +45,9 @@ export const GlobalStyles = createGlobalStyle`
 
 const baseTheme = {
   main: "#FFA700",
+  altDarkerYellow: "#FFBA00",
   mobile: '768px',
+  
 }
 
 export const lightTheme = {

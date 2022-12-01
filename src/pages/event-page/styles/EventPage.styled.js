@@ -26,14 +26,18 @@ export const StyledEventRightColumn = styled.div`
   @media (max-width: ${({ theme }) => theme.mobile}) {
     margin-top: 20px;
     margin-left: 0px;
+    width: 100%;
   }
 `;
 
 export const StyledEventImageDiv = styled.div`
+aspect-ratio: 4/4;
+
 `
 
 export const StyledEventImage = styled.img`
-  aspect-ratio: 4/4;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   border-radius: 10px;
   z-index: 10;
@@ -45,7 +49,6 @@ export const StyledSecurityMessage = styled.p`
 `;
 
 export const StyledEventMainInfo = styled.div`
-  padding-top: 10px;
   display: flex;
   flex-direction: row;
 `;
@@ -57,45 +60,89 @@ export const StyledEventInfoLeftColumn = styled.div`
 
 export const StyledEventInfoRightColumn = styled.div`
   width: 30%;
+  align-items: center;
+  display: flex;
+  justify-content: center;
 `
 export const StyledEventHeader = styled.h1`
-  font-size: 2.5rem;
+  font-size: 3rem;
 
   margin-top: 10px;
   font-family: "Montserrat", sans-serif;
-  font-weight: 1000;
+  font-weight: 700;
+  font-style: italic;
 `;
 
+export const StyledEventCapacityDiv = styled.div`
+  margin-top: 10px;
+  margin-left: 10px;  
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  justify-content: start;
+  gap: 10px;
+  height: 30px;
+  padding: 5px;
+
+`
 export const StyledEventOrganizer = styled.h2`
-  margin-left: 30px;
+  margin-left: 10px;
   margin-top: 5px;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   font-weight: 400;
 `;
 
+export const StyledEventCapacity = styled.h3`
+  
+  font-size: 1.3rem;
+  font-weight: 300;
+`
+
 export const StyledEventLocation = styled.div`
   display: flex;
-  align-items: center;
+  align-items: start;
   gap: 10px;
   margin-left: 6px;
-  margin-top: 50px;
+  margin-top: 40px;
 `;
-
-export const StyledEventDate = styled.h2`
-  color: #ffba00;
-  font-size: 2rem;
+export const StyledEventDateDiv = styled.div`
   display: flex;
   align-items: center;
+  margin-top: 20px;
   gap: 10px;
+  color: ${({theme}) => theme.altDarkerYellow};
+  font-size: 2rem;
+  padding: 10px;
+  
+`
+export const StyledEventDateIcon = styled.svg`
+
+`
+
+export const StyledEventDate = styled.h2`
+  font-size: 2rem;
+  align-items: flex-end;
+  padding-top: 5px;
+  
+  
+  
+
 `;
 
 export const StyledEventTags = styled.div``;
 
 export const StyledEventLocationHeader = styled.h3``;
 
+export const StyledEventQRDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+`
 
+export const StyledEventQRHeader = styled.h4`
 
-
+`
 
 
 
@@ -108,16 +155,18 @@ export const StyledRsvpDiv = styled.div`
   border-radius: 8px;
   align-items: center;
   justify-content: space-between;
-  margin-top: 30px;
+  margin-top: 70px;
   background: ${({theme}) => theme.card};
   box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
 
   @media (max-width: ${({ theme }) => theme.mobile}) {
     position: fixed;
     bottom: 10px; 
-    width: 90%;
+    width: 93%;
     margin: auto;
     z-index: 200;
+    padding: 10px;
+    
    
     
   }

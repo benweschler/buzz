@@ -1,6 +1,10 @@
 import {
+  StyledEventCapacity,
+  StyledEventCapacityDiv,
   StyledEventContainer,
   StyledEventDate,
+  StyledEventDateDiv,
+  StyledEventDateIcon,
   StyledEventDescription,
   StyledEventImageDiv,
   StyledEventInfoLeftColumn,
@@ -8,6 +12,8 @@ import {
   StyledEventLeftColumn,
   StyledEventLocation,
   StyledEventOrganizer,
+  StyledEventQRDiv,
+  StyledEventQRHeader,
   StyledEventRightColumn,
   StyledRsvpAbout,
   StyledRsvpButton,
@@ -15,61 +21,160 @@ import {
   StyledRsvpMessage,
   StyledSecurityMessage,
 } from "./styles/EventPage.styled";
-import DJClub from "../../assets/images/dj-club.jpg";
 import { StyledEventImage } from "./styles/EventPage.styled";
 import { StyledEventHeader } from "./styles/EventPage.styled";
 import { StyledEventMainInfo } from "./styles/EventPage.styled";
 import { IoCalendarClearOutline } from "react-icons/io5";
 import { IoLocationOutline } from "react-icons/io5";
+import { IoPersonOutline } from "react-icons/io5";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import QrCodeScannerRoundedIcon from '@mui/icons-material/QrCodeScannerRounded';
+import QrCodeScannerRoundedIcon from "@mui/icons-material/QrCodeScannerRounded";
+import { useLocation } from "react-router-dom";
 
 const EventPage = () => {
+  const {
+    state: {
+      title,
+      image,
+      date,
+      organizer,
+      location,
+      attendees,
+      price,
+      tags,
+      organizationId,
+      description,
+      capacity,
+      ticketed,
+      eventId,
+    } = {},
+  } = useLocation();
+
   const [active, setActive] = useState(false);
+  const [member, setMember] = useState(false);
 
   useEffect(() => {
     const getRSVP = async () => {
-      const user="gygBGe9hAjfKtcguPC6LgIb3bLl2"
-      const event="eIUuIrsmQBg5SAbHhHQo"
-      const data=await axios.get("http://localhost:4000/api/utilities/"+user+"/"+event)
-      if(data.data.registered)
-      {
-        setActive(true)
+      const user = "gygBGe9hAjfKtcguPC6LgIb3bLl2";
+      const event = eventId;
+      const data = await axios.get(
+        "http://localhost:4000/api/utilities/" + user + "/" + event
+      );
+      if (data.data.registered) {
+        setActive(true);
+      } else {
+        setActive(false);
       }
-      else{
-        setActive(false)
-      }
-    }
+    };
 
     getRSVP().catch(console.error);
   }, [active]);
 
   const handleRsvp = async () => {
-    const body={
-      user:"gygBGe9hAjfKtcguPC6LgIb3bLl2",
-      event:"eIUuIrsmQBg5SAbHhHQo"
+    const body = {
+      user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
+      event: eventId,
+    };
+    const rsvp = await axios.patch(
+      "http://localhost:4000/api/users/register",
+      body
+    );
+    console.log(rsvp.data.registered);
+    if (rsvp.data.registered) {
+      setActive(true);
+    } else {
+      setActive(false);
     }
-    const rsvp=await axios.patch("http://localhost:4000/api/users/register", body)
-    console.log(rsvp.data.registered)
-    if(rsvp.data.registered){
-      setActive(true)
-    }
-    else{
-      setActive(false)
-    }
-  
-    //if(rsvp.data.registered)
-    //set active
-    //else set
+  };
 
-  }
-  
+  const getTime = (date) => {
+    const time = new Date(date);
+    let result = "";
+    const day = time.getDay();
+    switch (day) {
+      case 0:
+        result += "Sun, ";
+        break;
+      case 1:
+        result += "Mon, ";
+        break;
+      case 2:
+        result += "Tue, ";
+        break;
+      case 3:
+        result += "Wed, ";
+        break;
+      case 4:
+        result += "Thu, ";
+        break;
+      case 5:
+        result += "Fri, ";
+        break;
+      case 6:
+        result += "Sat, ";
+        break;
+      default:
+        return;
+    }
+    const month = time.getMonth();
+    switch (month) {
+      case 0:
+        result += "Jan ";
+        break;
+      case 1:
+        result += "Feb ";
+        break;
+      case 2:
+        result += "Mar ";
+        break;
+      case 3:
+        result += "Apr ";
+        break;
+      case 4:
+        result += "May ";
+        break;
+      case 5:
+        result += "Jun ";
+        break;
+      case 6:
+        result += "Jul ";
+        break;
+      case 7:
+        result += "Aug ";
+        break;
+      case 8:
+        result += "Sep ";
+        break;
+      case 9:
+        result += "Oct ";
+        break;
+      case 10:
+        result += "Nov ";
+        break;
+      case 11:
+        result += "Dec ";
+        break;
+      default:
+        return;
+    }
+    const dayOfMonth = time.getDate();
+    result += dayOfMonth + ", ";
+
+    const Hours = time.getHours();
+    let Mins = time.getMinutes();
+    if (Mins < 10) {
+      Mins = "0" + Mins;
+    }
+    result += Hours + ":" + Mins;
+    return result;
+  };
+
   return (
     <StyledEventContainer>
       <StyledEventLeftColumn>
         <StyledEventImageDiv>
-          <StyledEventImage src={DJClub} />
+          <StyledEventImage src={image} />
         </StyledEventImageDiv>
         <StyledSecurityMessage>
           Buzz takes your privacy and security seriously. <br />
@@ -79,38 +184,49 @@ const EventPage = () => {
       </StyledEventLeftColumn>
 
       <StyledEventRightColumn>
+        <StyledEventHeader>{title}</StyledEventHeader>
         <StyledEventMainInfo>
           <StyledEventInfoLeftColumn>
-            <StyledEventHeader>Russian Techno Night</StyledEventHeader>
-            <StyledEventOrganizer> Moscow Techno</StyledEventOrganizer>
+            <StyledEventOrganizer> {organizer}</StyledEventOrganizer>
+            <StyledEventCapacityDiv>
+              <IoPersonOutline />
+              <StyledEventCapacity>
+                {attendees} / {capacity}{" "}
+              </StyledEventCapacity>
+            </StyledEventCapacityDiv>
             <StyledEventLocation>
               <IoLocationOutline />
-              <h3> Royce Hall </h3>
+              <h3> {location} </h3>
             </StyledEventLocation>
-            <StyledEventDate>
+            <StyledEventDateDiv>
               <IoCalendarClearOutline />
-              Thu, 4 Nov, 9:30pm
-            </StyledEventDate>
+              
+              <StyledEventDate>{getTime(date)}</StyledEventDate>
+            </StyledEventDateDiv>
           </StyledEventInfoLeftColumn>
           <StyledEventInfoRightColumn>
-            <QrCodeScannerRoundedIcon />
-            QR Scanner
+            <StyledEventQRDiv>
+              <QrCodeScannerRoundedIcon />
+              <StyledEventQRHeader> QR Scanner </StyledEventQRHeader>
+            </StyledEventQRDiv>
           </StyledEventInfoRightColumn>
         </StyledEventMainInfo>
 
         <StyledRsvpDiv>
-            <StyledRsvpAbout>
-              <h4> Pricing: Free</h4>
-              <StyledRsvpMessage>
-                No upfront costs, or cheeky data mining 👀
-              </StyledRsvpMessage>
-            </StyledRsvpAbout>
+          <StyledRsvpAbout>
+            <h4> Price: {ticketed ? "$" + price : "Free!"}</h4>
+            <StyledRsvpMessage>
+              No extra upfront costs, or cheeky data mining 👀
+            </StyledRsvpMessage>
+          </StyledRsvpAbout>
 
-            <StyledRsvpButton onClick={handleRsvp} activated={active}>{active ? "RSVPed" : "RSVP"}</StyledRsvpButton>
-          </StyledRsvpDiv>
+          <StyledRsvpButton onClick={handleRsvp} activated={active}>
+            {active ? "RSVPed" : "RSVP"}
+          </StyledRsvpButton>
+        </StyledRsvpDiv>
         <StyledEventDescription>
           <h2> About </h2>
-          <p>Example event description.</p>
+          <p>{description}</p>
         </StyledEventDescription>
       </StyledEventRightColumn>
     </StyledEventContainer>

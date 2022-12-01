@@ -33,7 +33,7 @@ function App() {
           <Route path="/event-page" element={<EventPage />} />
           <Route path="/organization-page" element={<OrganizationPage />} />
           <Route path="/user-page" element={<UserPage />} />
-          <Route path="/log-or-sign-in" element={<LogRegCtrl/>} />
+          <Route path="/log-or-sign-up" element={<LogRegCtrl/>} />
           <Route path="/create-event" element={<CreateEvent/>} />
         </Routes>
       </Container>
