@@ -92,7 +92,7 @@ import {
               value={eventInfo[name.toString().toLowerCase()]}
               name={name.toString().toLowerCase()} 
               placeholder= {name} onChange={handleChange}/>
-            <Span/>
+            <Span className="FxBottom"/>
         </Block>
       )
     }
@@ -112,7 +112,7 @@ import {
               value={eventInfo.date}
               name="date" onChange={handleChange}
               style={{color:"grey"}}/>
-            <Span/>
+            <Span className="FxBottom"/>
           </Block>
 
           {BlockInput("Location", "text")}
@@ -125,14 +125,14 @@ import {
                   value={eventInfo.capacity}
                   name="capacity" min="0" max="10000"
                   placeholder="capacity" onChange={handleChange}/>
-                <Span/>
+                <Span className="FxBottom"/>
               </Block>
               <Block>
                 <Input type="number"
                   value={eventInfo.price}
                   name="price" min="0"
                   placeholder="price" onChange={handleChange}/>
-                <Span/>
+                <Span className="FxBottom"/>
               </Block>
             <Label>
               <span style={{fontSize:"2rem",color:"grey"}}>
@@ -149,7 +149,7 @@ import {
             placeholder= "describe your event."
             value={eventInfo.description}
             onChange={handleChange}/>
-            <Span/>
+            <Span className="FxSquare"/>
           </Block>
 
           <Block>
@@ -169,6 +169,7 @@ import {
             <FileInput type="file" name="file"
               accept="image/*, image/HEIC"
               onChange={handleFile}/>
+            <Span className="FxSquare"/>
           </FileInputWrapper>
 
           <Block style={{padding: "0px 10px 0px", color: "red"}}>
