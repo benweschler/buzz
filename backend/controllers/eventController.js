@@ -51,7 +51,7 @@ const createEvent = async (req, res) => {
 
         // Parse bool
         let ticketedBool = false;
-        if (req.body.capacity == "true") {
+        if (req.body.ticketed == "true") {
           ticketedBool = true;
         }
 
@@ -173,11 +173,71 @@ const updateEvent = async (req, res) => {
   if (req.body.tags && (req.body.tags.length > 0)) {
     tagsUpdated = true;
   }
-  const oldTags = eventRef.data().tags
+  
   const tagString = req.body.tags;
   delete req.body.tags;
   if (Object.keys(req.body).length !== 0) {
     await database.collection('Events').doc(id).update(req.body).catch((error) => {
+      res.status(500).json({
+        error: error
+      })
+      return;
+    })
+  }
+
+  // Parse non-string variables
+  // Parse capacity
+  let capacityNum = 0;
+  if (req.body.capacity && !isNaN(parseInt(req.body.capacity))) {
+    capacityNum = parseInt(req.body.capacity);
+    await database.collection('Events').doc(id).update({
+      capacity: capacityNum
+    }).catch((error) => {
+      res.status(500).json({
+        error: error
+      })
+    })
+  }
+
+  // Parse bool
+  if (req.body.ticketed && (req.body.ticketed == "true")) {
+    await database.collection('Events').doc(id).update({
+      ticketed: true
+    }).catch((error) => {
+      res.status(500).json({
+        error: error
+      })
+    })
+  } else if (req.body.ticketed == "false") {
+    await database.collection('Events').doc(id).update({
+      ticketed: false
+    }).catch((error) => {
+      res.status(500).json({
+        error: error
+      })
+    })
+  }
+
+  // Parse date
+  let dateNum = 0;
+  if (req.body.date && !isNaN(parseInt(req.body.date))) {
+    dateNum = parseInt(req.body.date);
+    await database.collection('Events').doc(id).update({
+      date: dateNum
+    }).catch((error) => {
+      res.status(500).json({
+        error: error
+      })
+    })
+  }
+
+  // Parse Price
+  let priceNum = 0;
+  if (req.body.price && !isNaN(parseInt(req.body.price))) {
+    priceNum = parseInt(req.body.price);
+    await database.collection('Events').doc(id).update({
+      price: priceNum
+    }).catch((error) => {
       res.status(500).json({
         error: error
       })
