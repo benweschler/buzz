@@ -6,7 +6,7 @@ export const GlobalStyles = createGlobalStyle`
     color: ${({theme}) => theme.text};
     transition: color 200ms ease-in, background 200ms ease-in;
     
-    font-family: 'Monserrat', 'Poppins', sans-serif;
+    font-family: 'Monserrat', sans-serif;
     font-size: 1.15em;
     margin: 0;
   }
@@ -18,14 +18,9 @@ export const GlobalStyles = createGlobalStyle`
     transform 200ms ease-in;
   }
 
-  @import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Permanent+Marker&family=Poppins&display=swap');
+  
   * {
     box-sizing: border-box;
-  }
-  body {
-    font-family: 'Monserrat', 'Poppins', sans-serif;
-    font-size: 1.15em;
-    margin: 0;
   }
   p {
     opacity: 0.9;

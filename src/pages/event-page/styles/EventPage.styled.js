@@ -13,7 +13,6 @@ export const StyledEventLeftColumn = styled.div`
   justify-content: start;
   margin-top: 100px;
   width: 30%;
-  
   @media (max-width: ${({ theme }) => theme.mobile}) {
     width: 100%;
   }
