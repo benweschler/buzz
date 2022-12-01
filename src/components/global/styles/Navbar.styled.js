@@ -44,11 +44,6 @@ export const StyledNavMenu = styled.ul`
       padding: 15px 0;
     }
 
-    li {
-      position: relative;
-      padding: 15px 0;
-    }
-
     a {
       color: black;
       text-transform: uppercase;
@@ -65,7 +60,7 @@ export const StyledNavMenu = styled.ul`
       bottom: 0;
       left: 50%;
       display: block;
-      background: none repeat scroll 0 0 transparent;
+      /* background: none repeat scroll 0 0 transparent; */
       height: 2px;
       width: 0;
       background: black;
@@ -111,13 +106,4 @@ export const StyledNavBackground = styled.div`
   transition: transform 0.5s;
 `;
 
-export const StyledNavigation = styled.nav`
-  position: fixed;
-  top: 0;
-  right: 0;
-  height: 100vh;
-  z-index: 700;
-  width: ${(props) => (props.clicked ? "100%" : "0")};
-  opacity: ${(props) => (props.clicked ? "1" : "0")};
-  transition: width 0.8s, opacity 0.8s;
-`;
+

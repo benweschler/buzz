@@ -13,17 +13,38 @@ import {
   StyledOrgRightColumn,
 } from "./styles/OrganizationPage.styled";
 import RoyceHall from "../../assets/images/Royce-Hall.jpg";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 const OrganizationPage = () => {
   const [follow, setFollow] = useState(false)
   const [join, setJoin] = useState(false)
+  useEffect(() => {
+    const getOrgRelation = async () => {
+      const user="gygBGe9hAjfKtcguPC6LgIb3bLl2"
+      const org="AO0movdTMMnS3wfVHhGC"
+      const data=await axios.get("http://localhost:4000/api/utilities/org/"+user+"/"+org)
+      if(data.data.following)
+      {
+        setFollow(true)
+      }
+      else{
+        setFollow(false)
+      }
+      if(data.data.member){
+        setJoin(true)
+      }
+      else{
+        setJoin(false)
+      }
+    }
+    getOrgRelation().catch(console.error);
+  }, [join, follow]);
 
   const handleFollow = async() => {
     const body={
       user : "gygBGe9hAjfKtcguPC6LgIb3bLl2",
-      org : "AO0movdTMMnS3wfVHhGC"
+      organization : "AO0movdTMMnS3wfVHhGC"
     }
     const doFollow=await axios.patch("http://localhost:4000/api/users/follow", body)
     console.log(doFollow.data.following)
@@ -37,7 +58,7 @@ const OrganizationPage = () => {
   const handleJoin=async()=>{
     const body={
       user : "gygBGe9hAjfKtcguPC6LgIb3bLl2",
-      org : "AO0movdTMMnS3wfVHhGC"
+      organization : "AO0movdTMMnS3wfVHhGC"
     }
     const doJoin=await axios.patch("http://localhost:4000/api/users/add", body)
     if (doJoin.data.member){

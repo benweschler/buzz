@@ -3,6 +3,8 @@ import {
   StyledEventDate,
   StyledEventDescription,
   StyledEventImageDiv,
+  StyledEventInfoLeftColumn,
+  StyledEventInfoRightColumn,
   StyledEventLeftColumn,
   StyledEventLocation,
   StyledEventOrganizer,
@@ -21,6 +23,7 @@ import { IoCalendarClearOutline } from "react-icons/io5";
 import { IoLocationOutline } from "react-icons/io5";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import QrCodeScannerRoundedIcon from '@mui/icons-material/QrCodeScannerRounded';
 
 const EventPage = () => {
   const [active, setActive] = useState(false);
@@ -77,18 +80,25 @@ const EventPage = () => {
 
       <StyledEventRightColumn>
         <StyledEventMainInfo>
-          <StyledEventHeader>Russian Techno Night</StyledEventHeader>
-          <StyledEventOrganizer> Moscow Techno</StyledEventOrganizer>
-          <StyledEventLocation>
-            <IoLocationOutline />
-            <h3> Royce Hall </h3>
-          </StyledEventLocation>
+          <StyledEventInfoLeftColumn>
+            <StyledEventHeader>Russian Techno Night</StyledEventHeader>
+            <StyledEventOrganizer> Moscow Techno</StyledEventOrganizer>
+            <StyledEventLocation>
+              <IoLocationOutline />
+              <h3> Royce Hall </h3>
+            </StyledEventLocation>
+            <StyledEventDate>
+              <IoCalendarClearOutline />
+              Thu, 4 Nov, 9:30pm
+            </StyledEventDate>
+          </StyledEventInfoLeftColumn>
+          <StyledEventInfoRightColumn>
+            <QrCodeScannerRoundedIcon />
+            QR Scanner
+          </StyledEventInfoRightColumn>
+        </StyledEventMainInfo>
 
-          <StyledEventDate>
-            <IoCalendarClearOutline />
-            Thu, 4 Nov, 9:30pm
-          </StyledEventDate>
-          <StyledRsvpDiv>
+        <StyledRsvpDiv>
             <StyledRsvpAbout>
               <h4> Pricing: Free</h4>
               <StyledRsvpMessage>
@@ -98,7 +108,6 @@ const EventPage = () => {
 
             <StyledRsvpButton onClick={handleRsvp} activated={active}>{active ? "RSVPed" : "RSVP"}</StyledRsvpButton>
           </StyledRsvpDiv>
-        </StyledEventMainInfo>
         <StyledEventDescription>
           <h2> About </h2>
           <p>Example event description.</p>

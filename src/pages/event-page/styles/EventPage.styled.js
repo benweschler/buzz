@@ -46,13 +46,24 @@ export const StyledSecurityMessage = styled.p`
 
 export const StyledEventMainInfo = styled.div`
   padding-top: 10px;
+  display: flex;
+  flex-direction: row;
 `;
 
+
+export const StyledEventInfoLeftColumn = styled.div`
+  width: 70%;
+`
+
+export const StyledEventInfoRightColumn = styled.div`
+  width: 30%;
+`
 export const StyledEventHeader = styled.h1`
   font-size: 2.5rem;
 
   margin-top: 10px;
   font-family: "Montserrat", sans-serif;
+  font-weight: 1000;
 `;
 
 export const StyledEventOrganizer = styled.h2`
@@ -81,6 +92,13 @@ export const StyledEventDate = styled.h2`
 export const StyledEventTags = styled.div``;
 
 export const StyledEventLocationHeader = styled.h3``;
+
+
+
+
+
+
+
 
 export const StyledRsvpDiv = styled.div`
   display: flex;
@@ -171,6 +189,6 @@ export const StyledRsvpButton = styled.button`
 export const StyledEventDescription = styled.div`
   display: flex;
   flex-direction: column;
-  padding-top: 150px;
+  margin-top: 80px;
   margin-bottom: 200px;
 `;

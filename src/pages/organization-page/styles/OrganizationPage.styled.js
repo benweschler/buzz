@@ -10,6 +10,7 @@ export const StyledBanner = styled.div`
   margin: auto;
   height: 500px;
   padding-top: 100px;
+  
 `;
 
 export const StyledBannerImageBlurred = styled.img`
@@ -39,6 +40,7 @@ export const StyledBannerImage = styled.img`
     height: 20rem;
     margin-left: auto;
     margin-right: auto;
+    
   }
 `;
 
@@ -106,14 +108,15 @@ export const StyledOrgButtonDiv = styled.div`
   margin-top: -80px;
   background: ${({ theme }) => theme.card};
   box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
-  margin-left: 80%;
+  margin-left: 70%;
+  margin-right: auto;
   @media (max-width: ${({ theme }) => theme.mobile}) {
-    position: fixed;
-    bottom: 10px;
-    width: 90%;
+    
+    
+    width: 50%;
     margin: auto;
-    margin-left: 70%;
-    justify-content: flex-end;
+    justify-content: center;  
+    margin-top: 20px;
     z-index: 200;
   }
 `;
