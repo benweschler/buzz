@@ -39,7 +39,8 @@ function Login(props) {
     body['password'] = userInfo.password;
 
     axios.post('http://localhost:4000/api/users/signin', body).then((response) => {
-      console.log(response.data);
+      localStorage.setItem('token', JSON.stringify(response.data.token));
+      localStorage.setItem('user', JSON.stringify(response.data.user_data));
     }).catch((error) => {
       if (error.response.data.error.code === "auth/user-not-found") {
         setError('User not found within database');
@@ -57,9 +58,6 @@ function Login(props) {
       <Form onSubmit={handleSubmit}>
         <Flex>
           <h1>Log in</h1>
-          <Link onClick={() => props.switchForm('Register')}>
-            Sign up
-          </Link>
         </Flex>
 
         <Block>
@@ -85,7 +83,10 @@ function Login(props) {
         <Button type="submit">
           Log in
         </Button>
-
+        
+        <Button onClick={() => props.switchForm('Register')}>
+            Sign up
+        </Button>
       </Form>
     </FormWrapper>
     )

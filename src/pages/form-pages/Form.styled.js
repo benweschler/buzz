@@ -26,20 +26,12 @@ export const FormWrapper = styled.div`
 `;
 
 export const Form = styled.form`
-  width: 100%;
-  max-width: 700px;
-  min-width: 400px;
-  padding: 40px;
-  background: rgb(247, 247, 247);
-  border-radius: 10px;
-  box-sizing: border-box;
-  box-shadow: 0 0 10px 0;
-
-  &:focus-within {
-    box-shadow: 0 0 15px 0;
-    background: rgb(250, 250, 250);
-    transition: 0.4s;
-  }
+	width: 100%;
+	max-width: 500px;
+  min-width: 300px;
+	padding: 40px;
+	background: rgb(247,247,247);
+	box-sizing: border-box;
 `;
 
 export const Link = styled.a`
@@ -60,14 +52,10 @@ export const Input = styled.input`
   border: none;
   border-bottom: 4px solid rgb(204, 204, 204);
   font-size: 1.8rem;
-
-  &:focus {
-    outline: none;
-    background: rgb(250, 250, 250);
-    transition: 0.4s;
-  }
-
-  &::placeholder {
+	&: focus{
+		outline: none;
+	}
+  &:: placeholder{
     font-size: 1.8rem;
   }
 `;
