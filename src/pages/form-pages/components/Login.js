@@ -1,3 +1,4 @@
+import axios from "axios";
 import {React,useState} from "react";
 import {
   Block,
@@ -29,14 +30,26 @@ function Login(props) {
       return;
     }
 
-    const login = new FormData();
-    login.append('email', userInfo.email);
-    login.append('password', userInfo.password);
+    //const login = new FormData();
+    //login.append('email', userInfo.email);
+    //login.append('password', userInfo.password);
 
-    console.log("FormData:")
-    for (const entry of login.entries()){
-      console.log(entry[0] + ': ' + entry[1]);
-    }
+    const body = {}
+    body['email'] = userInfo.email;
+    body['password'] = userInfo.password;
+
+    axios.post('http://localhost:4000/api/users/signin', body).then((response) => {
+      console.log(response.data);
+    }).catch((error) => {
+      if (error.response.data.error.code === "auth/user-not-found") {
+        setError('User not found within database');
+        return;
+      } else if (error.response.data.error.code === "auth/wrong-password") {
+        setError('Username or password incorrect');
+        return;
+      }
+      console.log(error);
+    })
   }
 
   return(

@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, {useState} from "react";
 import {
   Block,
@@ -62,11 +63,21 @@ function Register(props) {
     Register.append("password", userInfo.password);
     Register.append("major", userInfo.major);
     Register.append("file", file);
-    
-    console.log("FormData:")
-    for(var entry of Register.entries()) {
-      console.log(entry[0]+ ': '+ entry[1]); 
-    }
+
+    axios.post('http://localhost:4000/api/users/', Register, {
+      'Content-Type': 'multipart/form-data'
+    }).then((response) => {
+      console.log(response.data);
+    }).catch((error) => {
+      if (error.response.data.error.code === "auth/email-already-exists") {
+        setError('Email already exists in database!');
+        return;
+      } else if (error.response.data.error === "One or more fields are missing") {
+        setError('One or more fields are missing!');
+        return;
+      }
+      console.log(error);
+    })
   }
 
   return(
