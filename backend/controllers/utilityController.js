@@ -71,7 +71,9 @@ const filter = async (req, res) => {
       })
     }
   } else {
+    console.log(Date.now())
     const query = await database.collection("Events").where("date", ">", Date.now()).get()
+    console.log(query.docs.length)
     query.forEach((event) => {
       events.push(event.data())
     })
@@ -89,10 +91,33 @@ const filter = async (req, res) => {
   })
 }
 
+const userRegistered=async(req,res)=>{
+  const user=req.params.userid
+  const userRef=await database.collection("Users").doc(user).get()
+  if(!userRef.exists){
+    res.status(404).json({
+      error:"user not found"
+    })
+    return
+  }
+  const event=req.params.eventid
+  const query=await database.collection("Events").doc(event).get()
+  if (!query.exists){
+    res.status(404).json({
+      error:"event not found"
+    })
+    return
+  }
+  res.status(200).json({
+    registered: query.data().attendees.includes(user)
+  })
+}
+
 module.exports = {
   filterTags,
   sortByPop,
   eventsTonight,
   filter,
-  sortByRecency
+  sortByRecency,
+  userRegistered
 };
