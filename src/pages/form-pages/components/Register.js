@@ -67,12 +67,13 @@ function Register(props) {
     axios.post('http://localhost:4000/api/users/', Register, {
       'Content-Type': 'multipart/form-data'
     }).then((response) => {
-      console.log(response.data);
+      localStorage.setItem('token', JSON.stringify(response.data.token));
+      localStorage.setItem('user', JSON.stringify(response.data.user_data));
     }).catch((error) => {
-      if (error.response.data.error.code === "auth/email-already-exists") {
+      if (error.response.data.error.code && (error.response.data.error.code === "auth/email-already-exists")) {
         setError('Email already exists in database!');
         return;
-      } else if (error.response.data.error === "One or more fields are missing") {
+      } else if (error.response.data.error && (error.response.data.error === "One or more fields are missing")) {
         setError('One or more fields are missing!');
         return;
       }

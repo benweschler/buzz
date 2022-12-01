@@ -14,7 +14,6 @@ const crypto = require('crypto');
 const {sortByRecency} = require('./utilityController');
 const {INITIAL_USER_KEYS} = require('../constants/userConstants.js');
 const {WINDOW_TIME} = require('../constants/utilityConstants');
-const e = require('express');
 
 // When designing basic functionality for CRUD operations, I used
 // https://firebase.google.com/docs/firestore/manage-data/add-data
