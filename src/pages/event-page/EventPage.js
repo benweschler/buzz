@@ -19,14 +19,55 @@ import { StyledEventHeader } from "./styles/EventPage.styled";
 import { StyledEventMainInfo } from "./styles/EventPage.styled";
 import { IoCalendarClearOutline } from "react-icons/io5";
 import { IoLocationOutline } from "react-icons/io5";
+import axios from "axios";
+import { useState, useEffect } from "react";
+
 const EventPage = () => {
+  const [active, setActive] = useState(false);
+
+  useEffect(() => {
+    const getRSVP = async () => {
+      const user="gygBGe9hAjfKtcguPC6LgIb3bLl2"
+      const event="eIUuIrsmQBg5SAbHhHQo"
+      const data=await axios.get("http://localhost:4000/api/utilities/"+user+"/"+event)
+      if(data.data.registered)
+      {
+        setActive(true)
+      }
+      else{
+        setActive(false)
+      }
+    }
+
+    getRSVP().catch(console.error);
+  }, [active]);
+
+  const handleRsvp = async () => {
+    const body={
+      user:"gygBGe9hAjfKtcguPC6LgIb3bLl2",
+      event:"eIUuIrsmQBg5SAbHhHQo"
+    }
+    const rsvp=await axios.patch("http://localhost:4000/api/users/register", body)
+    console.log(rsvp.data.registered)
+    if(rsvp.data.registered){
+      setActive(true)
+    }
+    else{
+      setActive(false)
+    }
+  
+    //if(rsvp.data.registered)
+    //set active
+    //else set
+
+  }
+  
   return (
     <StyledEventContainer>
       <StyledEventLeftColumn>
         <StyledEventImageDiv>
           <StyledEventImage src={DJClub} />
         </StyledEventImageDiv>
-        
         <StyledSecurityMessage>
           Buzz takes your privacy and security seriously. <br />
           Your tickets are secured by advanced encryption and stored in a
@@ -55,7 +96,7 @@ const EventPage = () => {
               </StyledRsvpMessage>
             </StyledRsvpAbout>
 
-            <StyledRsvpButton>RSVP</StyledRsvpButton>
+            <StyledRsvpButton onClick={handleRsvp} activated={active}>{active ? "RSVPed" : "RSVP"}</StyledRsvpButton>
           </StyledRsvpDiv>
         </StyledEventMainInfo>
         <StyledEventDescription>

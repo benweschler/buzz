@@ -39,6 +39,9 @@ const Navbar = () => {
         <StyledNavItem>
           <Link to="/create-event">Create Event</Link>
         </StyledNavItem>
+        <StyledNavItem>
+          <Link to="/event-page">Event Page</Link>
+        </StyledNavItem>
       </StyledNavMenu>
       <StyledNavBackground clicked={click}>&nbsp;</StyledNavBackground>
       <StyledHamburger onClick={handleClick}>

@@ -113,11 +113,35 @@ const userRegistered=async(req,res)=>{
   })
 }
 
+const userOrgRelation=async(req,res)=>{
+  const user=req.params.userid
+  const userRef=await database.collection("Users").doc(user).get()
+  if(!userRef.exists){
+    res.status(404).json({
+      error:"user not found"
+    })
+    return
+  }
+  const org=req.params.orgid
+  const query=await database.collection("Organizations").doc(org).get()
+  if (!query.exists){
+    res.status(404).json({
+      error:"organization not found"
+    })
+    return
+  }
+  res.status(200).json({
+    following: userRef.data().clubs_following.includes(org),
+    member: userRef.data().organizations.includes(org)
+  })
+}
+
 module.exports = {
   filterTags,
   sortByPop,
   eventsTonight,
   filter,
   sortByRecency,
-  userRegistered
+  userRegistered,
+  userOrgRelation
 };

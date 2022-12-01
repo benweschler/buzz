@@ -405,7 +405,7 @@ const addUserToOrg = async (req, res) => {
           })
           return
         }
-        let message=""
+        let member=true
         if(orgDoc.data().members.includes(req.body.user)){
             if(orgDoc.data().members.length==1){
                 res.status(400).json({
@@ -419,7 +419,7 @@ const addUserToOrg = async (req, res) => {
               userRef.update({
                 "organizations": FieldValue.arrayRemove(req.body.organization)
               }) 
-            message="User successfully left organization"
+            member=false
         }
         else {
           orgRef.update({
@@ -428,10 +428,10 @@ const addUserToOrg = async (req, res) => {
           userRef.update({
             "organizations": FieldValue.arrayUnion(req.body.organization)
           })
-          message="User successfully added to organization"
+          member=true
         }
           res.status(200).json({
-            "success": message
+            "member": member
           })
       }).catch((error) => {
         res.status(500).json({
@@ -478,7 +478,7 @@ const addUserToEvent = async (req, res) => {
             })
             return
           }
-          let message=""
+          let registered=false
           if(!eventDoc.data().attendees.includes(req.body.user)){
             if (attendees >= capacity) {
                 res.status(500).json({
@@ -492,7 +492,7 @@ const addUserToEvent = async (req, res) => {
           userRef.update({
             "events_registered": FieldValue.arrayUnion(req.body.event)
           })
-          message="user added to event"
+          registered=true
         }
         else{
             eventRef.update({
@@ -501,10 +501,10 @@ const addUserToEvent = async (req, res) => {
             userRef.update({
                 "events_registered": FieldValue.arrayRemove(req.body.event)
             })
-            message="removed user from event"
+           registered=false
         }
           res.status(200).json({
-            "success": message
+            "registered": registered
           })
         }
       }).catch((error) => {
@@ -544,7 +544,7 @@ const followOrg = async (req, res) => {
           })
           return
         }
-       let message=""
+       let following=false
         if(orgDoc.data().followers.includes(req.body.user)){
             orgRef.update({
                 "followers": FieldValue.arrayRemove(req.body.user)
@@ -552,7 +552,7 @@ const followOrg = async (req, res) => {
               userRef.update({
                 "clubs_following": FieldValue.arrayRemove(req.body.organization)
               })
-              message="User successfully unfollowed organization"
+              following=false
         }
          else {
           orgRef.update({
@@ -561,10 +561,10 @@ const followOrg = async (req, res) => {
           userRef.update({
             "clubs_following": FieldValue.arrayUnion(req.body.organization)
           })
-          message="User successfully followed organization"
+          following=true
         }
           res.status(200).json({
-            "success": message
+            "following": following
           })
       }).catch((error) => {
         res.status(500).json({
