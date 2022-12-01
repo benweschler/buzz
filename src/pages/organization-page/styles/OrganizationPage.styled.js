@@ -10,8 +10,6 @@ export const StyledBanner = styled.div`
   margin: auto;
   height: 500px;
   padding-top: 100px;
-  
-
 `;
 
 export const StyledBannerImageBlurred = styled.img`
@@ -22,7 +20,6 @@ export const StyledBannerImageBlurred = styled.img`
   display: block;
   margin: auto;
   /* transform: scale(1.32);  */
-  
 `;
 
 export const StyledBannerImage = styled.img`
@@ -36,7 +33,7 @@ export const StyledBannerImage = styled.img`
   z-index: 200;
   height: 15rem;
   width: 15rem;
- 
+
   @media (max-width: ${({ theme }) => theme.mobile}) {
     width: 20rem;
     height: 20rem;
@@ -76,7 +73,6 @@ export const StyledOrgContainer = styled.div`
     flex-direction: column;
     padding-top: 30px;
   }
-
 `;
 
 export const StyledOrgLeftColumn = styled.div`
@@ -101,4 +97,67 @@ export const StyledOrgRightColumn = styled.div`
   }
 `;
 
+export const StyledOrgButtonDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  border-radius: 8px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: -80px;
+  background: ${({ theme }) => theme.card};
+  box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+  margin-left: 80%;
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    position: fixed;
+    bottom: 10px;
+    width: 90%;
+    margin: auto;
+    margin-left: 70%;
+    justify-content: flex-end;
+    z-index: 200;
+  }
+`;
 
+export const StyledOrgButton = styled.button`
+  background: #ff4742;
+  border: 1px solid #ff4742;
+  border-radius: 6px;
+  box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+  box-sizing: border-box;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: nunito, roboto, proxima-nova, "proxima nova", sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 16px;
+  min-height: 40px;
+  outline: 0;
+  padding: 12px 14px;
+  margin: 15px 15px;
+  text-align: center;
+  text-rendering: geometricprecision;
+  text-transform: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  width: 100px;
+
+  :hover,
+  :active {
+    /* background-color: initial;
+    background-position: 0 0;
+    color: #FF4742; */
+    filter: brightness(85%);
+    transition: filter 100ms ease-in;
+  }
+
+  .activated {
+    background: green;
+  }
+
+  :active {
+    opacity: 0.5;
+  }
+`;

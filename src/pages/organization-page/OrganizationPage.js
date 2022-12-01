@@ -6,19 +6,59 @@ import {
   StyledBannerText,
   StyledOrganizationDescription,
   StyledOrganizationEvents,
+  StyledOrgButton,
+  StyledOrgButtonDiv,
   StyledOrgContainer,
   StyledOrgLeftColumn,
   StyledOrgRightColumn,
 } from "./styles/OrganizationPage.styled";
 import RoyceHall from "../../assets/images/Royce-Hall.jpg";
+import { useState } from "react";
+import axios from "axios";
 
 const OrganizationPage = () => {
+  const [follow, setFollow] = useState(false)
+  const [join, setJoin] = useState(false)
+
+  const handleFollow = async() => {
+    const body={
+      user : "gygBGe9hAjfKtcguPC6LgIb3bLl2",
+      org : "AO0movdTMMnS3wfVHhGC"
+    }
+    const doFollow=await axios.patch("http://localhost:4000/api/users/follow", body)
+    console.log(doFollow.data.following)
+    if (doFollow.data.following){
+      setFollow(true)
+    }
+    else{
+      setFollow(false)
+    }
+  }
+  const handleJoin=async()=>{
+    const body={
+      user : "gygBGe9hAjfKtcguPC6LgIb3bLl2",
+      org : "AO0movdTMMnS3wfVHhGC"
+    }
+    const doJoin=await axios.patch("http://localhost:4000/api/users/add", body)
+    if (doJoin.data.member){
+      setJoin(true)
+    }
+    else{
+      setJoin(false)
+    }
+  }
   return (
     <>
       <StyledBanner>
         <StyledBannerImageBlurred src={RoyceHall} />
         <StyledBannerText>Royce Theater Club</StyledBannerText>
         <StyledBannerImage src={RoyceHall} />
+        <StyledOrgButtonDiv>
+          <StyledOrgButton onClick={handleFollow} following={follow}> {follow ? "Following" : "Follow"} </StyledOrgButton>
+          <StyledOrgButton onClick={handleJoin} joined={join}> {join ? "Joined" : "Join" }</StyledOrgButton>
+
+        </StyledOrgButtonDiv>
+
       </StyledBanner>
 
       <StyledOrgContainer>

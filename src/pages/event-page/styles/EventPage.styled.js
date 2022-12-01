@@ -158,6 +158,11 @@ export const StyledRsvpButton = styled.button`
     transition: filter 100ms ease-in;
   }
 
+  .activated {
+    background: green;
+
+  }
+
   :active {
     opacity: 0.5;
   }
