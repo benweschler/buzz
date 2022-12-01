@@ -1,5 +1,5 @@
-import { IoPeople } from "react-icons/io5";
-import { ImLocation2 } from "react-icons/im";
+import {IoPeople} from "react-icons/io5";
+import {ImLocation2} from "react-icons/im";
 import {
   Attendees,
   Card,
@@ -11,7 +11,6 @@ import {
   Tags,
   Title,
 } from "./styles/EventCard.styled";
-import { useNavigate } from "react-router-dom";
 
 export default function EventCard({
   title,
@@ -22,56 +21,28 @@ export default function EventCard({
   attendees,
   price,
   tags,
+  /* TODO: reimplement navigation
   organizationId,
   description,
   capacity,
   ticketed,
   eventId,
+  */
+  onImageLoad,
 }) {
-  const navigate = useNavigate();
   return (
-    <Card
-      className="card"
-      
-    >
-      <img src={image} alt={title} />
+    <Card className="card">
+      <img src={image} alt={title} onLoad={onImageLoad}/>
       <EventCardBody>
         <Date>{date}</Date>
-        <Title className="overflow-field" onClick={() => {
-        navigate("/event-page", {
-          state: {
-            title: title,
-            image: image,
-            date: date,
-            organizer: organizer,
-            location: location,
-            attendees: attendees,
-            price: price,
-            tags: tags,
-            organizationId: organizationId,
-            description: description,
-            capacity: capacity,
-            ticketed: ticketed,
-            eventId: eventId,
-          },
-        });
-      }}>{title}</Title>
-        <Organizer
-          className="overflow-field"
-          onClick={() => {
-            navigate("/organization-page", {
-              state: { organizationId: organizationId },
-            });
-          }}
-        >
-          {organizer}
-        </Organizer>
+        <Title className="overflow-field">{title}</Title>
+        <Organizer className="overflow-field">{organizer}</Organizer>
         <Location>
-          <ImLocation2 />
+          <ImLocation2/>
           {" " + location}
         </Location>
         <Attendees>
-          <IoPeople />
+          <IoPeople/>
           {" " + attendees} attending
         </Attendees>
         <Tags>{tags.join(" • ")}</Tags>

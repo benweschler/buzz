@@ -6,7 +6,6 @@ import {
   FileInputWrapper,
   FormWrapper,
   Form,
-  Link,
   Input,
   Span,
   Button,
@@ -25,11 +24,11 @@ function Register(props) {
   const [error, setError] = useState('');
 
 
-  function handleChange({ target: {name, value} }) {
+  function handleChange({target: {name, value}}) {
     setUserInfo({...userInfo, [name]: value});
   }
 
-  function handleFile(input){
+  function handleFile(input) {
     setFile(input.target.files[0]);
   }
 
@@ -39,19 +38,19 @@ function Register(props) {
     setFile(initFile);
     setError('');
 
-    var completed = true;
-    for (const entry in userInfo){
-      if (!userInfo[entry]){
+    let completed = true;
+    for (const entry in userInfo) {
+      if (!userInfo[entry]) {
         console.log("missing field: " + entry);
         completed = false;
       }
     }
-    if (!completed){
+    if (!completed) {
       setError("Input fields incompleted!");
       return;
     }
 
-    if (!file){
+    if (!file) {
       setError("No file uploaded!");
       return;
     }
@@ -81,7 +80,7 @@ function Register(props) {
     })
   }
 
-  return(
+  return (
     <FormWrapper>
       <Form onSubmit={handleSubmit}>
         <Flex>
@@ -90,59 +89,59 @@ function Register(props) {
 
         <Block>
           <Input type="name" name="name"
-            placeholder="name"
-            value={userInfo.name}
-            onChange={handleChange}/>
+                 placeholder="name"
+                 value={userInfo.name}
+                 onChange={handleChange}/>
           <Span/>
         </Block>
 
         <Block>
           <Input style={{fontSize: "1.3rem"}}
-            type="email" name="email"
-            placeholder="email"
-            value={userInfo.email}
-            onChange={handleChange}/>
+                 type="email" name="email"
+                 placeholder="email"
+                 value={userInfo.email}
+                 onChange={handleChange}/>
           <Span/>
         </Block>
 
         <Block>
           <Input type="password" name="password"
-            placeholder="password"
-            value={userInfo.password}
-            onChange={handleChange}/>
+                 placeholder="password"
+                 value={userInfo.password}
+                 onChange={handleChange}/>
           <Span/>
         </Block>
 
         <Block>
           <Input type="text" name="major"
-            placeholder="major"
-            value={userInfo.major}
-            onChange={handleChange}/>
+                 placeholder="major"
+                 value={userInfo.major}
+                 onChange={handleChange}/>
           <Span/>
         </Block>
 
         <FileInputWrapper>
           <label htmlFor="file">Upload a profile pic</label>
           <FileInput type="file" name="file"
-            accept="image/*, image/HEIC"
-            onChange={handleFile}/>
+                     accept="image/*, image/HEIC"
+                     onChange={handleFile}/>
         </FileInputWrapper>
 
         <Block style={{padding: "0px 10px 0px", color: "red"}}>
           {error ? error : ''}
         </Block>
 
-        <Button className="Primary"  type="submit">
+        <Button className="Primary" type="submit">
           Sign up
         </Button>
 
-        <Button className="Secondary" 
-          onClick={() => props.switchForm('Login')}>
+        <Button className="Secondary"
+                onClick={() => props.switchForm('Login')}>
           Log in
         </Button>
       </Form>
     </FormWrapper>
-    )
+  )
 }
-  
+
 export default Register;

@@ -33,20 +33,12 @@ export const FormWrapper = styled.div`
 `;
 
 export const Form = styled.form`
-	width: 100%;
-	max-width: 500px;
+  width: 100%;
+  max-width: 500px;
   min-width: 300px;
-	padding: 40px;
-	background: rgb(247,247,247);
+  padding: 40px;
+  background: rgb(247, 247, 247);
 `;
-
-export const Link = styled.a`
-  color: rgb(201, 66, 16);
-
-  &:hover {
-    text-decoration: underline;
-  }
-`
 
 export const Input = styled.input`
   display: block;
@@ -57,10 +49,12 @@ export const Input = styled.input`
   border: none;
   border-bottom: 4px solid rgb(204, 204, 204);
   font-size: 1.8rem;
-	&: focus{
-		outline: none;
-	}
-  &:: placeholder{
+  
+  &:focus {
+    outline: none;
+  }
+
+  &::placeholder {
     font-size: 1.8rem;
   }
 `;
@@ -145,6 +139,7 @@ export const Button = styled.button`
     background-color: ${({theme}) => theme.main};
     color: white;
     border: none;
+
     &:hover {
       color: ${({theme}) => theme.main};
       background-color: white;
@@ -155,6 +150,7 @@ export const Button = styled.button`
     border: 2px solid #b3b3b3;
     background-color: rgb(247, 247, 247);
     color: ${({theme}) => theme.main};
+
     &:hover {
       color: white;
       background-color: ${({theme}) => theme.main};

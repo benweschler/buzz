@@ -17,7 +17,7 @@ export const Wrapper = styled.div`
 `;
 
 export const EventView = styled.div`
-  display: grid;
+  display: ${({visible}) => visible ? "grid" : "none"};
   grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
   gap: 1.5rem;
 `;
@@ -27,3 +27,10 @@ export const FilterRow = styled.div`
   flex-flow: row wrap;
   gap: 1rem;
 `;
+
+export const LoadingIndicator = styled.div`
+  margin-top: 5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+`
