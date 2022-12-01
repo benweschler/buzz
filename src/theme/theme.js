@@ -36,7 +36,6 @@ export const GlobalStyles = createGlobalStyle`
     text-decoration: none;
     color: ${({theme}) => theme.text};
     transition: color 100ms ease-in;
-
   }
   a:hover {
     color: ${({theme}) => theme.main};

@@ -5,6 +5,13 @@ supports absolutely-positioned children */
 export const Block = styled.div`
   position: relative;
   margin: 10px 0;
+
+  &.Separator {
+    margin: 40px 0;
+    height: 1px;
+    width: 100%;
+    background-color: lightgrey;
+  }
 `
 
 /* flex container: 
@@ -31,7 +38,6 @@ export const Form = styled.form`
   min-width: 300px;
 	padding: 40px;
 	background: rgb(247,247,247);
-	box-sizing: border-box;
 `;
 
 export const Link = styled.a`
@@ -47,7 +53,6 @@ export const Input = styled.input`
   width: 100%;
   height: 4rem;
   padding: 5px 10px 15px;
-  box-sizing: border-box;
   background: rgb(247, 247, 247);
   border: none;
   border-bottom: 4px solid rgb(204, 204, 204);
@@ -64,7 +69,6 @@ export const TextArea = styled.textarea`
   resize: none;
   width: 100%;
   height: 100%;
-  box-sizing: border-box;
   padding: 5px 10px 15px;
   background: rgb(247, 247, 247);
   border: none;
@@ -95,7 +99,7 @@ export const FileInputWrapper = styled.div`
 `
 
 export const Span = styled.span`
-  ${Input} + & {
+  &.FxBottom {
     position: absolute;
     bottom: 0;
     left: 50%;
@@ -105,13 +109,13 @@ export const Span = styled.span`
     transition: 0.4s;
   }
 
-  ${Input}:focus + & {
+  ${Input}:focus + &.FxBottom {
     width: 100%;
     transition: 0.4s;
     left: 0;
   }
 
-  ${TextArea} + & {
+  &.FxSquare {
     position: absolute;
     height: 100%;
     bottom: 0;
@@ -120,25 +124,9 @@ export const Span = styled.span`
     transition: 0.4s;
   }
 
-  ${TextArea}:focus + & {
+  ${TextArea}:focus + &.FxSquare {
     width: 100%;
     transition: 0.4s;
-    box-sizing: border-box;
-    border: 4px solid rgb(201, 66, 16);
-  }
-
-  ${FileInputWrapper} > & {
-    position: absolute;
-    height: 100%;
-    bottom: 0;
-    left: 0;
-    width: 0;
-  }
-
-  ${FileInputWrapper}:hover > & {
-    width: 100%;
-    transition: 0.4s;
-    box-sizing: border-box;
     border: 4px solid rgb(201, 66, 16);
   }
 `;
@@ -146,16 +134,32 @@ export const Span = styled.span`
 export const Button = styled.button`
   display: block;
   width: 100%;
-  background-color: rgb(201, 66, 16);
-  color: white;
   margin: 15px 0 5px 0;
-  border: none;
-  border-radius: 5px;
   height: 50px;
   padding: 5px 0;
-  cursor: pointer;
-  box-sizing: border-box;
+  border-radius: 5px;
   font-size: 2rem;
+  cursor: pointer;
+
+  &.Primary {
+    background-color: ${({theme}) => theme.main};
+    color: white;
+    border: none;
+    &:hover {
+      color: ${({theme}) => theme.main};
+      background-color: white;
+    }
+  }
+
+  &.Secondary {
+    border: 2px solid #b3b3b3;
+    background-color: rgb(247, 247, 247);
+    color: ${({theme}) => theme.main};
+    &:hover {
+      color: white;
+      background-color: ${({theme}) => theme.main};
+    }
+  }
 
   &:hover {
     background-color: rgb(186, 61, 15);
