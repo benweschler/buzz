@@ -456,7 +456,7 @@ const addUserToEvent = async (req, res) => {
             })
             return
           }
-          let message=""
+          let registered=false
           if(!eventDoc.data().attendees.includes(req.body.user)){
             if (attendees >= capacity) {
                 res.status(500).json({
@@ -470,7 +470,7 @@ const addUserToEvent = async (req, res) => {
           userRef.update({
             "events_registered": FieldValue.arrayUnion(req.body.event)
           })
-          message="user added to event"
+          registered=true
         }
         else{
             eventRef.update({
@@ -479,10 +479,10 @@ const addUserToEvent = async (req, res) => {
             userRef.update({
                 "events_registered": FieldValue.arrayRemove(req.body.event)
             })
-            message="removed user from event"
+           registered=false
         }
           res.status(200).json({
-            "success": message
+            "registered": registered
           })
         }
       }).catch((error) => {
