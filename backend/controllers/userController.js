@@ -14,6 +14,7 @@ const crypto = require('crypto');
 const {sortByRecency} = require('./utilityController');
 const {INITIAL_USER_KEYS} = require('../constants/userConstants.js');
 const {WINDOW_TIME} = require('../constants/utilityConstants');
+const e = require('express');
 
 // When designing basic functionality for CRUD operations, I used
 // https://firebase.google.com/docs/firestore/manage-data/add-data
@@ -80,68 +81,71 @@ const createUser = async (req, res) => {
         })
       })
 
-        if (userCreated) {
-            // Don't want the password to be included in the document
-            delete req.body.password;
+      if (userCreated) {
+          // Don't want the password to be included in the document
+          delete req.body.password;
 
-            // Create the shared secret
-            const secret = new Uint8Array(20);
-            crypto.getRandomValues(secret);
+          // Create the shared secret
+          const secret = new Uint8Array(20);
+          crypto.getRandomValues(secret);
 
-            await database.collection('Users').doc(recordObj.uid).set({
-                ...req.body,
-                "clubs_following": [],
-                "events_registered": [],
-                "organizations": [],
-                "secret": secret,
-                "id": recordObj.uid
-            }).catch((error) => {
-                console.log('Error creating user document in Firestore');
-                res.status(500).json({
-                    error: error
-                })
+          await database.collection('Users').doc(recordObj.uid).set({
+              ...req.body,
+              "clubs_following": [],
+              "events_registered": [],
+              "organizations": [],
+              "secret": secret,
+              "id": recordObj.uid
+          }).catch((error) => {
+              console.log('Error creating user document in Firestore');
+              res.status(500).json({
+                  error: error
+              })
+          })
+
+          console.log('Created user document with id: ' + recordObj.uid);
+
+          const bucket = storage.bucket();
+          const fullPath = `UserImages/${v4()}`;
+          const bucketFile = bucket.file(fullPath);
+
+          await bucketFile.save(req.file.buffer, {
+            contentType: req.file.mimetype,
+            gzip: true
+          });
+
+          const [url] = await bucketFile.getSignedUrl({
+            action: 'read',
+            expires: '01-01-2030'
+          });
+
+          await database.collection('Users').doc(recordObj.uid).update({
+            image: url
+          }).catch((error) => {
+            res.status(500).json({
+              error: error
             })
-
-            console.log('Created user document with id: ' + recordObj.uid);
-
-      const bucket = storage.bucket();
-      const fullPath = `UserImages/${v4()}`;
-      const bucketFile = bucket.file(fullPath);
-
-      await bucketFile.save(req.file.buffer, {
-        contentType: req.file.mimetype,
-        gzip: true
-      });
-
-      const [url] = await bucketFile.getSignedUrl({
-        action: 'read',
-        expires: '01-01-2030'
-      });
-
-      await database.collection('Users').doc(recordObj.uid).update({
-        image: url
-      }).catch((error) => {
-        res.status(500).json({
-          error: error
-        })
-      })
+          })
 
 
-      // Sign in the user and return the token to the front-end
-      const userCredential = await signInWithEmailAndPassword(clientAuth, email, password).catch((error) => {
-        res.status(400).json({
-          error: error
-        })
-      })
+          // Sign in the user and return the token to the front-end
+          const userCredential = await signInWithEmailAndPassword(clientAuth, email, password).catch((error) => {
+            res.status(400).json({
+              error: error
+            })
+          })
 
-      res.status(200).json({
-        id: recordObj.uid,
-        url: url,
-        token: userCredential.user.stsTokenManager.accessToken
-      })
+          let userRef = await database.collection('Users').doc(recordObj.uid).get()
+          let userData = userRef.data();
+
+          res.status(200).json({
+            id: recordObj.uid,
+            user_data: userData,
+            token: userCredential.user.stsTokenManager.accessToken
+          })
+      }
     }
   }
-}
 }
 
 const readUser = async (req, res) => {
@@ -159,8 +163,12 @@ const readUser = async (req, res) => {
         })
       }
       const user = {...userDoc.data(), events_registered: events}
-      //console.log(events)
-      console.log(user)
+
+      const hmac = new jsSHA("SHA-1", "HEX");
+      hmac.setHMACKey(userDoc.data().secret, "UINT8ARRAY");
+
+      const hmacString = hmac.getHMAC('HEX');
+
       res.status(200).json(user)
     } else {
       res.status(404).json({
@@ -297,11 +305,25 @@ const authenticateUser = async (req, res) => {
     // since firebase on the client side is v9
     signInWithEmailAndPassword(clientAuth, email, password)
       .then((userCredential) => {
-        console.log(userCredential);
-        // Get the token that firebase generates and return it
-        res.status(200).json({
-          success: true,
-          token: userCredential.user.stsTokenManager.accessToken
+        console.log(userCredential.user.uid);
+        database.collection('Users').doc(userCredential.user.uid).get().then((userDoc) => {
+          let userData = {};
+
+          if (userDoc.exists) {
+            // Get the token that firebase generates and return it
+            userData = userDoc.data();
+            res.status(200).json({
+              success: true,
+              token: userCredential.user.stsTokenManager.accessToken,
+              user_data: userData
+            })
+          } else {
+            res.status(500).json({
+              success: false,
+              error: 'User not found'
+            })
+          }
+
         })
       }).catch((error) => {
       res.status(400).json({
@@ -597,45 +619,6 @@ const getFeed = async (req, res) => {
   })
 }
 
-const generateUserOTP = async (req, res) => {
-  if (!Object.keys(req.params).includes("id")) {
-    res.status(400).json({
-      error: "User ID is missing"
-    })
-  } else {
-    const {id} = req.params;
-    const userRef = database.collection('Users').doc(id);
-
-    const userDoc = await userRef.get();
-    if (!userDoc.exists) {
-      res.status(404).json({
-        error: 'User does not exist'
-      })
-    } else {
-      // Code comes from a section of this website: https://smarx.com/posts/2020/08/totp-how-most-2fa-apps-work/
-      const secret = new Uint8Array(userDoc.data().secret);
-
-      // Get current time in seconds
-      // Date.now() returns milliseconds
-      const currentTime = Date.now() / 1000;
-
-      // Our WINDOW_TIME is 60 seconds
-      const sequenceValue = Math.floor(currentTime)
-
-      // Do HMAC-SHA1 with the secret
-      const hmac = new jsSHA("SHA-1", "HEX");
-      hmac.setHMACKey(secret, "UINT8ARRAY");
-      hmac.update(sequenceValue.toString(16));
-
-      const hmacString = hmac.getHMAC('HEX');
-
-      res.status(200).json({
-        hmac: hmacString
-      })
-    }
-  }
-}
-
 const validateUserOTP = async (req, res) => {
   const {id, hmac} = req.params;
 
@@ -690,7 +673,6 @@ module.exports = {
   verifyToken,
   revokeToken,
   addUserToOrg,
-  generateUserOTP,
   validateUserOTP,
   addUserToEvent,
   followOrg,

@@ -3,12 +3,13 @@ import {
   StyledNavItem,
   StyledNavMenu,
   StyledHamburger,
-  StyledNavBackground,
+  StyledNavMenuBackground,
   Logo,
 } from "./styles/Navbar.styled";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import ShowQRButton from "../qr-code/UserQR";
 
 const Navbar = () => {
   const [click, setClick] = useState(false);
@@ -19,6 +20,7 @@ const Navbar = () => {
     <StyledNavbar>
       <Logo>Buzz</Logo>
       <StyledNavMenu clicked={click}>
+        <ShowQRButton/>
         <StyledNavItem>
           <Link to="/feed">See What's Buzzin'</Link>
         </StyledNavItem>
@@ -43,7 +45,7 @@ const Navbar = () => {
           <Link to="/event-page">Event Page</Link>
         </StyledNavItem>
       </StyledNavMenu>
-      <StyledNavBackground clicked={click}>&nbsp;</StyledNavBackground>
+      <StyledNavMenuBackground clicked={click}>&nbsp;</StyledNavMenuBackground>
       <StyledHamburger onClick={handleClick}>
         {click ? (
           <FaTimes size={30} style={{ color: "#ffd800" }} />
