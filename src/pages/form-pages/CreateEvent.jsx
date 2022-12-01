@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { Chip } from "@mui/material";
+import Constants from "../../constants/Constants";
+
 import {
     Block,
     Flex,
@@ -13,8 +16,8 @@ import {
     FileInput,
     Label,
     Switch,
-    Select
   } from './Form.styled';
+import styled from "styled-components";
 
   const initialState = {
       title: '',
@@ -55,7 +58,7 @@ import {
       var completed = true;
       for (const entry in eventInfo){
         if (!eventInfo[entry]){
-          console.log("Not entered: " + entry);
+          // console.log("Not entered: " + entry);
           completed = false;
         }
       }
@@ -99,10 +102,9 @@ import {
   
     return(
       <FormWrapper>
-        <Form onSubmit={handleSubmit}>
+        <Form className="CreateEvent" onSubmit={handleSubmit}>
           <Flex>
-            <h1 style={{fontSize:"3rem"}}>Create an event</h1>
-            <input type="reset"/>
+            <h1>Create an event</h1>
           </Flex>
 
           {BlockInput("Title", "text")}
@@ -119,24 +121,24 @@ import {
 
           {BlockInput("Organization", "text")}
 
-          <Flex style={{gap:"10px"}}>
+          <Flex>
               <Block>
                 <Input type="number"
                   value={eventInfo.capacity}
                   name="capacity" min="0" max="10000"
-                  placeholder="capacity" onChange={handleChange}/>
+                  placeholder="Capacity" onChange={handleChange}/>
                 <Span className="FxBottom"/>
               </Block>
               <Block>
                 <Input type="number"
                   value={eventInfo.price}
                   name="price" min="0"
-                  placeholder="price" onChange={handleChange}/>
+                  placeholder="Price" onChange={handleChange}/>
                 <Span className="FxBottom"/>
               </Block>
             <Label>
               <span style={{fontSize:"2rem",color:"grey"}}>
-                {ticketed? "Ticketed" : "Ticketed?"}
+                Ticketed
               </span>
               <HiddenInput type="checkbox" 
                 checked={ticketed} onChange={handleCheck}/>
@@ -152,18 +154,6 @@ import {
             <Span className="FxSquare"/>
           </Block>
 
-          <Block>
-            <Select>
-              <option value="" hidden>
-                Tags
-              </option>
-              <option value="1">Rock</option>
-              <option value="2">Metal</option>
-              <option value="3">Pop</option>
-              <option value="4">Opera</option>
-            </Select>
-          </Block>
-
           <FileInputWrapper>
             <label htmlFor="file">Upload a photo</label>
             <FileInput type="file" name="file"
@@ -172,16 +162,57 @@ import {
             <Span className="FxSquare"/>
           </FileInputWrapper>
 
+
           <Block style={{padding: "0px 10px 0px", color: "red"}}>
             {error ? error : ''}
           </Block>
 
-          <Button type="submit">
+          <Flex className="Column">
+            <Block className="Separator"/>
+          </Flex>
+
+          <Button className="Primary" type="submit">
             Submit
           </Button>
+          <Button className="Secondary" type="reset">
+            Reset form
+          </Button>
+          
         </Form>
       </FormWrapper>
       )
   }
+
+  function TagChipRow() {
+    const [selectedTags, setSelectedTags] = useState([])
+
+    function toggleTag(index) {
+      selectedTags[index] = !selectedTags[index]
+      setSelectedTags(selectedTags)
+      console.log("Toggled tag at index", index)
+    }
+
+    const tagChips = []
+    let tagIndex = 0
+    for(let [tag, icon] of Object.entries(Constants.tags)) {
+      console.log(tagIndex, tag, icon)
+      tagChips.push(
+        <Chip key={tag} icon={icon} label={tag} onClick={() => toggleTag(tagIndex)}/>
+      )
+      tagIndex++
+    }
+
+    return tagChips
+  }
+
+  const TagChipRowStyle = styled.div`
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+  `
+
+  //<TagChipRowStyle>
+  //<TagChipRow/>
+  //</TagChipRowStyle>
     
   export default CreateEvent;
