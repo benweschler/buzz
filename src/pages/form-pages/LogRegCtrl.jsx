@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import Login from './components/Login';
-import SignUp from './components/Signup';
+import Signup from './components/Signup';
 
 function LogRegCtrl() {
   const [curForm, setCurForm] = useState('Login');
@@ -12,7 +12,7 @@ function LogRegCtrl() {
 
   return (
     curForm === 'Login' ? <Login switchForm={toggleForm}/> :
-      <SignUp switchForm={toggleForm}/>
+      <Signup switchForm={toggleForm}/>
   )
 }
 

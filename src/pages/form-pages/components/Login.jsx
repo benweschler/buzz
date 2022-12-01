@@ -1,11 +1,10 @@
 import axios from "axios";
-import {React,useState} from "react";
+import {useState} from "react";
 import {
   Block,
   Flex,
   FormWrapper,
   Form,
-  Link,
   Input,
   Span,
   Button,
@@ -16,7 +15,7 @@ function Login(props) {
   const [userInfo, setUserInfo] = useState({email: '', password: ''});
   const [error, setError] = useState(null);
 
-  function handleChange({target: {name, value}}){
+  function handleChange({target: {name, value}}) {
     setUserInfo({...userInfo, [name]: value});
   }
 
@@ -24,8 +23,8 @@ function Login(props) {
     e.preventDefault();
     setError(null);
     setUserInfo({email: "", password: ""});
-    
-    if (!userInfo.email || !userInfo.password){
+
+    if (!userInfo.email || !userInfo.password) {
       setError("Missing input fields!");
       return;
     }
@@ -53,7 +52,7 @@ function Login(props) {
     })
   }
 
-  return(
+  return (
     <FormWrapper>
       <Form onSubmit={handleSubmit}>
         <Flex>
@@ -62,17 +61,17 @@ function Login(props) {
 
         <Block>
           <Input type="email" name="email"
-            placeholder="Email"
-            value={userInfo.email}
-            onChange={handleChange}/>
+                 placeholder="Email"
+                 value={userInfo.email}
+                 onChange={handleChange}/>
           <Span className="FxBottom"/>
         </Block>
 
         <Block>
           <Input type="password" name="password"
-            placeholder="Password"
-            value={userInfo.password}
-            onChange={handleChange}/>
+                 placeholder="Password"
+                 value={userInfo.password}
+                 onChange={handleChange}/>
           <Span className="FxBottom"/>
         </Block>
 
@@ -87,13 +86,14 @@ function Login(props) {
         <Button className="Primary" type="submit">
           Log in
         </Button>
+        
         <Button className="Secondary"
-          onClick={() => props.switchForm('Register')}>
-            Sign up
+                onClick={() => props.switchForm('Register')}>
+          Sign up
         </Button>
       </Form>
     </FormWrapper>
-    )
+  )
 }
-  
+
 export default Login;
