@@ -97,7 +97,7 @@ export const StyledHamburger = styled.div`
   }
 `;
 
-export const StyledNavBackground = styled.div`
+export const StyledNavMenuBackground = styled.div`
   @media (max-width: ${({theme}) => theme.mobile}) {
     position: fixed;
     top: 0.2rem;

@@ -5,31 +5,30 @@ import FilterChip from "./FilterChip";
 import TonightButton from "./TonightButton"
 import {EventView, FilterRow, Scaffold, Wrapper} from "./styles/Feed.styled";
 import {useTheme} from "styled-components";
-import axios from "axios";
+//import axios from "axios";
 
 export default function Feed({toggleTheme}) {
   const [selectedTags, setSelectedTags] = useState([])
   const [events, setEvents] = useState([])
   const theme = useTheme()
   useEffect(() => {
+    /*
     async function getEvents() {
-      const response = await axios.put(
+      return axios.put(
         "http://localhost:4000/api/utilities/filter",
-        {
-          tags: [],
-          tonight: theme.brightness === "dark"
-        }
-      )
-      setEvents(response["data"].events)
+        {tags: [], tonight: theme.brightness === "dark"}
+      ).then((response) => setEvents(response["data"].events))
     }
 
-    getEvents().catch((e) => console.log("ERROR WITH FETCHING EVENTS:", e))
+     */
+    setEvents([])
+    //getEvents().catch((e) => console.log("ERROR WITH FETCHING EVENTS:", e))
   }, [theme.brightness])
 
 
   function filter(element) {
-    for(let tag of selectedTags) {
-      if(!element.tags.includes(tag)) return false;
+    for (let tag of selectedTags) {
+      if (!element.tags.includes(tag)) return false;
     }
 
     return true;
@@ -51,7 +50,7 @@ export default function Feed({toggleTheme}) {
 
 function buildEventCards(events, filter) {
   const cards = [];
-  if(events.length === 0) return cards
+  if (events.length === 0) return cards
   events = events.filter(filter)
   for (let event of events) {
     cards.push(

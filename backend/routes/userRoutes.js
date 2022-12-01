@@ -12,7 +12,6 @@ const {
   verifyToken,
   revokeToken,
   addUserToOrg,
-  generateUserOTP,
   validateUserOTP,
   addUserToEvent,
   followOrg,
@@ -29,9 +28,6 @@ router.get('/token/:token', verifyToken);
 
 // Revoke Token
 router.get('/signout/:id', revokeToken);
-
-// Generate OTP QRCode
-router.get('/generateOTP/:id', generateUserOTP);
 
 // Validate OTP QRCode
 router.get('/validateOTP/:id/:hmac', validateUserOTP);

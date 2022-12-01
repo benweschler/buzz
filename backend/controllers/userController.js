@@ -619,45 +619,6 @@ const getFeed = async (req, res) => {
   })
 }
 
-const generateUserOTP = async (req, res) => {
-  if (!Object.keys(req.params).includes("id")) {
-    res.status(400).json({
-      error: "User ID is missing"
-    })
-  } else {
-    const {id} = req.params;
-    const userRef = database.collection('Users').doc(id);
-
-    const userDoc = await userRef.get();
-    if (!userDoc.exists) {
-      res.status(404).json({
-        error: 'User does not exist'
-      })
-    } else {
-      // Code comes from a section of this website: https://smarx.com/posts/2020/08/totp-how-most-2fa-apps-work/
-      const secret = new Uint8Array(userDoc.data().secret);
-
-      // Get current time in seconds
-      // Date.now() returns milliseconds
-      const currentTime = Date.now() / 1000;
-
-      // Our WINDOW_TIME is 60 seconds
-      const sequenceValue = Math.floor(currentTime)
-
-      // Do HMAC-SHA1 with the secret
-      const hmac = new jsSHA("SHA-1", "HEX");
-      hmac.setHMACKey(secret, "UINT8ARRAY");
-      hmac.update(sequenceValue.toString(16));
-
-      const hmacString = hmac.getHMAC('HEX');
-
-      res.status(200).json({
-        hmac: hmacString
-      })
-    }
-  }
-}
-
 const validateUserOTP = async (req, res) => {
   const {id, hmac} = req.params;
 
@@ -712,7 +673,6 @@ module.exports = {
   verifyToken,
   revokeToken,
   addUserToOrg,
-  generateUserOTP,
   validateUserOTP,
   addUserToEvent,
   followOrg,

@@ -35,10 +35,11 @@ export const GlobalStyles = createGlobalStyle`
   a {
     text-decoration: none;
     color: ${({theme}) => theme.text};
+    transition: color 100ms ease-in;
 
   }
   a:hover {
-    color: #ffba00
+    color: ${({theme}) => theme.main};
   }
 `;
 
