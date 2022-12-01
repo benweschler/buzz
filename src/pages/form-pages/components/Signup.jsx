@@ -131,10 +131,13 @@ function Register(props) {
           {error ? error : ''}
         </Block>
 
+        <Flex className="Column">
+          <Block className="Separator"/>
+        </Flex>
+
         <Button className="Primary" type="submit">
           Sign up
         </Button>
-
         <Button className="Secondary"
                 onClick={() => props.switchForm('Login')}>
           Log in
