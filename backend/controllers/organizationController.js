@@ -15,10 +15,12 @@ const createOrganization = async (req, res) => {
         }
     })
 
-    if (missingFields.length !== 0) {
+    const fileUndefined = (req.file == undefined)
+    if (missingFields.length !== 0 || fileUndefined) {
         res.status(400).json({
             error: 'One or more fields are missing',
-            missing_fields: missingFields
+            missing_fields: missingFields,
+            file_undefined: fileUndefined
         })
     } else {
         // Have to check the database if there is the same name in the organization

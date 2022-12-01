@@ -32,7 +32,12 @@ export default function EventCard({
   return (
     <Card
       className="card"
-      onClick={() => {
+      
+    >
+      <img src={image} alt={title} />
+      <EventCardBody>
+        <Date>{date}</Date>
+        <Title className="overflow-field" onClick={() => {
         navigate("/event-page", {
           state: {
             title: title,
@@ -47,16 +52,20 @@ export default function EventCard({
             description: description,
             capacity: capacity,
             ticketed: ticketed,
-            eventId: eventId
+            eventId: eventId,
           },
         });
-      }}
-    >
-      <img src={image} alt={title} />
-      <EventCardBody>
-        <Date>{date}</Date>
-        <Title className="overflow-field">{title}</Title>
-        <Organizer className="overflow-field">{organizer}</Organizer>
+      }}>{title}</Title>
+        <Organizer
+          className="overflow-field"
+          onClick={() => {
+            navigate("/organization-page", {
+              state: { organizationId: organizationId },
+            });
+          }}
+        >
+          {organizer}
+        </Organizer>
         <Location>
           <ImLocation2 />
           {" " + location}

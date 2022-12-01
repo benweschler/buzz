@@ -15,11 +15,25 @@ import {
 import RoyceHall from "../../assets/images/Royce-Hall.jpg";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
+
 
 const OrganizationPage = () => {
+  const {
+    state: {
+      organizationId
+    } = {},
+  } = useLocation(); 
+
   const [follow, setFollow] = useState(false)
   const [join, setJoin] = useState(false)
   useEffect(() => {
+    
+    const readOrg = async () => {
+      
+    }
+
+
     const getOrgRelation = async () => {
       const user="gygBGe9hAjfKtcguPC6LgIb3bLl2"
       const org="AO0movdTMMnS3wfVHhGC"
@@ -38,6 +52,7 @@ const OrganizationPage = () => {
         setJoin(false)
       }
     }
+    readOrg().catch(console.error);
     getOrgRelation().catch(console.error);
   }, [join, follow]);
 

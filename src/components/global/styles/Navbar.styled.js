@@ -22,7 +22,7 @@ export const Logo = styled.h1`
 export const StyledNavMenu = styled.ul`
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0.3rem;
   @media (max-width: ${({theme}) => theme.mobile}) {
     position: fixed;
     top: 0;
@@ -61,7 +61,6 @@ export const StyledNavMenu = styled.ul`
       bottom: 0;
       left: 50%;
       display: block;
-      /* background: none repeat scroll 0 0 transparent; */
       height: 2px;
       width: 0;
       background: black;
