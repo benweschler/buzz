@@ -80,12 +80,13 @@ function Login(props) {
           {error ? error : ''}
         </Block>
 
-        <Block className="Separator"/>
-
+        <Flex className="Column">
+          <Block className="Separator"/>
+        </Flex>
+    
         <Button className="Primary" type="submit">
           Log in
         </Button>
-        
         <Button className="Secondary"
           onClick={() => props.switchForm('Register')}>
             Sign up

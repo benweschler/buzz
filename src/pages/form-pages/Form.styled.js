@@ -10,12 +10,15 @@ supports absolutely-positioned children */
 export const Block = styled.div`
   position: relative;
   margin: 10px 0;
+  flex-basis: 180px;
 
   &.Separator {
-    margin: 20px 0 10px;
     height: 1px;
-    width: 100%;
-    background-color: lightgrey;
+    width: 70%;
+    margin: 40px 0 10px;
+    flex-basis: auto;
+    background-color: ${sharedStyles.grey};
+    border-radius: 10px;
   }
 `
 
@@ -26,7 +29,14 @@ export const Flex = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 10;
   margin: 10px 0;
+
+  &.Column{
+    margin: 0;
+    flex-direction: column;
+    justify-content: center;
+  }
 `
 
 export const FormWrapper = styled.div`
@@ -66,10 +76,10 @@ export const Input = styled.input`
   border: none;
   border-bottom: 4px solid rgb(204, 204, 204);
   font-size: 1.8rem;
-	&: focus{
+	&:focus{
 		outline: none;
 	}
-  &:: placeholder{
+  &::placeholder{
     font-size: 1.8rem;
   }
 `;
@@ -210,7 +220,7 @@ export const HiddenInput = styled.input`
     background: green;
 
     &:before {
-      transform: translate(32px, -50%);
+      transform: translate(24px, -50%);
     }
   }
 `;
