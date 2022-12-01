@@ -65,7 +65,7 @@ function Login(props) {
             placeholder="Email"
             value={userInfo.email}
             onChange={handleChange}/>
-          <Span/>
+          <Span className="FxBottom"/>
         </Block>
 
         <Block>
@@ -73,18 +73,21 @@ function Login(props) {
             placeholder="Password"
             value={userInfo.password}
             onChange={handleChange}/>
-          <Span/>
+          <Span className="FxBottom"/>
         </Block>
 
         <Block style={{padding: "0px 10px 0px", color: "red"}}>
           {error ? error : ''}
         </Block>
 
-        <Button type="submit">
+        <Block className="Separator"/>
+
+        <Button className="Primary" type="submit">
           Log in
         </Button>
         
-        <Button onClick={() => props.switchForm('Register')}>
+        <Button className="Secondary"
+          onClick={() => props.switchForm('Register')}>
             Sign up
         </Button>
       </Form>

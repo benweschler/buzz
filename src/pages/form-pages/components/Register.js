@@ -86,9 +86,6 @@ function Register(props) {
       <Form onSubmit={handleSubmit}>
         <Flex>
           <h1>Sign up</h1>
-          <Link onClick={() => props.switchForm('Login')}>
-            Log in
-          </Link>
         </Flex>
 
         <Block>
@@ -135,8 +132,13 @@ function Register(props) {
           {error ? error : ''}
         </Block>
 
-        <Button type="submit">
+        <Button className="Primary"  type="submit">
           Sign up
+        </Button>
+
+        <Button className="Secondary" 
+          onClick={() => props.switchForm('Login')}>
+          Log in
         </Button>
       </Form>
     </FormWrapper>
