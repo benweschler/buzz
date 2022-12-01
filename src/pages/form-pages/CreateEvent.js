@@ -99,7 +99,7 @@ import {
   
     return(
       <FormWrapper>
-        <Form onSubmit={handleSubmit}>
+        <Form className="CreateEvent" onSubmit={handleSubmit}>
           <Flex>
             <h1 style={{fontSize:"3rem"}}>Create an event</h1>
             <input type="reset"/>

@@ -1,5 +1,10 @@
 import styled from 'styled-components';
 
+const sharedStyles = {
+  grey: "rgb(204, 204, 204)",
+  highlight: ({theme}) => theme.main
+};
+
 /* normal container: 
 supports absolutely-positioned children */
 export const Block = styled.div`
@@ -7,7 +12,7 @@ export const Block = styled.div`
   margin: 10px 0;
 
   &.Separator {
-    margin: 40px 0;
+    margin: 20px 0 10px;
     height: 1px;
     width: 100%;
     background-color: lightgrey;
@@ -38,6 +43,10 @@ export const Form = styled.form`
   min-width: 300px;
 	padding: 40px;
 	background: rgb(247,247,247);
+  &.CreateEvent{
+    max-width: 700px;
+    min-width: 500px;
+  }
 `;
 
 export const Link = styled.a`
@@ -105,7 +114,6 @@ export const Span = styled.span`
     left: 50%;
     width: 0;
     height: 5px;
-    background-color: rgb(201, 66, 16);
     transition: 0.4s;
   }
 
@@ -113,6 +121,7 @@ export const Span = styled.span`
     width: 100%;
     transition: 0.4s;
     left: 0;
+    background-color: ${sharedStyles.highlight};
   }
 
   &.FxSquare {
@@ -127,7 +136,7 @@ export const Span = styled.span`
   ${TextArea}:focus + &.FxSquare {
     width: 100%;
     transition: 0.4s;
-    border: 4px solid rgb(201, 66, 16);
+    border: 4px solid ${sharedStyles.highlight};
   }
 `;
 
@@ -142,27 +151,24 @@ export const Button = styled.button`
   cursor: pointer;
 
   &.Primary {
-    background-color: ${({theme}) => theme.main};
-    color: white;
+    background-color: ${sharedStyles.highlight};
+    color: rgb(247,247,247);
     border: none;
     &:hover {
-      color: ${({theme}) => theme.main};
-      background-color: white;
+      color: ${sharedStyles.highlight};
+      background-color: rgb(247,247,247);
+      border: 2px solid #b3b3b3;
     }
   }
 
   &.Secondary {
     border: 2px solid #b3b3b3;
     background-color: rgb(247, 247, 247);
-    color: ${({theme}) => theme.main};
+    color: ${sharedStyles.highlight};
     &:hover {
-      color: white;
-      background-color: ${({theme}) => theme.main};
+      color: rgb(247,247,247);
+      background-color: ${sharedStyles.highlight};
     }
-  }
-
-  &:hover {
-    background-color: rgb(186, 61, 15);
   }
 `;
 
