@@ -64,7 +64,7 @@ export const Organizer = styled.div`
   font-size: 1rem;
   font-weight: 600;
   align-self: start;
-
+  z-index: 500;
   &:hover {
     text-decoration: underline;
   }

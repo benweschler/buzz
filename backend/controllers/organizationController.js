@@ -15,10 +15,12 @@ const createOrganization = async (req, res) => {
         }
     })
 
-    if (missingFields.length !== 0) {
+    const fileUndefined = (req.file == undefined)
+    if (missingFields.length !== 0 || fileUndefined) {
         res.status(400).json({
             error: 'One or more fields are missing',
-            missing_fields: missingFields
+            missing_fields: missingFields,
+            file_undefined: fileUndefined
         })
     } else {
         // Have to check the database if there is the same name in the organization
@@ -117,9 +119,17 @@ const createOrganization = async (req, res) => {
 const readOrganization = async (req, res)=>{
     const {id} = req.params;
     
-    database.collection('Organizations').doc(id).get().then((doc) => {
+    database.collection('Organizations').doc(id).get().then(async (doc) => {
         if (doc.exists) {
-            res.status(200).json(doc.data());
+            events=[]
+            const eventRef=await database.collection('Events').where("organization", "==", id).where("date", ">", Date.now()).orderBy('date').get()
+            if(!eventRef.empty){
+                eventRef.forEach(event=>{
+                    events.push(event.data())
+                })
+            }
+            const org ={...doc.data(),"events": events}
+            res.status(200).json(org);
         } else {
             res.status(404).json({
                 error: 'Document does not exist'

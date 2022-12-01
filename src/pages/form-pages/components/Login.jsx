@@ -86,7 +86,7 @@ function Login(props) {
         <Button className="Primary" type="submit">
           Log in
         </Button>
-        
+
         <Button className="Secondary"
                 onClick={() => props.switchForm('Register')}>
           Sign up

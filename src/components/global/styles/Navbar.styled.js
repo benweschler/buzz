@@ -22,13 +22,12 @@ export const Logo = styled.h1`
 export const StyledNavMenu = styled.ul`
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0.3rem;
   @media (max-width: ${({theme}) => theme.mobile}) {
     position: fixed;
     top: 0;
     flex-direction: column;
     justify-content: center;
-    width: 100%;
     height: 100%;
     z-index: 800;
     text-align: center;
@@ -61,7 +60,6 @@ export const StyledNavMenu = styled.ul`
       bottom: 0;
       left: 50%;
       display: block;
-      /* background: none repeat scroll 0 0 transparent; */
       height: 2px;
       width: 0;
       background: black;
@@ -106,5 +104,3 @@ export const StyledNavMenuBackground = styled.div`
   transform: ${(props) => (props.clicked ? "scale(80)" : "scale(0)")};
   transition: transform 0.5s;
 `;
-
-

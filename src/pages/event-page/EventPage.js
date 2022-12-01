@@ -54,9 +54,28 @@ const EventPage = () => {
   const [active, setActive] = useState(false);
   const [member, setMember] = useState(false);
 
+
+
+
   useEffect(() => {
+
+    const getOrgRelation = async () => {
+      // user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
+      const user =  "gygBGe9hAjfKtcguPC6LgIb3bLl2"
+      const org=organizationId
+      const data=await axios.get("http://localhost:4000/api/utilities/org/"+user+"/"+org)
+      if(data.data.member){
+        setMember(true)
+      }
+      else{
+        setMember(false)
+      }
+      console.log(data.data.member)
+    }
+    
     const getRSVP = async () => {
-      const user = "gygBGe9hAjfKtcguPC6LgIb3bLl2";
+      // user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
+      const user =  "gygBGe9hAjfKtcguPC6LgIb3bLl2"
       const event = eventId;
       const data = await axios.get(
         "http://localhost:4000/api/utilities/" + user + "/" + event
@@ -69,10 +88,12 @@ const EventPage = () => {
     };
 
     getRSVP().catch(console.error);
-  }, [active]);
+    getOrgRelation().catch(console.error);
+  }, [active, eventId, organizationId]);
 
   const handleRsvp = async () => {
     const body = {
+      // user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
       user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
       event: eventId,
     };
@@ -205,10 +226,12 @@ const EventPage = () => {
             </StyledEventDateDiv>
           </StyledEventInfoLeftColumn>
           <StyledEventInfoRightColumn>
+          {member && (
             <StyledEventQRDiv>
               <QrCodeScannerRoundedIcon />
               <StyledEventQRHeader> QR Scanner </StyledEventQRHeader>
             </StyledEventQRDiv>
+          )}
           </StyledEventInfoRightColumn>
         </StyledEventMainInfo>
 

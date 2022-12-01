@@ -33,6 +33,7 @@ export const StyledEventRightColumn = styled.div`
 export const StyledEventImageDiv = styled.div`
 aspect-ratio: 4/4;
 
+
 `
 
 export const StyledEventImage = styled.img`
@@ -41,16 +42,20 @@ export const StyledEventImage = styled.img`
   object-fit: cover;
   border-radius: 10px;
   z-index: 10;
+  box-shadow: rgba(0, 0, 0, 0.1) 2px 3px 5px;
 `;
 
 export const StyledSecurityMessage = styled.p`
   font-size: 0.8rem;
   padding-left: 10px;
+  padding-top: 5px;
 `;
 
 export const StyledEventMainInfo = styled.div`
   display: flex;
   flex-direction: row;
+  padding-top: 10px;
+  
 `;
 
 
