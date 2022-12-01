@@ -119,9 +119,21 @@ import {
 
           {BlockInput("Organization", "text")}
 
-          <Flex>
-            {BlockInput("Capacity", "number")}
-            {BlockInput("Price","number")}
+          <Flex style={{gap:"10px"}}>
+              <Block>
+                <Input type="number"
+                  value={eventInfo.capacity}
+                  name="capacity" min="0" max="10000"
+                  placeholder="capacity" onChange={handleChange}/>
+                <Span/>
+              </Block>
+              <Block>
+                <Input type="number"
+                  value={eventInfo.price}
+                  name="price" min="0"
+                  placeholder="price" onChange={handleChange}/>
+                <Span/>
+              </Block>
             <Label>
               <span style={{fontSize:"2rem",color:"grey"}}>
                 {ticketed? "Ticketed" : "Ticketed?"}
