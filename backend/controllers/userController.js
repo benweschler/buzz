@@ -383,7 +383,7 @@ const addUserToOrg = async (req, res) => {
           })
           return
         }
-        let message=""
+        let member=true
         if(orgDoc.data().members.includes(req.body.user)){
             if(orgDoc.data().members.length==1){
                 res.status(400).json({
@@ -397,7 +397,7 @@ const addUserToOrg = async (req, res) => {
               userRef.update({
                 "organizations": FieldValue.arrayRemove(req.body.organization)
               }) 
-            message="User successfully left organization"
+            member=false
         }
         else {
           orgRef.update({
@@ -406,10 +406,10 @@ const addUserToOrg = async (req, res) => {
           userRef.update({
             "organizations": FieldValue.arrayUnion(req.body.organization)
           })
-          message="User successfully added to organization"
+          member=true
         }
           res.status(200).json({
-            "success": message
+            "member": member
           })
       }).catch((error) => {
         res.status(500).json({
@@ -522,7 +522,7 @@ const followOrg = async (req, res) => {
           })
           return
         }
-       let message=""
+       let following=false
         if(orgDoc.data().followers.includes(req.body.user)){
             orgRef.update({
                 "followers": FieldValue.arrayRemove(req.body.user)
@@ -530,7 +530,7 @@ const followOrg = async (req, res) => {
               userRef.update({
                 "clubs_following": FieldValue.arrayRemove(req.body.organization)
               })
-              message="User successfully unfollowed organization"
+              following=false
         }
          else {
           orgRef.update({
@@ -539,10 +539,10 @@ const followOrg = async (req, res) => {
           userRef.update({
             "clubs_following": FieldValue.arrayUnion(req.body.organization)
           })
-          message="User successfully followed organization"
+          following=true
         }
           res.status(200).json({
-            "success": message
+            "following": following
           })
       }).catch((error) => {
         res.status(500).json({
