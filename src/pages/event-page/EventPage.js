@@ -32,7 +32,6 @@ import { useState, useEffect } from "react";
 import QrCodeScannerRoundedIcon from "@mui/icons-material/QrCodeScannerRounded";
 import { useLocation } from "react-router-dom";
 
-
 //old import code
 // onClick={() => {
 //   navigate("/event-page", {
@@ -54,56 +53,59 @@ import { useLocation } from "react-router-dom";
 //   });
 // }}
 
-
-
-
 const EventPage = () => {
-  const {
-    state: {
-      title,
-      image,
-      date,
-      organizer,
-      location,
-      attendees,
-      price,
-      tags,
-      organizationId,
-      description,
-      capacity,
-      ticketed,
-      eventId,
-    } = {},
-  } = useLocation();
+  //   const {
+  //     state: {
+  //       title,
+  //       image,
+  //       date,
+  //       organizer,
+  //       location,
+  //       attendees,
+  //       price,
+  //       tags,
+  //       organizationId,
+  //       description,
+  //       capacity,
+  //       ticketed,
+
+  const { state: { eventId } = {} } = useLocation();
 
   const [active, setActive] = useState(false);
   const [member, setMember] = useState(false);
-
-
-
+  const [event, setEvent] = useState({});
 
   useEffect(() => {
+    const getEvent = async () => {
+      const eventId = "UZOKqjWI96Y6SMjxgQhb";
+      const data = await axios.get(
+        "http://localhost:4000/api/events/" + eventId
+      );
+      setEvent(data.data);
+    };
 
     const getOrgRelation = async () => {
       // user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
-      const user =  "gygBGe9hAjfKtcguPC6LgIb3bLl2"
-      const org=organizationId
-      const data=await axios.get("http://localhost:4000/api/utilities/org/"+user+"/"+org)
-      if(data.data.member){
-        setMember(true)
+      const user = "gygBGe9hAjfKtcguPC6LgIb3bLl2";
+      const org = event.organizationId;
+      const data = await axios.get(
+        "http://localhost:4000/api/utilities/org/" + user + "/" + org
+      );
+      if (data.data.member) {
+        setMember(true);
+      } else {
+        setMember(false);
       }
-      else{
-        setMember(false)
-      }
-      console.log(data.data.member)
-    }
+      console.log(data.data.member);
+    };
+
     
+  
     const getRSVP = async () => {
       // user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
-      const user =  "gygBGe9hAjfKtcguPC6LgIb3bLl2"
-      const event = eventId;
+      const user = "gygBGe9hAjfKtcguPC6LgIb3bLl2";
       const data = await axios.get(
-        "http://localhost:4000/api/utilities/" + user + "/" + event
+        "http://localhost:4000/api/utilities/" + user + "/" + event.eventId
       );
       if (data.data.registered) {
         setActive(true);
@@ -111,10 +113,13 @@ const EventPage = () => {
         setActive(false);
       }
     };
-
     getRSVP().catch(console.error);
+
+    getEvent().catch(console.error);
     getOrgRelation().catch(console.error);
-  }, [active, eventId, organizationId]);
+  }, );
+
+
 
   const handleRsvp = async () => {
     const body = {
@@ -220,7 +225,7 @@ const EventPage = () => {
     <StyledEventContainer>
       <StyledEventLeftColumn>
         <StyledEventImageDiv>
-          <StyledEventImage src={image} />
+          <StyledEventImage src={event.image} />
         </StyledEventImageDiv>
         <StyledSecurityMessage>
           Buzz takes your privacy and security seriously. <br />
@@ -230,39 +235,39 @@ const EventPage = () => {
       </StyledEventLeftColumn>
 
       <StyledEventRightColumn>
-        <StyledEventHeader>{title}</StyledEventHeader>
+        <StyledEventHeader>{event.title}</StyledEventHeader>
         <StyledEventMainInfo>
           <StyledEventInfoLeftColumn>
-            <StyledEventOrganizer> {organizer}</StyledEventOrganizer>
+            <StyledEventOrganizer> {event.organizer}</StyledEventOrganizer>
             <StyledEventCapacityDiv>
               <IoPersonOutline />
               <StyledEventCapacity>
-                {attendees} / {capacity}{" "}
+                {event.attendees} / {event.capacity}{" "}
               </StyledEventCapacity>
             </StyledEventCapacityDiv>
             <StyledEventLocation>
               <IoLocationOutline />
-              <h3> {location} </h3>
+              <h3> {event.location} </h3>
             </StyledEventLocation>
             <StyledEventDateDiv>
               <IoCalendarClearOutline />
-              
-              <StyledEventDate>{getTime(date)}</StyledEventDate>
+
+              <StyledEventDate>{getTime(event.date)}</StyledEventDate>
             </StyledEventDateDiv>
           </StyledEventInfoLeftColumn>
           <StyledEventInfoRightColumn>
-          {member && (
-            <StyledEventQRDiv>
-              <QrCodeScannerRoundedIcon />
-              <StyledEventQRHeader> QR Scanner </StyledEventQRHeader>
-            </StyledEventQRDiv>
-          )}
+            {member && (
+              <StyledEventQRDiv>
+                <QrCodeScannerRoundedIcon />
+                <StyledEventQRHeader> QR Scanner </StyledEventQRHeader>
+              </StyledEventQRDiv>
+            )}
           </StyledEventInfoRightColumn>
         </StyledEventMainInfo>
 
         <StyledRsvpDiv>
           <StyledRsvpAbout>
-            <h4> Price: {ticketed ? "$" + price : "Free!"}</h4>
+            <h4> Price: {event.ticketed ? "$" + event.price : "Free!"}</h4>
             <StyledRsvpMessage>
               No extra upfront costs, or cheeky data mining 👀
             </StyledRsvpMessage>
@@ -274,7 +279,7 @@ const EventPage = () => {
         </StyledRsvpDiv>
         <StyledEventDescription>
           <h2> About </h2>
-          <p>{description}</p>
+          <p>{event.description}</p>
         </StyledEventDescription>
       </StyledEventRightColumn>
     </StyledEventContainer>

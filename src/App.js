@@ -29,7 +29,7 @@ function App() {
       <Container>
         <Routes>
           <Route path="/" element={<Navigate to="/feed" />} />
-          <Route path="feed" element={<Feed toggleTheme={toggleTheme}/>}/>
+          <Route path="/feed" element={<Feed toggleTheme={toggleTheme}/>}/>
           <Route path="/event-page" element={<EventPage />} />
           <Route path="/organization-page" element={<OrganizationPage />} />
           <Route path="/user-page" element={<UserPage />} />
