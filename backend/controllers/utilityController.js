@@ -65,14 +65,14 @@ const getFeed = async (id) => {
   let results = []
   const user=await database.collection("Users").doc(id).get()
   const organizations=user.data().clubs_following
-  console.log(organizations)
+
   for(let i=0;i<organizations.length;i++)
   {
     let org = await database.collection('Organizations').doc(organizations[i]).get()
     if (!org.exists) {
       return []
     }
-    database.collection('Events').where("organization", "==", org.id).where("date", ">", Date.now()).orderBy('date').get().then((snapshot) => {
+    await database.collection('Events').where("organization", "==", org.id).where("date", ">", Date.now()).orderBy('date').get().then((snapshot) => {
       snapshot.forEach((doc) => {
         results.push(doc.data());
       });
