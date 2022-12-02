@@ -1,28 +1,33 @@
 
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { ImgOrgCard, OrgCardImgDiv, OrgCardWrapper, TitleDivOrgCard, TitleOrgCard } from './styles/UserOrgCard.styled'
 
 const OrgCard = (
     {
         name,
         image,
+        id,
+        
     }
 ) => {
   return (
-    <OrgCardWrapper>
-      <OrgCardImgDiv>
-        <ImgOrgCard src={image}>
-        </ImgOrgCard>
-      </OrgCardImgDiv>
-      <TitleDivOrgCard>
-        <TitleOrgCard>
-          {name}
-        </TitleOrgCard>
+    <Link to={"/organization-page/" + id}>
+      <OrgCardWrapper>
+        <OrgCardImgDiv>
+          <ImgOrgCard src={image}>
+          </ImgOrgCard>
+        </OrgCardImgDiv>
+        <TitleDivOrgCard>
+          <TitleOrgCard>
+            {name}
+          </TitleOrgCard>
 
-      </TitleDivOrgCard>
+        </TitleDivOrgCard>
 
 
-    </OrgCardWrapper>
+      </OrgCardWrapper>
+    </Link>
   )
 }
 

@@ -45,7 +45,6 @@ export const UserTicketsDiv = styled.div`
 export const TicketsContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-  gap: 1.5rem;
   width: 100%;
   margin: 10px 10px;
 
@@ -75,6 +74,7 @@ export const OrgTopRow = styled.div`
   align-items: center;
   justify-content: space-between;
   height: 100px;
+
   @media (max-width: ${({ theme }) => theme.mobile}) {
       gap: 30px;
       flex-direction: column;
