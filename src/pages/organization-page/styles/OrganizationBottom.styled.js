@@ -1,11 +1,7 @@
 import styled from "styled-components";
 
 
-export const OrganizationEventsDiv = styled.div`
-  padding-top: 30px;
-  display: flex;
-  flex-direction: column;
-`;
+
 
 export const OrganizationDescription = styled.div`
   margin-top: 10px;
@@ -14,7 +10,7 @@ export const OrganizationDescription = styled.div`
 `;
 
 export const OrgBottomContainer = styled.div`
-  margin-top: 100px;
+  margin-top: 40px;
   display: flex;
   padding-left: 20px;
   padding-right: 20px;
@@ -27,7 +23,8 @@ export const OrgBottomContainer = styled.div`
 
 export const OrgLeftColumn = styled.div`
   display: flex;
-  width: 35%;
+  flex-direction: column;
+  width: 50%;
   text-align: start;
   @media (max-width: ${({ theme }) => theme.mobile}) {
     width: 100%;
@@ -36,9 +33,12 @@ export const OrgLeftColumn = styled.div`
 
 export const OrgRightColumn = styled.div`
   display: flex;
-  width: 35%;
+  flex-direction: column;
+
+  width: 50%;
   text-align: start;
   padding-left: 20px;
+  justify-content: start;
 
   @media (max-width: ${({ theme }) => theme.mobile}) {
     width: 100%;
@@ -52,11 +52,11 @@ export const OrgButtonDiv = styled.div`
   border-radius: 8px;
   align-items: center;
   justify-content: space-between;
-  margin-top: -80px;
-  background: ${({ theme }) => theme.card};
+  width: 60%;
+  margin: 0 auto;
+  margin-left: 40%;
+  background: rgba(0,0,0, 0.03);
   box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
-  margin-left: 70%;
-  margin-right: auto;
   @media (max-width: ${({ theme }) => theme.mobile}) {
     
     
@@ -112,6 +112,32 @@ export const OrgButton = styled.button`
   }
 `;
 
+export const OrganizationEventsDiv = styled.div`
+  margin-top: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  
+  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background: ${({ theme }) => theme.card};
+  box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+
+`;
+
+
+export const OrgEventsContainer = styled.div`
+
+`
+
 export const OrgEvent = styled.div`
 
+`
+
+export const EventsHeaderOrg = styled.div`
+  margin-top: 150px;
+  display: flex;
+  justify-content: start;
 `

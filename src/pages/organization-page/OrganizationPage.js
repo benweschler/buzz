@@ -3,7 +3,7 @@ import {
   BannerImage,
   BannerImageBlurred,
   BannerText,
-} from "./styles/OrganizationBanner.styled"
+} from "./styles/OrganizationBanner.styled";
 import {
   OrganizationDescription,
   OrganizationEventsDiv,
@@ -12,20 +12,22 @@ import {
   OrgBottomContainer,
   OrgLeftColumn,
   OrgRightColumn,
+  OrgEventsContainer,
+  EventsHeaderOrg,
 } from "./styles/OrganizationBottom.styled";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 
 const OrganizationPage = () => {
-  // const location = useLocation()
-  // const {organizationID} = location.state
-  const organizationID = "5vJvgrDO0740G6gwvF1k";
+  const location = useLocation();
+  const { organizationID } = location.state;
 
   const [orgData, setOrgData] = useState({});
   const [follow, setFollow] = useState(false);
   const [join, setJoin] = useState(false);
   useEffect(() => {
-    console.log("useEffect query in OrganizationPage")
+    console.log("useEffect query in OrganizationPage");
     const readOrg = async () => {
       const data = await axios.get(
         "http://localhost:4000/api/organizations/" + organizationID
@@ -90,17 +92,7 @@ const OrganizationPage = () => {
       <BannerOrg>
         <BannerImageBlurred src={orgData.image} />
         <BannerText>{orgData.name}</BannerText>
-        <BannerImage src={orgData.image} />
-        <OrgButtonDiv>
-          <OrgButton onClick={handleFollow} following={follow}>
-            {" "}
-            {follow ? "Following" : "Follow"}{" "}
-          </OrgButton>
-          <OrgButton onClick={handleJoin} joined={join}>
-            {" "}
-            {join ? "Joined" : "Join"}
-          </OrgButton>
-        </OrgButtonDiv>
+        {/* <BannerImage src={orgData.image} /> */}
       </BannerOrg>
 
       <OrgBottomContainer>
@@ -109,16 +101,38 @@ const OrganizationPage = () => {
             <h2> About </h2>
             <p>{orgData.description}</p>
           </OrganizationDescription>
-        </OrgLeftColumn>
-
-        <OrgRightColumn>
-          <h2> Our Events:</h2>
+          <EventsHeaderOrg>
+            <h2> Our Events</h2>
+          </EventsHeaderOrg>
           <OrganizationEventsDiv>
+            
+            <OrgEventsContainer>
+              <h3> One </h3>
+              <h3> Two </h3>
+              <h3> Three </h3>
+            </OrgEventsContainer>
             {/* {console.log(orgData.events)}
               {orgData.events.forEach(event=>{
                 renderName(event)
               })} */}
           </OrganizationEventsDiv>
+        </OrgLeftColumn>
+
+        <OrgRightColumn>
+          <OrgButtonDiv>
+            
+            <OrgButton onClick={handleFollow} following={follow}>
+              {" "}
+              {follow ? "Following" : "Follow"}{" "}
+            </OrgButton>
+            <OrgButton onClick={handleJoin} joined={join}>
+              {" "}
+              {join ? "Joined" : "Join"}
+            </OrgButton>
+          </OrgButtonDiv>
+          
+          
+          
         </OrgRightColumn>
       </OrgBottomContainer>
     </>

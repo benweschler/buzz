@@ -9,8 +9,8 @@ export const BannerOrg = styled.div`
   border-radius: 3px;
   margin: auto;
   height: 500px;
-  padding-top: 100px;
-  
+  padding-top: 40px;
+  box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
 `;
 
 export const BannerImageBlurred = styled.img`
