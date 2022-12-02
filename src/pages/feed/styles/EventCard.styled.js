@@ -30,7 +30,35 @@ export const Card = styled.div`
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     transform: scale(1.01);
   }
-`;
+`
+
+export const EventCardBody = styled.div`
+  padding: 0.75rem;
+  display: flex;
+  flex-flow: column wrap;
+  gap: 0.5rem;
+`
+
+export const CardBodyTopRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`
+
+export const Date = styled.div`
+  font-size: 0.9rem;
+  color: grey;
+`
+
+export const PriceChip = styled.div`
+  border-radius: 10px;
+  background: ${props => Color(props.theme.main).alpha(0.5)};
+  padding: 5px 7px;
+  font-weight: 600;
+  font-size: 15px;
+  width: min-content;
+`
 
 export const TitleLink = styled(Link)`
   font-size: 1.2rem;
@@ -44,24 +72,6 @@ export const TitleLink = styled(Link)`
   }
 `
 
-export const EventCardBody = styled.div`
-  padding: 0.75rem;
-  display: flex;
-  flex-flow: column wrap;
-  gap: 0.5rem;
-`
-
-export const PriceChip = styled.div`
-  border-radius: 10px;
-  background: ${props => Color(props.theme.main).alpha(0.5)};
-  padding: 5px 7px;
-  font-weight: 600;
-  font-size: 15px;
-  width: min-content;
-  align-self: end;
-  position: absolute;
-`;
-
 export const OrganizerLink = styled(Link)`
   color: ${props => props.theme.main};
   font-size: 1rem;
@@ -71,11 +81,6 @@ export const OrganizerLink = styled(Link)`
   &:hover {
     text-decoration: underline;
   }
-`
-
-export const Date = styled.div`
-  font-size: 0.9rem;
-  color: grey;
 `
 
 export const Location = styled.div`

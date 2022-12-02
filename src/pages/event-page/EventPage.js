@@ -1,28 +1,34 @@
 import {
-  StyledEventCapacity,
-  StyledEventCapacityDiv,
-  StyledEventContainer,
-  StyledEventDate,
-  StyledEventDateDiv,
-  StyledEventDescription,
-  StyledEventImageDiv,
-  StyledEventInfoLeftColumn,
-  StyledEventInfoRightColumn,
-  StyledEventLeftColumn,
-  StyledEventLocation,
-  StyledEventOrganizer,
-  StyledEventQRDiv,
-  StyledEventQRHeader,
-  StyledEventRightColumn,
-  StyledRsvpAbout,
-  StyledRsvpButton,
-  StyledRsvpDiv,
-  StyledRsvpMessage,
-  StyledSecurityMessage,
-  StyledEventMainInfo,
-  StyledEventHeader,
-  StyledEventImage,
+  EventContainer,
+  EventDescription,
+  EventRightColumn,
 } from "./styles/EventPage.styled";
+import {
+  ImageDivEvent,
+  ImageEvent,
+  LeftColumnEvent,
+  SecurityMessage,
+} from "./styles/EventImageArea.styled";
+import {
+  CapacityDiv,
+  CapacityEvent,
+  DateEvent,
+  EventDateDiv,
+  EventHeader,
+  InfoLeftColumn,
+  InfoRightColumn,
+  LocationEvent,
+  MainInfo,
+  OrganizerEvent,
+  QRDivEvent,
+  QRHeader,
+} from "./styles/EventPageInfoPanel.styled";
+import {
+  RsvpAbout,
+  RsvpButton,
+  RsvpDiv,
+  RsvpMessage,
+} from "./styles/EventRSVP.styled";
 import {
   IoCalendarClearOutline,
   IoLocationOutline,
@@ -31,21 +37,20 @@ import {
 import axios from "axios";
 import { useState, useEffect } from "react";
 import QrCodeScannerRoundedIcon from "@mui/icons-material/QrCodeScannerRounded";
-import { getTime } from "../../utils/dateUtils";
+import formatUnixTime from "../../utils/dateUtils";
+import { useLocation } from "react-router-dom";
 
 
 const EventPage = () => {
-  //TODO const location = useLocation();
-  // const {eventID} = location.state
-  const eventID = "eIUuIrsmQBg5SAbHhHQo"
-  //TODO const { state: { eventID } = {} } = useLocation();
+  const location = useLocation();
+  const { eventID } = location.state;
 
   const [active, setActive] = useState(false);
   const [member, setMember] = useState(false);
   const [event, setEvent] = useState({});
 
   useEffect(() => {
-    console.log("useEffect query in EventPage")
+    console.log("useEffect query in EventPage");
     const getInfo = async () => {
       const eventData = await axios.get(
         "http://localhost:4000/api/events/" + eventID
@@ -72,7 +77,6 @@ const EventPage = () => {
       } else {
         setActive(false);
       }
-      
     };
 
     getInfo().catch(console.error);
@@ -96,69 +100,68 @@ const EventPage = () => {
     }
   };
 
-
   return (
-    <StyledEventContainer>
-      <StyledEventLeftColumn>
-        <StyledEventImageDiv>
-          <StyledEventImage src={event.image} />
-        </StyledEventImageDiv>
-        <StyledSecurityMessage>
+    <EventContainer>
+      <LeftColumnEvent>
+        <ImageDivEvent>
+          <ImageEvent src={event.image} />
+        </ImageDivEvent>
+        <SecurityMessage>
           Buzz takes your privacy and security seriously. <br />
           Your tickets are secured by advanced encryption and stored in a
           personal QR code.
-        </StyledSecurityMessage>
-      </StyledEventLeftColumn>
+        </SecurityMessage>
+      </LeftColumnEvent>
 
-      <StyledEventRightColumn>
-        <StyledEventHeader>{event.title}</StyledEventHeader>
-        <StyledEventMainInfo>
-          <StyledEventInfoLeftColumn>
-            <StyledEventOrganizer> {event.organizer}</StyledEventOrganizer>
-            <StyledEventCapacityDiv>
+      <EventRightColumn>
+        <EventHeader>{event.title}</EventHeader>
+        <MainInfo>
+          <InfoLeftColumn>
+            <OrganizerEvent> {event.organizer}</OrganizerEvent>
+            <CapacityDiv>
               <IoPersonOutline />
-              <StyledEventCapacity>
+              <CapacityEvent>
                 {event.attending} / {event.capacity}{" "}
-              </StyledEventCapacity>
-            </StyledEventCapacityDiv>
-            <StyledEventLocation>
+              </CapacityEvent>
+            </CapacityDiv>
+            <LocationEvent>
               <IoLocationOutline />
               <h3> {event.location} </h3>
-            </StyledEventLocation>
-            <StyledEventDateDiv>
+            </LocationEvent>
+            <EventDateDiv>
               <IoCalendarClearOutline />
 
-              <StyledEventDate>{getTime(event.date)}</StyledEventDate>
-            </StyledEventDateDiv>
-          </StyledEventInfoLeftColumn>
-          <StyledEventInfoRightColumn>
+              <DateEvent>{formatUnixTime(event.date)}</DateEvent>
+            </EventDateDiv>
+          </InfoLeftColumn>
+          <InfoRightColumn>
             {member && (
-              <StyledEventQRDiv>
+              <QRDivEvent>
                 <QrCodeScannerRoundedIcon />
-                <StyledEventQRHeader> QR Scanner </StyledEventQRHeader>
-              </StyledEventQRDiv>
+                <QRHeader> QR Scanner </QRHeader>
+              </QRDivEvent>
             )}
-          </StyledEventInfoRightColumn>
-        </StyledEventMainInfo>
+          </InfoRightColumn>
+        </MainInfo>
 
-        <StyledRsvpDiv>
-          <StyledRsvpAbout>
+        <RsvpDiv>
+          <RsvpAbout>
             <h4> Price: {event.ticketed ? "$" + event.price : "Free!"}</h4>
-            <StyledRsvpMessage>
+            <RsvpMessage>
               No extra upfront costs, or cheeky data mining 👀
-            </StyledRsvpMessage>
-          </StyledRsvpAbout>
-
-          <StyledRsvpButton onClick={handleRsvp} activated={active}>
+            </RsvpMessage>
+          </RsvpAbout>
+          <RsvpButton onClick={handleRsvp} activated={active}>
             {active ? "RSVPed" : "RSVP"}
-          </StyledRsvpButton>
-        </StyledRsvpDiv>
-        <StyledEventDescription>
+          </RsvpButton>
+        </RsvpDiv>
+
+        <EventDescription>
           <h2> About </h2>
           <p>{event.description}</p>
-        </StyledEventDescription>
-      </StyledEventRightColumn>
-    </StyledEventContainer>
+        </EventDescription>
+      </EventRightColumn>
+    </EventContainer>
   );
 };
 

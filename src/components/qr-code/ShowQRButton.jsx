@@ -66,21 +66,21 @@ function QRCard({onClose}) {
   )
 
   useEffect(() => {
+    function decrementTimer() {
+      setExpirationTimer(prevState => {
+        if (prevState === 0) {
+          refreshCode()
+          return prevState
+        } else {
+          return prevState - 1
+        }
+      })
+    }
+
     const interval = setInterval(decrementTimer, TICK_MILLIS)
 
     return () => clearInterval(interval)
-  }, [decrementTimer])
-
-  function decrementTimer() {
-    setExpirationTimer(prevState => {
-      if (prevState === 0) {
-        refreshCode()
-        return prevState
-      } else {
-        return prevState - 1
-      }
-    })
-  }
+  }, [])
 
   function refreshCode() {
     setExpirationTimer(TIMEOUT_INTERVAL)

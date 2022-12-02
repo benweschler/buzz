@@ -40,6 +40,8 @@ function App() {
           navigate('/');
         }
       });
+    // TODO: figure out why eslint warns that this useEffect should depend on navigate
+    // eslint-disable-next-line
     }, []);
 
   return (
