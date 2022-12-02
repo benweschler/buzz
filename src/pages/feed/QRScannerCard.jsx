@@ -102,7 +102,7 @@ export default function QRScannerCard({onClose}) {
 
 async function validateOtp(otp, userID) {
   const data = await axios.get(
-    'http://localhost:4000/api/users/validateOTP/${userID}/${otp}')
+    `http://localhost:4000/api/users/validateOTP/${userID}/${otp}`)
     .catch((e) => console.log("Error validating OTP:", e))
 
   return data.data.authentication
