@@ -53,7 +53,7 @@ const EventPage = () => {
         "http://localhost:4000/api/events/" + eventID
       );
       setEvent(eventData.data);
-      const user = localStorage.getItem("user").id;
+      const user = JSON.parse(localStorage.getItem("user")).id;
       const memberData = await axios.get(
         "http://localhost:4000/api/utilities/org/" +
           user +
