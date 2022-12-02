@@ -43,14 +43,13 @@ function Login(props) {
 
     axios.post('http://localhost:4000/api/users/signin', body).then((response) => {
       let userData = response.data.user_data;
+      secureLocalStorage.setItem("private-key", response.data.user_data.secret);
+
       delete userData.secret;
       localStorage.setItem('token', JSON.stringify(response.data.token));
       localStorage.setItem('user', JSON.stringify(userData));
 
-      secureLocalStorage.setItem(
-        "private-key",
-        "25ded69a67835050b3a2e1beb92812eb521cfc39"
-      )
+      console.log(secureLocalStorage.getItem('private-key'));
       // Navigate user to feed
       navigate('/feed');
     }).catch((error) => {

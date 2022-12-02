@@ -68,17 +68,13 @@ function Register(props) {
     axios.post('http://localhost:4000/api/users/', Register, {
       'Content-Type': 'multipart/form-data'
     }).then((response) => {
-      // Secret key
-      const hmac = new jsSHA("SHA-1", "HEX");
-      hmac.setHMACKey(response.data.user_data.secret, "UINT8ARRAY");
-      const hmacString = hmac.getHMAC('HEX');
-
       let userData = response.data.user_data;
+      secureLocalStorage.setItem("private-key", response.data.user_data.secret);
       delete userData.secret;
       localStorage.setItem('token', JSON.stringify(response.data.token));
       localStorage.setItem('user', JSON.stringify(userData));
 
-      secureLocalStorage.setItem("private-key", hmacString);
+      console.log(secureLocalStorage.getItem('private-key'));
     }).catch((error) => {
       if (error.response.data.error.code && (error.response.data.error.code === "auth/email-already-exists")) {
         setError('Email already exists in database!');

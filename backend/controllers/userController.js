@@ -65,12 +65,15 @@ const createUser = async (req, res) => {
       const secret = new Uint8Array(20);
       crypto.getRandomValues(secret);
 
+      var enc = new TextDecoder('utf-8');
+      const secretKey = enc.decode(secret);
+
       await database.collection('Users').doc(recordObj.uid).set({
           ...req.body,
           "clubs_following": [],
           "events_registered": [],
           "organizations": [],
-          "secret": secret,
+          "secret": secretKey,
           "id": recordObj.uid
       }).catch((error) => {
           console.log('Error creating user document in Firestore');
@@ -620,7 +623,7 @@ const validateUserOTP = async (req, res) => {
       error: "User does not exist"
     })
   } else {
-    const secret = new Uint8Array(userDoc.data().secret);
+    const secret = userDoc.data().secret;
 
     const currentTime = Date.now() / 1000;
 
@@ -633,8 +636,8 @@ const validateUserOTP = async (req, res) => {
       const iteratedTime = sequenceValue - i;
 
       // Do HMAC-SHA1 with the secret
-      const hmac = new jsSHA("SHA-1", "HEX");
-      hmac.setHMACKey(secret, "UINT8ARRAY");
+      const hmac = new jsSHA("SHA-1", "TEXT");
+      hmac.setHMACKey(secret, "TEXT");
       hmac.update(iteratedTime.toString(16));
 
       const hmacString = hmac.getHMAC('HEX');
