@@ -37,6 +37,8 @@ function Login(props) {
     body['email'] = userInfo.email;
     body['password'] = userInfo.password;
 
+    //console.log(process.env.REACT_APP_SERVER_URL);
+
     axios.post('http://localhost:4000/api/users/signin', body).then((response) => {
       let userData = response.data.user_data;
       secureLocalStorage.setItem("private-key", response.data.user_data.secret);
@@ -48,13 +50,13 @@ function Login(props) {
       // Navigate user to feed
       navigate('/feed');
     }).catch((error) => {
-      if (error.response.data.error.code === "auth/user-not-found") {
+      if (error.response.data.error.code && (error.response.data.error.code === "auth/user-not-found")) {
         setError('User not found within database');
         return;
-      } else if (error.response.data.error.code === "auth/wrong-password") {
+      } else if (error.response.data.error.code && (error.response.data.error.code === "auth/wrong-password")) {
         setError('Username or password incorrect');
         return;
-      } else if (error.response.data.error.code === "auth/too-many-requests") {
+      } else if (error.response.data.error.code && (error.response.data.error.code === "auth/too-many-requests")) {
         setError('Too many login attempts');
       }
       console.log(error);

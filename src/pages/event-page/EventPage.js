@@ -58,13 +58,13 @@ const EventPage = () => {
     console.log("useEffect query in EventPage");
     const getInfo = async () => {
       const eventData = await axios.get(
-        "http://localhost:4000/api/events/" + eventID
+        'http://localhost:4000/api/events/' + eventID
       );
       setEventData(eventData.data);
       console.log(eventData);
       const user = JSON.parse(localStorage.getItem("user")).id;
       const memberData = await axios.get(
-        "http://localhost:4000/api/utilities/org/" + user + "/" + eventData.data.organization
+        'http://localhost:4000/api/utilities/org/' + user + "/" + eventData.data.organization
       );
       if (memberData.data.member) {
         setMember(true);
@@ -73,7 +73,7 @@ const EventPage = () => {
       }
       console.log("MEMBER DATA:", memberData.data.member);
       const registeredData = await axios.get(
-        "http://localhost:4000/api/utilities/" + user + "/" + eventID
+        'http://localhost:4000/api/utilities/' + user + "/" + eventID
       );
       if (registeredData.data.registered) {
         setActive(true);
@@ -94,7 +94,7 @@ const EventPage = () => {
     };
 
     await axios.patch(
-      "http://localhost:4000/api/users/register",
+      'http://localhost:4000/api/users/register',
       body
     ).then((rsvp) => {
       if (rsvp.data.registered) {

@@ -37,7 +37,7 @@ const UserPage = () => {
 
     const readUser = async () => {
       const data = await axios.get(
-        "http://localhost:4000/api/users/" + localUser.id
+        'http://localhost:4000/api/users/' + localUser.id
       );
 
       setUserData(data.data);

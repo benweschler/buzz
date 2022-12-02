@@ -25,7 +25,7 @@ export default function Feed({toggleTheme}) {
 
     async function getEvents() {
       return axios.put(
-        "http://localhost:4000/api/utilities/filter",
+        'http://localhost:4000/api/utilities/filter',
         {tags: [], tonight: theme.brightness === "dark"}
       ).then((response) => setEvents(response["data"].events))
     }
