@@ -37,8 +37,7 @@ import {
 import axios from "axios";
 import { useState, useEffect } from "react";
 import QrCodeScannerRoundedIcon from "@mui/icons-material/QrCodeScannerRounded";
-import { useLocation } from "react-router-dom";
-import { getTime } from "../../utils/dateUtils";
+import formatUnixTime from "../../utils/dateUtils";
 import { useLocation } from "react-router-dom";
 
 //old import code
@@ -165,7 +164,7 @@ const EventPage = () => {
             <EventDateDiv>
               <IoCalendarClearOutline />
 
-              <DateEvent>{getTime(event.date)}</DateEvent>
+              <DateEvent>{formatUnixTime(event.date)}</DateEvent>
             </EventDateDiv>
           </InfoLeftColumn>
           <InfoRightColumn>
