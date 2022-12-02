@@ -9,12 +9,23 @@ import {
 import { FaBars, FaTimes } from "react-icons/fa";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from 'axios';
 import ShowQRButton from "../qr-code/UserQR";
 
 const Navbar = () => {
   const [click, setClick] = useState(false);
 
   const handleClick = () => setClick(!click);
+
+  const handleSignOut = async () => {
+    const userID = JSON.parse(localStorage.getItem('user')).id;
+    await axios.get(`http://localhost:4000/api/users/signout/${userID}`).catch((error) => {
+      console.log(error);
+    })
+
+    localStorage.setItem('token', JSON.stringify(""));
+    localStorage.setItem('user', JSON.stringify({}));
+  }
 
   return (
     <StyledNavbar>
@@ -35,8 +46,8 @@ const Navbar = () => {
         <StyledNavItem>
           <Link to="/user-page">My Account</Link>
         </StyledNavItem>
-        <StyledNavItem>
-          <Link to="/log-or-sign-up">Log In</Link>
+        <StyledNavItem onClick={handleSignOut}>
+          <Link to="/log-or-sign-up">Sign Out</Link>
         </StyledNavItem>
         <StyledNavItem>
           <Link to="/create-event">Create Event</Link>

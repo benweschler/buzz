@@ -1,5 +1,6 @@
 import axios from "axios";
 import {useState} from "react";
+import { useNavigate } from 'react-router-dom';
 import {
   Block,
   Flex,
@@ -12,6 +13,7 @@ import {
 
 
 function Login(props) {
+  const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({email: '', password: ''});
   const [error, setError] = useState(null);
 
@@ -40,6 +42,9 @@ function Login(props) {
     axios.post('http://localhost:4000/api/users/signin', body).then((response) => {
       localStorage.setItem('token', JSON.stringify(response.data.token));
       localStorage.setItem('user', JSON.stringify(response.data.user_data));
+
+      // Navigate user to feed
+      navigate('/feed');
     }).catch((error) => {
       if (error.response.data.error.code === "auth/user-not-found") {
         setError('User not found within database');
@@ -47,6 +52,8 @@ function Login(props) {
       } else if (error.response.data.error.code === "auth/wrong-password") {
         setError('Username or password incorrect');
         return;
+      } else if (error.response.data.error.code === "auth/too-many-requests") {
+        setError('Too many login attempts');
       }
       console.log(error);
     })

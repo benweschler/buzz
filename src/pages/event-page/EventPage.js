@@ -61,7 +61,7 @@ const EventPage = () => {
 
     const getOrgRelation = async () => {
       // user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
-      const user =  "gygBGe9hAjfKtcguPC6LgIb3bLl2"
+      const user = localStorage.getItem("user").id
       const org=organizationId
       const data=await axios.get("http://localhost:4000/api/utilities/org/"+user+"/"+org)
       if(data.data.member){
@@ -75,7 +75,7 @@ const EventPage = () => {
     
     const getRSVP = async () => {
       // user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
-      const user =  "gygBGe9hAjfKtcguPC6LgIb3bLl2"
+      const user = localStorage.getItem("user").id
       const event = eventId;
       const data = await axios.get(
         "http://localhost:4000/api/utilities/" + user + "/" + event
@@ -94,7 +94,7 @@ const EventPage = () => {
   const handleRsvp = async () => {
     const body = {
       // user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
-      user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
+      user: localStorage.getItem("user").id,
       event: eventId,
     };
     const rsvp = await axios.patch(
