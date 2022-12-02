@@ -15,6 +15,7 @@ import {
   DateEvent,
   EventDateDiv,
   EventHeader,
+  EventOrgLink,
   InfoLeftColumn,
   InfoRightColumn,
   LocationEvent,
@@ -39,7 +40,9 @@ import { useState, useEffect } from "react";
 import QrCodeScannerRoundedIcon from "@mui/icons-material/QrCodeScannerRounded";
 import formatUnixTime from "../../utils/dateUtils";
 import { useLocation } from "react-router-dom";
-
+import { LoadingIndicator } from "../feed/styles/Feed.styled";
+import { HashLoader } from "react-spinners";
+import { useTheme } from "styled-components";
 
 const EventPage = () => {
   const location = useLocation();
@@ -47,7 +50,9 @@ const EventPage = () => {
 
   const [active, setActive] = useState(false);
   const [member, setMember] = useState(false);
-  const [event, setEvent] = useState({});
+  const [eventData, setEventData] = useState(null);
+
+  const theme = useTheme()
 
   useEffect(() => {
     console.log("useEffect query in EventPage");
@@ -55,7 +60,7 @@ const EventPage = () => {
       const eventData = await axios.get(
         "http://localhost:4000/api/events/" + eventID
       );
-      setEvent(eventData.data);
+      setEventData(eventData.data);
       const user = JSON.parse(localStorage.getItem("user")).id;
       const memberData = await axios.get(
         "http://localhost:4000/api/utilities/org/" +
@@ -68,7 +73,7 @@ const EventPage = () => {
       } else {
         setMember(false);
       }
-      console.log(memberData.data.member);
+      console.log("MEMBER DATA:", memberData.data.member);
       const registeredData = await axios.get(
         "http://localhost:4000/api/utilities/" + user + "/" + eventID
       );
@@ -79,8 +84,8 @@ const EventPage = () => {
       }
     };
 
-    getInfo().catch(console.error);
-  }, []);
+    getInfo().catch((e) => console.log("Error fetching event data on event page:", e));
+  }, [eventID]);
 
   const handleRsvp = async () => {
     const body = {
@@ -100,11 +105,18 @@ const EventPage = () => {
     }
   };
 
+  if(!eventData)
+    return (
+      <LoadingIndicator>
+        <HashLoader size="150px" color={theme.main}/>
+      </LoadingIndicator>
+    )
+
   return (
     <EventContainer>
       <LeftColumnEvent>
         <ImageDivEvent>
-          <ImageEvent src={event.image} />
+          <ImageEvent src={eventData.image} />
         </ImageDivEvent>
         <SecurityMessage>
           Buzz takes your privacy and security seriously. <br />
@@ -114,24 +126,27 @@ const EventPage = () => {
       </LeftColumnEvent>
 
       <EventRightColumn>
-        <EventHeader>{event.title}</EventHeader>
+        <EventHeader>{eventData.title}</EventHeader>
         <MainInfo>
           <InfoLeftColumn>
-            <OrganizerEvent> {event.organizer}</OrganizerEvent>
+            <EventOrgLink to="/organization-page" state={{organizationID: eventData.organization}}>
+              <OrganizerEvent> {eventData.organization_name}</OrganizerEvent> 
+            </EventOrgLink>
+            
             <CapacityDiv>
               <IoPersonOutline />
               <CapacityEvent>
-                {event.attending} / {event.capacity}{" "}
+                {eventData.attending} / {eventData.capacity}{" "}
               </CapacityEvent>
             </CapacityDiv>
             <LocationEvent>
               <IoLocationOutline />
-              <h3> {event.location} </h3>
+              <h3> {eventData.location} </h3>
             </LocationEvent>
             <EventDateDiv>
               <IoCalendarClearOutline />
 
-              <DateEvent>{formatUnixTime(event.date)}</DateEvent>
+              <DateEvent>{formatUnixTime(eventData.date)}</DateEvent>
             </EventDateDiv>
           </InfoLeftColumn>
           <InfoRightColumn>
@@ -146,7 +161,7 @@ const EventPage = () => {
 
         <RsvpDiv>
           <RsvpAbout>
-            <h4> Price: {event.ticketed ? "$" + event.price : "Free!"}</h4>
+            <h4> Price: {eventData.ticketed ? "$" + eventData.price : "Free!"}</h4>
             <RsvpMessage>
               No extra upfront costs, or cheeky data mining 👀
             </RsvpMessage>
@@ -158,7 +173,7 @@ const EventPage = () => {
 
         <EventDescription>
           <h2> About </h2>
-          <p>{event.description}</p>
+          <p>{eventData.description}</p>
         </EventDescription>
       </EventRightColumn>
     </EventContainer>

@@ -14,6 +14,8 @@ import axios from 'axios';
 const UserPage = () => {
 
   const [user, setUser] = useState({})
+  const [userData, setUserData] = useState({})
+
   useEffect(() => {
     const localUser = JSON.parse(localStorage.getItem('user'))
     setUser(localUser)
@@ -23,7 +25,9 @@ const UserPage = () => {
         "http://localhost:4000/api/users/" + localUser.id
       );
       console.log(data.data);
+      setUserData(data.data);
     };
+
 
     readUser().catch(() => {
       console.log('ERROR');
@@ -53,7 +57,9 @@ const UserPage = () => {
           <h2>Your Tickets</h2>
         </LeftColumnUser>
         <RightColumnUser>
+          
           <h2>Your Organizations</h2>
+          {buildOrgData(userData.organizations)}
         </RightColumnUser>
       </UserColumnDiv>
       
@@ -63,5 +69,15 @@ const UserPage = () => {
     </>
   );
 };
+
+function buildOrgData(orgData) {
+  const organizationObjects = JSON.parse(localStorage.getItem('user')).organizations;
+  console.log(organizationObjects);
+  return (
+    organizationObjects.map((org) =>
+      <h1 key={org.id}>{org.name}</h1>
+    )
+  )
+}
 
 export default UserPage;

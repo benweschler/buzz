@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 export const MainInfo = styled.div`
@@ -45,6 +46,10 @@ export const OrganizerEvent = styled.h2`
   font-size: 1.4rem;
   font-weight: 400;
 `;
+
+export const EventOrgLink = styled(Link)`
+  height: 100%;
+`
 
 export const CapacityEvent = styled.h3`
   
