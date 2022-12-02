@@ -17,8 +17,8 @@ export const UserProfile = styled.div`
 `;
 
 export const StyledUserAvatar = styled.img`
-  width: 200px;
-  height: 200px;
+  width: 250px;
+  height: 250px;
   border: 4px solid #000;
   border-radius: 3px;
 `;

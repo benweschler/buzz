@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { useEffect } from "react";
-import { LeftColumnUser, RightColumnUser } from "./styles/UserBottom.styled";
+import { LeftColumnUser, RightColumnUser, UserColumnDiv } from "./styles/UserBottom.styled";
 import {
   UserProfile,
   StyledUserAvatar,
@@ -9,13 +9,26 @@ import {
 } from "./styles/UserProfile.styled";
 // import ExampleEvents from "../../assets/ExampleEvents.json"
 // import UserEventCard from "../../components/UserPage/UserEventCard"
+import axios from 'axios';
 
 const UserPage = () => {
-  
+
   const [user, setUser] = useState({})
   useEffect(() => {
     const localUser = JSON.parse(localStorage.getItem('user'))
     setUser(localUser)
+
+    const readUser = async () => {
+      const data = await axios.get(
+        "http://localhost:4000/api/users/" + localUser.id
+      );
+      console.log(data.data);
+    };
+
+    readUser().catch(() => {
+      console.log('ERROR');
+    })
+
   },[]);
 
   const avatarString = "https://avatars.dicebear.com/api/initials/" + user.name +".svg"
@@ -23,7 +36,7 @@ const UserPage = () => {
   return (
     <>
       <UserProfile>
-        <StyledUserAvatar src={avatarString} />
+        <StyledUserAvatar src={user.image} alt={avatarString} />
         <StyledUserInfo>
           <h2>{user.name}</h2>
           <p>
@@ -33,13 +46,17 @@ const UserPage = () => {
           </p>
         </StyledUserInfo>
       </UserProfile>
+      
 
-      <LeftColumnUser>
-        <h2>Your Tickets</h2>
-      </LeftColumnUser>
-      <RightColumnUser>
-        <h2>Your Organizations</h2>
-      </RightColumnUser>
+      <UserColumnDiv>
+        <LeftColumnUser>
+          <h2>Your Tickets</h2>
+        </LeftColumnUser>
+        <RightColumnUser>
+          <h2>Your Organizations</h2>
+        </RightColumnUser>
+      </UserColumnDiv>
+      
       {/* {ExampleEvents.map((item, index) => (
         <UserEventCard key={index} item={item } />
       ))} */}

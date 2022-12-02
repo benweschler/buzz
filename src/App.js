@@ -1,24 +1,24 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import Feed from "./pages/feed/Feed";
-import {ThemeProvider} from "styled-components";
-import {GlobalStyles, lightTheme, darkTheme} from "./theme/theme";
+import { ThemeProvider } from "styled-components";
+import { GlobalStyles, lightTheme, darkTheme } from "./theme/theme";
 import Navbar from "./components/global/Navbar";
-import EventPage from "./pages/event-page/EventPage"
-import {Navigate, Route, Routes} from "react-router-dom";
+import EventPage from "./pages/event-page/EventPage";
+import { Navigate, Route, Routes } from "react-router-dom";
 import {Container} from "./components/global/styles/Container.styled";
 import OrganizationPage from "./pages/organization-page/OrganizationPage";
-import UserPage from "./pages/user-page/UserPage"
+import UserPage from "./pages/user-page/UserPage";
 import LogRegCtrl from "./pages/form-pages/LogRegCtrl";
 import CreateEvent from "./pages/form-pages/CreateEvent";
 
-import axios from 'axios';
-import {useNavigate} from 'react-router-dom';
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function App() {
   const navigate = useNavigate();
   const [theme, setTheme] = useState(lightTheme);
   const toggleTheme = () =>
-    setTheme(theme.brightness === 'light' ? darkTheme : lightTheme);
+    setTheme(theme.brightness === "light" ? darkTheme : lightTheme);
 
   useEffect(() => {
     console.log("useEffect query in App")
@@ -61,7 +61,6 @@ function App() {
         </Routes>
       </Container>
     </ThemeProvider>
-
   );
 }
 
