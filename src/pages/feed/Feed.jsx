@@ -55,25 +55,23 @@ export default function Feed({toggleTheme}) {
 }
 
 function EventCards({events, filter}) {
-  const [_, setNumLoadedImages] = useState(0)
+  const [numLoadedImages, setNumLoadedImages] = useState(0)
   const [imagesAreLoading, setImagesAreLoading] = useState(true)
   const [failedImageLoads, setFailedImageLoads] = useState([])
   const theme = useTheme()
 
+  useEffect(() => {
+    if(numLoadedImages >= events.length)
+      setImagesAreLoading(false)
+  }, [numLoadedImages, events.length])
+
   const cards = [];
   if (events.length === 0) return cards
 
-  const onImageLoad = () => setNumLoadedImages(prevState => {
-    const newCount = prevState + 1
-    if(newCount >= events.length)
-      setImagesAreLoading(false)
+  const onImageLoad = () => setNumLoadedImages(prevState => prevState + 1)
 
-    return newCount
-  })
-
-  function onImageError(eventTitle) {
+  const onImageError = (eventTitle) =>
     setFailedImageLoads(prev => [...prev, eventTitle])
-  }
 
   events = events.filter(filter)
   for (let event of events) {
