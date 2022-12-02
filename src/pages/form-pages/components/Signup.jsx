@@ -11,8 +11,8 @@ import {
   Button,
   FileInput
 } from '../Form.styled';
-import jsSHA from 'jssha';
 import secureLocalStorage from 'react-secure-storage';
+import { useNavigate } from 'react-router-dom';
 
 const initUserInfo = {
   name: '', email: '', password: '', major: ''
@@ -21,6 +21,7 @@ const initUserInfo = {
 const initFile = '';
 
 function Register(props) {
+  const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(initUserInfo);
   const [file, setFile] = useState(initFile);
   const [error, setError] = useState('');
@@ -71,10 +72,10 @@ function Register(props) {
       let userData = response.data.user_data;
       secureLocalStorage.setItem("private-key", response.data.user_data.secret);
       delete userData.secret;
-      localStorage.setItem('token', JSON.stringify(response.data.token));
       localStorage.setItem('user', JSON.stringify(userData));
 
       console.log(secureLocalStorage.getItem('private-key'));
+      navigate('/feed');
     }).catch((error) => {
       if (error.response.data.error.code && (error.response.data.error.code === "auth/email-already-exists")) {
         setError('Email already exists in database!');

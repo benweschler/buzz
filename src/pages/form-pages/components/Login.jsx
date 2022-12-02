@@ -33,10 +33,6 @@ function Login(props) {
       return;
     }
 
-    //const login = new FormData();
-    //login.append('email', userInfo.email);
-    //login.append('password', userInfo.password);
-
     const body = {}
     body['email'] = userInfo.email;
     body['password'] = userInfo.password;
@@ -46,7 +42,6 @@ function Login(props) {
       secureLocalStorage.setItem("private-key", response.data.user_data.secret);
 
       delete userData.secret;
-      localStorage.setItem('token', JSON.stringify(response.data.token));
       localStorage.setItem('user', JSON.stringify(userData));
 
       console.log(secureLocalStorage.getItem('private-key'));

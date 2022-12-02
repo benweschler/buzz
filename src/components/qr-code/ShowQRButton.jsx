@@ -97,7 +97,7 @@ function QRCard({onClose}) {
             <IoClose/>
           </CloseButton>
         </TopRow>
-        <IDUserName>Ben Weschler</IDUserName>
+        <IDUserName>{JSON.parse(localStorage.getItem('user')).name}</IDUserName>
       </div>
       <QRRow>
         <QRBorder>
