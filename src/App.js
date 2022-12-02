@@ -14,6 +14,7 @@ import CreateOrg from "./pages/form-pages/components/CreateOrg";
 
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import {onAuthStateChanged} from 'firebase/auth';
 const {auth} = require('./firebase/index.js');
 
 function App() {
@@ -22,36 +23,20 @@ function App() {
   const toggleTheme = () =>
     setTheme(theme.brightness === "light" ? darkTheme : lightTheme);
 
-    useEffect(() => {
-      async function getCurrentUser(id) {
-        axios.get(
-          `http://localhost:4000/api/users/${id}`
-        ).then((response) => {
-          if (response.data.success)
-            navigate('/feed')
-        })
-      }
-
-      auth.onIdTokenChanged(function(user) {
-        if (user) {
-          // User is signed in or token was refreshed.
-          console.log('User has signed in!')
-          getCurrentUser(user.uid);
-        } else {
-          navigate('/');
-        }
-      });
-    // TODO: figure out why eslint warns that this useEffect should depend on navigate
-    // eslint-disable-next-line
-    }, []);
-
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyles/>
       <Navbar/>
       <Container>
         <Routes>
-          <Route path="/" element={<Navigate to="/log-or-sign-up"/>}/>
+          
+          <Route exact path="/" element={
+            JSON.parse(localStorage.getItem('user')).id ? (
+              <Feed toggleTheme={toggleTheme}/>
+            ) : (
+              <Navigate to="/log-or-sign-up"/>
+            )
+            }/>
           <Route path="/feed" element={<Feed toggleTheme={toggleTheme}/>}/>
           <Route path="/event-page" element={<EventPage/>}/>
           <Route path="/organization-page" element={<OrganizationPage/>}/>
