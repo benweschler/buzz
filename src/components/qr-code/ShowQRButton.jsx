@@ -4,8 +4,8 @@ import {useState} from "react";
 import QrCodeRoundedIcon from '@mui/icons-material/QrCodeRounded';
 import {Box} from "@mui/material";
 import {modalStyle} from "../modalStyles";
-import {StyledIconButton} from "../global/StyledButtons";
 import QRCard from "./QRCard";
+import {NavBarItem} from "../global/styles/Navbar.styled";
 
 export default function ShowQRButton() {
   const [open, setOpen] = useState(false)
@@ -15,9 +15,9 @@ export default function ShowQRButton() {
 
   return (
     <>
-      <StyledIconButton onClick={handleOpen}>
+      <NavBarItem onClick={handleOpen}>
         <QrCodeRoundedIcon/>
-      </StyledIconButton>
+      </NavBarItem>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"

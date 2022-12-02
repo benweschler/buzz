@@ -14,6 +14,7 @@ import {useTheme} from "styled-components";
 import axios from "axios";
 import {HashLoader} from 'react-spinners'
 import QRScannerButton from "./QRScannerButton";
+import FollowingButton from "./FollowingButton";
 
 export default function Feed({toggleTheme}) {
   const [selectedTags, setSelectedTags] = useState([])
@@ -47,6 +48,7 @@ export default function Feed({toggleTheme}) {
         <QRScannerButton/>
         <h1>Popular Events <span style={{color: "grey"}}>at UCLA</span></h1>
         <TonightButton toggleTheme={toggleTheme}/>
+        <FollowingButton/>
         <FilterRow>
           {renderTagFilters(selectedTags, setSelectedTags)}
         </FilterRow>

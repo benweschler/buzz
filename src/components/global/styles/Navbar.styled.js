@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import Color from "color";
 
 export const StyledNavbar = styled.div`
   width: 100%;
@@ -26,7 +27,7 @@ export const Logo = styled.h1`
 export const StyledNavMenu = styled.ul`
   display: flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 2rem;
   @media (max-width: ${({theme}) => theme.mobile}) {
     position: fixed;
     top: 10%;
@@ -79,13 +80,26 @@ export const StyledNavMenu = styled.ul`
   }
 `;
 
-export const StyledNavItem = styled.li`
-  padding: 1rem;
-  
+export const NavBarItem = styled.li`
+  background: transparent;
+  color: ${({theme}) => theme.text};
+  border-radius: 0.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: color 100ms ease-in, border 100ms ease-in, background 100ms ease-in;
+  max-width: fit-content;
+  max-height: fit-content;
+  border: transparent;
+
   @media (max-width: ${({theme}) => theme.mobile}) {
     margin: 1.5rem;
     justify-content: center;
     font-size: 1.8rem;
+  }
+
+  &:hover {
+    color: ${({theme}) => theme.main};
+    background: ${({theme}) => Color(theme.main).alpha(0.07)};
   }
 `;
 

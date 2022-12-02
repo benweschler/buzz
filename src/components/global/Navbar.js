@@ -1,6 +1,6 @@
 import {
   StyledNavbar,
-  StyledNavItem,
+  NavBarItem,
   StyledNavMenu,
   StyledHamburger,
   StyledNavMenuBackground,
@@ -39,15 +39,15 @@ const Navbar = () => {
 
       <StyledNavMenu clicked={click}>
         <ShowQRButton/>
-        <StyledNavItem onClick={handleClick}>
+        <NavBarItem onClick={handleClick}>
           <Link to="/feed">See What's Buzzin'</Link>
-        </StyledNavItem>
-        <StyledNavItem onClick={handleClick}>
+        </NavBarItem>
+        <NavBarItem onClick={handleClick}>
           <Link to="/user-page">My Account</Link>
-        </StyledNavItem>
-        <StyledNavItem onClick={handleSignOut}>
+        </NavBarItem>
+        <NavBarItem onClick={handleSignOut}>
           <Link to="/log-or-sign-up">Sign Out</Link>
-        </StyledNavItem>
+        </NavBarItem>
       </StyledNavMenu>
       <StyledNavMenuBackground clicked={click}>&nbsp;</StyledNavMenuBackground>
       <StyledHamburger onClick={handleClick}>
