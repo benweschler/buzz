@@ -10,8 +10,8 @@ import {
 import { FaBars, FaTimes } from "react-icons/fa";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import ShowQRButton from "../qr-code/ShowQRButton";
 import axios from 'axios';
-import ShowQRButton from "../qr-code/UserQR";
 import secureLocalStorage from 'react-secure-storage';
 
 const Navbar = () => {
@@ -36,7 +36,7 @@ const Navbar = () => {
       <LogoLink to="/feed">
         <Logo>Buzz</Logo>
       </LogoLink>
-      
+
       <StyledNavMenu clicked={click}>
         <ShowQRButton/>
         <StyledNavItem>

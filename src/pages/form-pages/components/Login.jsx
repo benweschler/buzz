@@ -11,7 +11,6 @@ import {
   Span,
   Button,
 } from '../Form.styled';
-import jsSHA from 'jssha';
 import secureLocalStorage from 'react-secure-storage';
 
 
@@ -43,18 +42,15 @@ function Login(props) {
     body['password'] = userInfo.password;
 
     axios.post('http://localhost:4000/api/users/signin', body).then((response) => {
-      // Secret key
-      const hmac = new jsSHA("SHA-1", "HEX");
-      hmac.setHMACKey(response.data.user_data.secret, "UINT8ARRAY");
-      const hmacString = hmac.getHMAC('HEX');
-
       let userData = response.data.user_data;
       delete userData.secret;
       localStorage.setItem('token', JSON.stringify(response.data.token));
       localStorage.setItem('user', JSON.stringify(userData));
 
-      secureLocalStorage.setItem("private-key", JSON.stringify(hmacString));
-
+      secureLocalStorage.setItem(
+        "private-key",
+        "25ded69a67835050b3a2e1beb92812eb521cfc39"
+      )
       // Navigate user to feed
       navigate('/feed');
     }).catch((error) => {
@@ -106,8 +102,10 @@ function Login(props) {
           Log in
         </Button>
 
-        <Button className="Secondary"
-                onClick={() => props.switchForm('Register')}>
+        <Button
+          className="Secondary"
+          onClick={() => props.switchForm('Register')}
+        >
           Sign up
         </Button>
       </Form>

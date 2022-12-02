@@ -8,7 +8,6 @@ import {Navigate, Route, Routes} from "react-router-dom";
 import { Container } from "./components/global/styles/Container.styled";
 import OrganizationPage from "./pages/organization-page/OrganizationPage";
 import UserPage from "./pages/user-page/UserPage"
-import  secureLocalStorage  from  "react-secure-storage";
 import LogRegCtrl from "./pages/form-pages/LogRegCtrl";
 import CreateEvent from "./pages/form-pages/CreateEvent";
 
@@ -22,12 +21,6 @@ function App() {
     setTheme(theme.brightness === 'light' ? darkTheme : lightTheme);
 
   useEffect(() => {
-    secureLocalStorage.setItem(
-      "private-key",
-      "25ded69a67835050b3a2e1beb92812eb521cfc39"
-    )
-
-
     async function getCurrentUser() {
       const token = JSON.parse(localStorage.getItem('token'));
       const userID = JSON.parse(localStorage.getItem('user')).id;
@@ -56,7 +49,7 @@ function App() {
       <Container>
         <Routes>
           <Route path="/" element={<Navigate to="/log-or-sign-up" />} />
-          <Route path="feed" element={<Feed toggleTheme={toggleTheme}/>}/>
+          <Route path="/feed" element={<Feed toggleTheme={toggleTheme}/>}/>
           <Route path="/event-page" element={<EventPage />} />
           <Route path="/organization-page" element={<OrganizationPage />} />
           <Route path="/user-page" element={<UserPage />} />
