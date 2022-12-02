@@ -154,6 +154,23 @@ const readUser = async (req, res) => {
         await orgRef.get().then((org) => {
           organizations.push(org.data())
         })
+      }
+      let expiredEvents=[]
+      let tempEvents=[]
+      for(let i=0;i<events.length;i++){
+        if(events[i].date<=Date.now())
+        {
+          expiredEvents.push(events[i].id)
+        }
+        else{
+          tempEvents.push(events[i])
+        }
+      }
+      events=tempEvents
+      if(expiredEvents.length>0){
+      userRef.update({
+        "events_registered": FieldValue.arrayRemove(...expiredEvents)
+      })
     }
       const user = {...userDoc.data(), events_registered: events, organizations: organizations}
 
@@ -163,11 +180,11 @@ const readUser = async (req, res) => {
         error: 'Document does not exist'
       })
     }
-  }).catch((error) => {
-    res.status(500).json({
-      error: error
-    })
-  })
+  })//.catch((error) => {
+  //   res.status(500).json({
+  //     error: error
+  //   })
+  // })
 }
 
 
