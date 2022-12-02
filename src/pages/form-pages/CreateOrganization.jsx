@@ -11,7 +11,8 @@ import {
   Button,
   TextArea,
   FileInput
-} from '../Form.styled';
+} from './Form.styled';
+import { useNavigate } from "react-router-dom";
 
 function getUsrID() {
   const usrObj = JSON.parse(localStorage.getItem('user'));
@@ -24,11 +25,12 @@ const initOrgInfo = {
 
 const initFile = '';
 
-function CreateOrg(props) {
+function CreateOrganization(props) {
   const [orgInfo, setOrgInfo] = useState(initOrgInfo);
   const [file, setFile] = useState(initFile);
   const [error, setError] = useState('');
 
+  const navigate = useNavigate();
 
   function handleChange({target: {name, value}}) {
     setOrgInfo({...orgInfo, [name]: value});
@@ -42,6 +44,7 @@ function CreateOrg(props) {
     setOrgInfo(initOrgInfo);
     setFile(initFile);
     setError('');
+    navigate("/feed");
   }
 
   function handleSubmit(e) {
@@ -125,11 +128,11 @@ function CreateOrg(props) {
         </Button>
         <Button className="Secondary" type="reset"
                 onClick={handleReset}>
-          Reset 
+          Cancel
         </Button>
       </Form>
     </FormWrapper>
   )
 }
 
-export default CreateOrg;
+export default CreateOrganization;

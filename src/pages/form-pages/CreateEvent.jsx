@@ -18,6 +18,7 @@ import axios from "axios"
 import styled from "styled-components"
 import TagChipRow from "./components/TagChipRow"
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const TagChipRowStyle = styled.div`
   display: flex;
@@ -54,6 +55,8 @@ function CreateEvent() {
 
   const params = useParams();
   const orgID = params.id;
+
+  const navigate = useNavigate();
 
 
   function handleChange({ target: {name, value} }) {
@@ -146,6 +149,7 @@ function CreateEvent() {
         setError("Firebase error.")
       }
     })
+    navigate("/feed");
   }
 
   const BlockInput = (name, type) => {
