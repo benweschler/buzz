@@ -20,57 +20,30 @@ import {
   StyledRsvpDiv,
   StyledRsvpMessage,
   StyledSecurityMessage,
+  StyledEventMainInfo,
+  StyledEventHeader,
+  StyledEventImage,
 } from "./styles/EventPage.styled";
-import { StyledEventImage } from "./styles/EventPage.styled";
-import { StyledEventHeader } from "./styles/EventPage.styled";
-import { StyledEventMainInfo } from "./styles/EventPage.styled";
-import { IoCalendarClearOutline } from "react-icons/io5";
-import { IoLocationOutline } from "react-icons/io5";
-import { IoPersonOutline } from "react-icons/io5";
+import {
+  IoCalendarClearOutline,
+  IoLocationOutline,
+  IoPersonOutline,
+} from "react-icons/io5";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import QrCodeScannerRoundedIcon from "@mui/icons-material/QrCodeScannerRounded";
 import { useLocation } from "react-router-dom";
 import { getTime } from "../../utils/dateUtils";
 
-//old import code
-// onClick={() => {
-//   navigate("/event-page", {
-//     state: {
-//       title: title,
-//       image: image,
-//       date: date,
-//       organizer: organizer,
-//       location: location,
-//       attendees: attendees,
-//       price: price,
-//       tags: tags,
-//       organizationId: organizationId,
-//       description: description,
-//       capacity: capacity,
-//       ticketed: ticketed,
-//       eventId: eventId,
-//     },
-//   });
-// }}
 
 const EventPage = () => {
-  //   const {
-  //     state: {
-  //       title,
-  //       image,
-  //       date,
-  //       organizer,
-  //       location,
-  //       attendees,
-  //       price,
-  //       tags,
-  //       organizationId,
-  //       description,
-  //       capacity,
-  //       ticketed,
 
-  const { state: { eventId } = {} } = useLocation();
+  
+
+  const location = useLocation();
+  // const {eventID} = location.state
+  const eventID = "eIUuIrsmQBg5SAbHhHQo"
+  // const { state: { eventID } = {} } = useLocation();
 
   const [active, setActive] = useState(false);
   const [member, setMember] = useState(false);
@@ -78,49 +51,42 @@ const EventPage = () => {
 
   useEffect(() => {
     const getInfo = async () => {
-      const eventId = "UZOKqjWI96Y6SMjxgQhb";
       const eventData = await axios.get(
-        "http://localhost:4000/api/events/" + eventId
+        "http://localhost:4000/api/events/" + eventID
       );
       setEvent(eventData.data);
-      const user = "gygBGe9hAjfKtcguPC6LgIb3bLl2";
-      
+      const user = localStorage.getItem("user").id;
       const memberData = await axios.get(
-        "http://localhost:4000/api/utilities/org/" + user + "/" + event.organizationId
+        "http://localhost:4000/api/utilities/org/" +
+          user +
+          "/" +
+          eventData.data.organization
       );
       if (memberData.data.member) {
         setMember(true);
       } else {
         setMember(false);
       }
-
-      console.log(memberData.data.member)
-    }
-    
-    const getRSVP = async () => {
-      // user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
-      const user =  "gygBGe9hAjfKtcguPC6LgIb3bLl2"
-      const event = eventId;
-      const data = await axios.get(
-        "http://localhost:4000/api/utilities/" + user + "/" + event.eventId
+      console.log(memberData.data.member);
+      const registeredData = await axios.get(
+        "http://localhost:4000/api/utilities/" + user + "/" + eventID
       );
-      if (data.data.registered) {
+      if (registeredData.data.registered) {
         setActive(true);
       } else {
         setActive(false);
       }
+      
     };
-    getRSVP().catch(console.error);
+
     getInfo().catch(console.error);
-  }, );
-
-
+  }, []);
 
   const handleRsvp = async () => {
     const body = {
       // user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
-      user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
-      event: eventId,
+      user: localStorage.getItem("user").id,
+      event: eventID,
     };
     const rsvp = await axios.patch(
       "http://localhost:4000/api/users/register",
@@ -133,6 +99,7 @@ const EventPage = () => {
       setActive(false);
     }
   };
+
 
   return (
     <StyledEventContainer>
@@ -155,7 +122,7 @@ const EventPage = () => {
             <StyledEventCapacityDiv>
               <IoPersonOutline />
               <StyledEventCapacity>
-                {event.attendees} / {event.capacity}{" "}
+                {event.attending} / {event.capacity}{" "}
               </StyledEventCapacity>
             </StyledEventCapacityDiv>
             <StyledEventLocation>

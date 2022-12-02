@@ -10,18 +10,16 @@ import {
   Span,
   Button,
   FileInput
-} from '../Form.styled';
-import jsSHA from 'jssha';
-import secureLocalStorage from 'react-secure-storage';
+} from './Form.styled';
 
-const initUserInfo = {
+const initOrgInfo = {
   name: '', email: '', password: '', major: ''
 };
 
 const initFile = '';
 
-function Register(props) {
-  const [userInfo, setUserInfo] = useState(initUserInfo);
+function CreateOrg(props) {
+  const [userInfo, setUserInfo] = useState(initOrgInfo);
   const [file, setFile] = useState(initFile);
   const [error, setError] = useState('');
 
@@ -36,7 +34,7 @@ function Register(props) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    setUserInfo(initUserInfo);
+    setUserInfo(initOrgInfo);
     setFile(initFile);
     setError('');
 
@@ -68,17 +66,8 @@ function Register(props) {
     axios.post('http://localhost:4000/api/users/', Register, {
       'Content-Type': 'multipart/form-data'
     }).then((response) => {
-      // Secret key
-      const hmac = new jsSHA("SHA-1", "HEX");
-      hmac.setHMACKey(response.data.user_data.secret, "UINT8ARRAY");
-      const hmacString = hmac.getHMAC('HEX');
-
-      let userData = response.data.user_data;
-      delete userData.secret;
       localStorage.setItem('token', JSON.stringify(response.data.token));
-      localStorage.setItem('user', JSON.stringify(userData));
-
-      secureLocalStorage.setItem("private-key", hmacString);
+      localStorage.setItem('user', JSON.stringify(response.data.user_data));
     }).catch((error) => {
       if (error.response.data.error.code && (error.response.data.error.code === "auth/email-already-exists")) {
         setError('Email already exists in database!');
@@ -158,4 +147,4 @@ function Register(props) {
   )
 }
 
-export default Register;
+export default CreateOrg;

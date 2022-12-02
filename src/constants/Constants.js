@@ -8,6 +8,11 @@ export default class Constants {
     "Info-Session": <BiPaint/>,
     "Athletics": <DiReact/>,
     "Social": <DiReact/>,
-    "North-Campus": <DiReact/>
+    "North-Campus": <DiReact/>,
+    "Music": <DiReact/>,
+    "South-Campus": <DiReact/>,
+    "Career-Fair": <DiReact/>,
+    "Formal": <DiReact/>,
+    "Fundraiser": <DiReact/>
   };
 }
