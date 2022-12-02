@@ -48,9 +48,6 @@ const Navbar = () => {
           <Link to="/log-or-sign-up">Sign Out</Link>
         </StyledNavItem>
         <StyledNavItem>
-          <Link to="/create-event">Create Event</Link>
-        </StyledNavItem>
-        <StyledNavItem>
           <Link to="/create-organization">Create Organization</Link>
         </StyledNavItem>
       </StyledNavMenu>
