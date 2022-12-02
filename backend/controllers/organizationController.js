@@ -65,6 +65,9 @@ const createOrganization = async (req, res) => {
                 }).then((docRef) => {
                     console.log('Created organization document with id: ' + docRef.id);
                     organizationID = docRef.id;
+                    database.collection('Organizations').doc(docRef.id).update({
+                        id: docRef.id
+                    })
                 }).catch((error) => {
                     res.status(500).json({
                         error: error
@@ -303,41 +306,6 @@ const getAllActiveEvents =async(req, res)=>{
     })
 }
 
-const uploadOrganizationImage = async (req, res) => {
-    if (req.body.id == undefined || req.file == undefined) {
-        res.status(400).json({
-            error: 'One or more fields are missing'
-        })
-    } else {
-
-        const bucket = storage.bucket();
-        const fullPath = `OrganizationImages/${v4()}`;
-        const bucketFile = bucket.file(fullPath);
-
-        await bucketFile.save(req.file.buffer, {
-            contentType: req.file.mimetype,
-            gzip: true
-        });
-
-        const [url] = await bucketFile.getSignedUrl({
-            action: 'read',
-            expires: '01-01-2030'
-        });
-
-        axios.patch(`http://localhost:${process.env.PORT}/api/organizations/${req.body.id}`, {
-            image: url
-        }).then(() => {
-            res.status(200).json({
-                url: url
-            })
-        }).catch((error) => {
-            res.status(500).json({
-                error: error
-            })
-        })
-    }
-}
-
 module.exports = {
     createOrganization,
     readOrganization,
@@ -345,6 +313,5 @@ module.exports = {
     updateOrganization,
     deleteOrganization,
     getAllOrganizationEvents,
-    getAllActiveEvents,
-    uploadOrganizationImage
+    getAllActiveEvents
 };

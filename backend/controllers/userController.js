@@ -7,7 +7,6 @@ const {auth: clientAuth} = require('../../src/firebase/index');
 const {auth: adminAuth} = require('../firebase-admin/index');
 const {FieldValue} = require('@google-cloud/firestore');
 const {signInWithEmailAndPassword} = require('firebase/auth');
-const axios = require('axios');
 const jsSHA = require('jssha');
 const {v4} = require('uuid');
 const crypto = require('crypto');
@@ -354,7 +353,7 @@ const verifyToken = async (req, res) => {
       })
     }).catch((error) => {
       console.log('Token not verified!');
-      res.status(400).json({
+      res.status(200).json({
         "success": false
       })
     })
