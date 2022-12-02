@@ -1,7 +1,14 @@
-
 import { useState } from "react";
 import { useEffect } from "react";
-import { LeftColumnUser, RightColumnUser, UserColumnDiv } from "./styles/UserBottom.styled";
+import {
+  LeftColumnUser,
+  OrgTopRow,
+  RightColumnUser,
+  TicketHeaderUser,
+  TicketsContainer,
+  UserColumnDiv,
+  UserTicketsDiv,
+} from "./styles/UserBottom.styled";
 import {
   UserProfile,
   StyledUserAvatar,
@@ -9,45 +16,47 @@ import {
 } from "./styles/UserProfile.styled";
 // import ExampleEvents from "../../assets/ExampleEvents.json"
 // import UserEventCard from "../../components/UserPage/UserEventCard"
-import axios from 'axios';
+import axios from "axios";
 import { LoadingIndicator } from "../feed/styles/Feed.styled";
 import { HashLoader } from "react-spinners";
 import { useTheme } from "styled-components";
+import buildEventCards from "../../utils/buildEventCards";
+import OrgCard from "./OrgCard";
+import { EventOrgLink } from "../event-page/styles/EventPageInfoPanel.styled";
+import { CreateEventButton } from "../organization-page/styles/OrganizationBottom.styled";
 
 const UserPage = () => {
+  const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState(null);
 
-  const [user, setUser] = useState(null)
-  const [userData, setUserData] = useState(null)
-
-  const theme = useTheme()
+  const theme = useTheme();
 
   useEffect(() => {
-    const localUser = JSON.parse(localStorage.getItem('user'))
-    setUser(localUser)
+    const localUser = JSON.parse(localStorage.getItem("user"));
+    setUser(localUser);
 
     const readUser = async () => {
       const data = await axios.get(
         "http://localhost:4000/api/users/" + localUser.id
       );
-      console.log(data.data);
+
       setUserData(data.data);
     };
 
-
     readUser().catch(() => {
-      console.log('ERROR');
-    })
+      console.log("ERROR");
+    });
+  }, []);
 
-  },[]);
-
-  if(!userData)
+  if (!userData || !user)
     return (
       <LoadingIndicator>
-        <HashLoader size="150px" color={theme.main}/>
+        <HashLoader size="150px" color={theme.main} />
       </LoadingIndicator>
-    )
+    );
 
-  const avatarString = "https://avatars.dicebear.com/api/initials/" + user.name +".svg"
+  const avatarString =
+    "https://avatars.dicebear.com/api/initials/" + user.name + ".svg";
 
   return (
     <>
@@ -62,34 +71,38 @@ const UserPage = () => {
           </p>
         </StyledUserInfo>
       </UserProfile>
-      
 
       <UserColumnDiv>
         <LeftColumnUser>
-          <h2>Your Tickets</h2>
+          <TicketHeaderUser>
+            <h2>Your Tickets</h2>
+          </TicketHeaderUser>
+
+          <UserTicketsDiv>
+            <TicketsContainer>
+              {buildEventCards(userData.events_registered)}
+            </TicketsContainer>
+          </UserTicketsDiv>
         </LeftColumnUser>
         <RightColumnUser>
-          
-          <h2>Your Organizations</h2>
-          {buildOrgData(userData.organizations)}
+          <OrgTopRow>
+            <h2>Your Organizations</h2>
+            <EventOrgLink to={"/create-organization"}>
+              <CreateEventButton> Create Organization </CreateEventButton>
+            </EventOrgLink>
+          </OrgTopRow>
+
+          <UserTicketsDiv>
+            {buildOrgData(userData.organizations)}
+          </UserTicketsDiv>
         </RightColumnUser>
       </UserColumnDiv>
-      
-      {/* {ExampleEvents.map((item, index) => (
-        <UserEventCard key={index} item={item } />
-      ))} */}
     </>
   );
 };
 
 function buildOrgData(orgData) {
-  const organizationObjects = JSON.parse(localStorage.getItem('user')).organizations;
-  console.log(organizationObjects);
-  return (
-    organizationObjects.map((org) =>
-      <h1 key={org.id}>{org.name}</h1>
-    )
-  )
+  return orgData.map((org) => <OrgCard name={org.name} image={org.image} id={org.id}/>);
 }
 
 export default UserPage;

@@ -48,7 +48,7 @@ export const OrganizerEvent = styled.h2`
 `;
 
 export const EventOrgLink = styled(Link)`
-  height: 100%;
+  
 `
 
 export const CapacityEvent = styled.h3`

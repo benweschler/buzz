@@ -180,8 +180,9 @@ export const CreateEventButton = styled.button`
   line-height: 1;
   margin: 0 25px;
   outline: none;
+  font-size: 0.8rem;
   overflow: hidden;
-  padding: 0 25px;
+  padding: 10px 25px;
   position: relative;
   text-align: center;
   text-transform: none;
@@ -190,7 +191,7 @@ export const CreateEventButton = styled.button`
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
-  width: 50%;
+  width: 80%;
 
 
 :disabled {

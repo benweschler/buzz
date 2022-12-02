@@ -8,11 +8,12 @@ import {
   FilterRow, ImageLoadError,
   LoadingIndicator,
   Scaffold,
-  Wrapper
+  Wrapper,
 } from "./styles/Feed.styled";
 import {useTheme} from "styled-components";
 import axios from "axios";
 import {HashLoader} from 'react-spinners'
+import QRScannerButton from "./QRScannerButton";
 
 export default function Feed({toggleTheme}) {
   const [selectedTags, setSelectedTags] = useState([])
@@ -43,7 +44,8 @@ export default function Feed({toggleTheme}) {
   return (
     <Scaffold>
       <Wrapper>
-        <h1>Popular Events <span style={{color: "#a4a4a4"}}>at UCLA</span></h1>
+        <QRScannerButton/>
+        <h1>Popular Events <span style={{color: "grey"}}>at UCLA</span></h1>
         <TonightButton toggleTheme={toggleTheme}/>
         <FilterRow>
           {renderTagFilters(selectedTags, setSelectedTags)}

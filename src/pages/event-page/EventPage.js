@@ -57,14 +57,14 @@ const EventPage = () => {
   useEffect(() => {
     console.log("useEffect query in EventPage");
     const getInfo = async () => {
-      const eventId = "UZOKqjWI96Y6SMjxgQhb";
       const eventData = await axios.get(
-        "http://localhost:4000/api/events/" + eventId
+        "http://localhost:4000/api/events/" + eventID
       );
       setEventData(eventData.data);
+      console.log(eventData);
       const user = JSON.parse(localStorage.getItem("user")).id;
       const memberData = await axios.get(
-        "http://localhost:4000/api/utilities/org/" + user + "/" + event.organizationId
+        "http://localhost:4000/api/utilities/org/" + user + "/" + eventData.data.organization
       );
       if (memberData.data.member) {
         setMember(true);
@@ -75,7 +75,7 @@ const EventPage = () => {
       const registeredData = await axios.get(
         "http://localhost:4000/api/utilities/" + user + "/" + eventID
       );
-      if (data.data.registered) {
+      if (registeredData.data.registered) {
         setActive(true);
       } else {
         setActive(false);
@@ -86,26 +86,36 @@ const EventPage = () => {
   }, [eventID]);
 
   const handleRsvp = async () => {
-    const userInfo=JSON.parse(localStorage.get('user'))
+    const userInfo=JSON.parse(localStorage.getItem('user'))
+    console.log("userInfo: ", userInfo);
     const body = {
-      // user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
       user: userInfo.id,
-      event: eventId
+      event: eventID
     };
+
     const rsvp = await axios.patch(
       "http://localhost:4000/api/users/register",
       body
     );
-    console.log(rsvp.data.registered);
+
     if (rsvp.data.registered) {
       setActive(true);
+      setEventData(prevState => {
+        return{
+          ...prevState, attending : prevState.attending + 1
+        }})
     } else {
       setActive(false);
+      setEventData(prevState => {
+        return{
+          ...prevState, attending : prevState.attending - 1
+        }})
     }
     let userData=JSON.parse(localStorage.getItem('user'))
-    userData={...userData, events_registered: events}
-    JSON.stringify(userData)
-    localStorage.setItem(userData)
+    userData ={...userData, events_registered: eventData.events_registered}
+    userData = JSON.stringify(userData)
+    localStorage.setItem("user", userData)
+    console.log("userData: ", userData);
   };
 
   if(!eventData)
@@ -132,7 +142,7 @@ const EventPage = () => {
         <EventHeader>{eventData.title}</EventHeader>
         <MainInfo>
           <InfoLeftColumn>
-            <EventOrgLink to="/organization-page" state={{organizationID: eventData.organization}}>
+            <EventOrgLink to={"/organization-page/" + eventData.organization}>
               <OrganizerEvent> {eventData.organization_name}</OrganizerEvent> 
             </EventOrgLink>
             

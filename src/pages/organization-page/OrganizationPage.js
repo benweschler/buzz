@@ -18,11 +18,12 @@ import {
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import EventCard from "../feed/EventCard";
 import { EventOrgLink } from "../event-page/styles/EventPageInfoPanel.styled";
 import { LoadingIndicator } from "../feed/styles/Feed.styled";
 import { HashLoader } from "react-spinners";
 import { useTheme } from "styled-components";
+import buildEventCards from "../../utils/buildEventCards";
+
 
 const OrganizationPage = () => {
   const params = useParams();
@@ -33,8 +34,6 @@ const OrganizationPage = () => {
   const [join, setJoin] = useState(false);
 
   const theme = useTheme()
-
-  useEffect(() => console.log("EFFECT2"), [])
 
   useEffect(() => {
     console.log("useEffect query in OrganizationPage");
@@ -67,9 +66,10 @@ const OrganizationPage = () => {
   }, [organizationID]);
 
   const handleFollow = async () => {
+    const user = JSON.parse(localStorage.getItem("user")).id;
     const body = {
-      user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
-      organization: "AO0movdTMMnS3wfVHhGC",
+      user: user,
+      organization: organizationID,
     };
     const doFollow = await axios.patch(
       "http://localhost:4000/api/users/follow",
@@ -83,9 +83,10 @@ const OrganizationPage = () => {
     }
   };
   const handleJoin = async () => {
+    const user = JSON.parse(localStorage.getItem("user")).id;
     const body = {
-      user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
-      organization: "AO0movdTMMnS3wfVHhGC",
+      user: user,
+      organization: organizationID,
     };
     const doJoin = await axios.patch(
       "http://localhost:4000/api/users/add",
@@ -104,6 +105,14 @@ const OrganizationPage = () => {
         <HashLoader size="150px" color={theme.main}/>
       </LoadingIndicator>
     )
+
+    function renderCreateEvent(join){
+      if (join){
+        return(
+          <CreateEventButton> Create Event </CreateEventButton>
+        )
+      }
+    }
   
   return (
     <>
@@ -138,7 +147,7 @@ const OrganizationPage = () => {
           <EventsHeaderOrg>
             <h2> Our Events</h2>
             <EventOrgLink to={"/create-event/" + organizationID}>
-              <CreateEventButton> Create Event </CreateEventButton>
+              {renderCreateEvent(join)}
             </EventOrgLink>
             
           </EventsHeaderOrg>
@@ -155,31 +164,5 @@ const OrganizationPage = () => {
   );
 }
 
-function buildEventCards(events) {
-  const cards = []
-
-  // TODO: sometimes, we're getting different number of events from the API call for an org.
-  // This ensures each card has a unique key
-  let keySuffix = 0;
-  for(const event of events) {
-    cards.push(
-      <EventCard
-        key={"" + event.id + keySuffix++}
-        eventID={event.id}
-        title={event.title}
-        organization={event.organization_name}
-        organizationID={event.organization}
-        image={event.image}
-        description={event.description}
-        attendees={event.attendees.length}
-        location={event.location}
-        price={event.price}
-        tags={event.tags}
-        date={event.date}
-      />)
-  }
-
-  return cards
-}
 
 export default OrganizationPage;

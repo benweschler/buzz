@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import {StyledErrorMessage} from "../../../components/globalStyles";
 
 export const Scaffold = styled.div`
   display: flex;
@@ -35,12 +36,6 @@ export const LoadingIndicator = styled.div`
   justify-content: center;
 `
 
-export const ImageLoadError = styled.div`
+export const ImageLoadError = styled(StyledErrorMessage)`
   padding: 75px;
-  font-size: 1.5rem;
-  font-style: italic;
-  font-weight: 400;
-  justify-self: center;
-  align-self: center;
-  color: red;
 `
