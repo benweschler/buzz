@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Color from "color";
+import {Link} from "react-router-dom";
 
 export const Card = styled.div`
   overflow: hidden;
@@ -31,13 +32,15 @@ export const Card = styled.div`
   }
 `;
 
-export const Title = styled.div`
+export const TitleLink = styled(Link)`
   font-size: 1.2rem;
   font-weight: 700;
   align-self: start;
 
   &:hover {
     text-decoration: underline;
+    //TODO remove
+    color: ${({theme}) => theme.text};
   }
 `
 
@@ -59,7 +62,7 @@ export const PriceChip = styled.div`
   position: absolute;
 `;
 
-export const Organizer = styled.div`
+export const OrganizerLink = styled(Link)`
   color: ${props => props.theme.main};
   font-size: 1rem;
   font-weight: 600;

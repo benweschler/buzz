@@ -29,6 +29,7 @@ export default function Feed({toggleTheme}) {
 
     setEvents([])
     getEvents().catch((e) => console.log("ERROR WITH FETCHING EVENTS:", e))
+    console.log(events);
   }, [theme.brightness])
 
 
@@ -73,8 +74,10 @@ function EventCards({events, filter}) {
     cards.push(
       <EventCard
         key={event.id}
+        eventID={event.id}
         title={event.title}
-        organizer={event.organization_name}
+        organization={event.organization_name}
+        organizationID={event.organization}
         image={event.image}
         description={event.description}
         attendees={event.attendees.length}
@@ -82,12 +85,6 @@ function EventCards({events, filter}) {
         price={event.price}
         tags={event.tags}
         date={event.date}
-        //Extras for passing to event-page
-        organizationId={event.organization}
-        capacity={event.capacity}
-        ticketed={event.ticketed}
-        eventId={event.id}
-        // Track image load status
         onImageLoad={onImageLoad}
       />
     );

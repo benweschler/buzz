@@ -2,7 +2,6 @@ const admin = require('firebase-admin');
 const {database, storage} = require('../firebase-admin/index');
 const {INITIAL_EVENT_KEYS} = require('../constants/eventConstants.js');
 const {FieldValue} = require('@google-cloud/firestore');
-const axios = require('axios');
 const {v4} = require('uuid');
 
 
@@ -71,6 +70,7 @@ const createEvent = async (req, res) => {
 
         await eventRef.set({
           "capacity": capacityNum,
+          "attending": 0,
           "description": req.body.description,
           "location": req.body.location,
           "title": req.body.title,

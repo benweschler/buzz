@@ -1,4 +1,7 @@
-require('dotenv').config()
+//require('dotenv').config()
+const dotenv = require('dotenv');
+
+dotenv.config({ path: `${__dirname}/../.env` })
 
 // Routes
 const userRoutes = require('./routes/userRoutes');
@@ -34,6 +37,6 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-app.listen(process.env.PORT, () => {
-  console.log('App listening on port ' + process.env.PORT);
+app.listen(process.env.SERVER_PORT, () => {
+  console.log('App listening on port ' + process.env.SERVER_PORT);
 })

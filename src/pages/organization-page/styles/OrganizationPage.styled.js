@@ -30,6 +30,7 @@ export const StyledBannerImage = styled.img`
   border-radius: 5px;
   outline: none;
   display: block;
+  object-fit: cover;
   margin-top: -50px;
   z-index: 200;
   height: 15rem;
@@ -69,8 +70,11 @@ export const StyledOrganizationDescription = styled.div`
 `;
 
 export const StyledOrgContainer = styled.div`
-  padding-top: 10px;
+  margin-top: 100px;
   display: flex;
+  padding-left: 20px;
+  padding-right: 20px;
+  justify-content: space-between;
   @media (max-width: ${({ theme }) => theme.mobile}) {
     flex-direction: column;
     padding-top: 30px;
@@ -78,18 +82,17 @@ export const StyledOrgContainer = styled.div`
 `;
 
 export const StyledOrgLeftColumn = styled.div`
-  float: left;
-  width: 45%;
+  display: flex;
+  width: 35%;
   text-align: start;
-  margin: auto;
   @media (max-width: ${({ theme }) => theme.mobile}) {
     width: 100%;
   }
 `;
 
 export const StyledOrgRightColumn = styled.div`
-  float: left;
-  width: 55%;
+  display: flex;
+  width: 35%;
   text-align: start;
   padding-left: 20px;
 
@@ -164,3 +167,7 @@ export const StyledOrgButton = styled.button`
     opacity: 0.5;
   }
 `;
+
+export const StyledOrgEvent = styled.div`
+
+`
