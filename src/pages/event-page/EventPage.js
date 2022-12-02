@@ -64,7 +64,7 @@ const EventPage = () => {
       console.log(eventData);
       const user = JSON.parse(localStorage.getItem("user")).id;
       const memberData = await axios.get(
-        "http://localhost:4000/api/utilities/org/" + user + "/" + eventData.organizationId
+        "http://localhost:4000/api/utilities/org/" + user + "/" + eventData.data.organization
       );
       if (memberData.data.member) {
         setMember(true);
@@ -87,6 +87,7 @@ const EventPage = () => {
 
   const handleRsvp = async () => {
     const userInfo=JSON.parse(localStorage.getItem('user'))
+    console.log("userInfo: ", userInfo);
     const body = {
       user: userInfo.id,
       event: eventID
@@ -111,9 +112,10 @@ const EventPage = () => {
         }})
     }
     let userData=JSON.parse(localStorage.getItem('user'))
-    userData={...userData, events_registered: eventData}
-    JSON.stringify(userData)
-    localStorage.setItem(userData)
+    userData ={...userData, events_registered: eventData.events_registered}
+    userData = JSON.stringify(userData)
+    localStorage.setItem("user", userData)
+    console.log("userData: ", userData);
   };
 
   if(!eventData)

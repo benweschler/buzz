@@ -28,7 +28,8 @@ function App() {
         <Routes>
           
           <Route exact path="/" element={
-            JSON.parse(localStorage.getItem('user')).id ? (
+            (JSON.parse(localStorage.getItem('user')) && 
+            JSON.parse(localStorage.getItem('user')).id) ? (
               <Feed toggleTheme={toggleTheme}/>
             ) : (
               <Navigate to="/log-or-sign-up"/>
