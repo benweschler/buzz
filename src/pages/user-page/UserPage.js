@@ -1,4 +1,6 @@
 
+import { useState } from "react";
+import { useEffect } from "react";
 import { LeftColumnUser, RightColumnUser } from "./styles/UserBottom.styled";
 import {
   UserProfile,
@@ -7,8 +9,14 @@ import {
 } from "./styles/UserProfile.styled";
 // import ExampleEvents from "../../assets/ExampleEvents.json"
 // import UserEventCard from "../../components/UserPage/UserEventCard"
-const user = JSON.parse(localStorage.getItem('user'))
+
 const UserPage = () => {
+  
+  const [user, setUser] = useState({})
+  useEffect(() => {
+    const localUser = JSON.parse(localStorage.getItem('user'))
+    setUser(localUser)
+  },[]);
 
   const avatarString = "https://avatars.dicebear.com/api/initials/" + user.name +".svg"
 
