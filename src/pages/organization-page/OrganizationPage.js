@@ -23,6 +23,8 @@ import { EventOrgLink } from "../event-page/styles/EventPageInfoPanel.styled";
 import { LoadingIndicator } from "../feed/styles/Feed.styled";
 import { HashLoader } from "react-spinners";
 import { useTheme } from "styled-components";
+import buildEventCards from "../../utils/buildEventCards";
+
 
 const OrganizationPage = () => {
   const location = useLocation();
@@ -33,8 +35,6 @@ const OrganizationPage = () => {
   const [join, setJoin] = useState(false);
 
   const theme = useTheme()
-
-  useEffect(() => console.log("EFFECT2"), [])
 
   useEffect(() => {
     console.log("useEffect query in OrganizationPage");
@@ -155,31 +155,5 @@ const OrganizationPage = () => {
   );
 }
 
-function buildEventCards(events) {
-  const cards = []
-
-  // TODO: sometimes, we're getting different number of events from the API call for an org.
-  // This ensures each card has a unique key
-  let keySuffix = 0;
-  for(const event of events) {
-    cards.push(
-      <EventCard
-        key={"" + event.id + keySuffix++}
-        eventID={event.id}
-        title={event.title}
-        organization={event.organization_name}
-        organizationID={event.organization}
-        image={event.image}
-        description={event.description}
-        attendees={event.attendees.length}
-        location={event.location}
-        price={event.price}
-        tags={event.tags}
-        date={event.date}
-      />)
-  }
-
-  return cards
-}
 
 export default OrganizationPage;
