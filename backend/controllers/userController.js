@@ -154,6 +154,23 @@ const readUser = async (req, res) => {
         await orgRef.get().then((org) => {
           organizations.push(org.data())
         })
+      }
+      let expiredEvents=[]
+      let tempEvents=[]
+      for(let i=0;i<events.length;i++){
+        if(events[i].date<=Date.now())
+        {
+          expiredEvents.push(events[i].id)
+        }
+        else{
+          tempEvents.push(events[i])
+        }
+      }
+      events=tempEvents
+      if(expiredEvents.length>0){
+      userRef.update({
+        "events_registered": FieldValue.arrayRemove(...expiredEvents)
+      })
     }
       const user = {...userDoc.data(), events_registered: events, organizations: organizations}
 
@@ -163,11 +180,11 @@ const readUser = async (req, res) => {
         error: 'Document does not exist'
       })
     }
-  }).catch((error) => {
-    res.status(500).json({
-      error: error
-    })
-  })
+  })//.catch((error) => {
+  //   res.status(500).json({
+  //     error: error
+  //   })
+  // })
 }
 
 
@@ -605,6 +622,61 @@ const followOrg = async (req, res) => {
   })
 }
 
+const checkIn = async (req, res) => {
+    if (!req.body.user || !req.body.event) {
+      res.status(400).json({
+        error: "Cannot check in user because event or user are missing from body of request"
+      })
+      return
+    }
+  
+    let userRef = database.collection('Users').doc(req.body.user)
+    let eventRef = database.collection('Events').doc(req.body.event)
+    userRef.get().then((userDoc) => {
+      if (!userDoc.exists) {
+        res.status(404).json({
+          error: "User not found"
+        })
+        return
+      } else {
+        eventRef.get().then((eventDoc) => {
+          if (!eventDoc.exists) {
+            res.status(404).json({
+              error: "Event not found"
+            })
+            return
+          }
+          let registered=false
+          let alreadyChecked=false
+          if(eventDoc.data().attendees.includes(req.body.user))
+          {
+            registered=true
+            if(eventDoc.data().attended.includes(req.body.user)){
+                alreadyChecked=true
+            }
+            else{
+                eventRef.update({
+                    "attended": FieldValue.arrayUnion(req.body.user)
+                })
+            }
+          }
+            res.status(200).json({
+              "registered": registered,
+              "alreadyChecked": alreadyChecked
+            })
+        }).catch((error) => {
+          res.status(500).json({
+            error: error
+          })
+        })
+      }
+     }).catch((error) => {
+      res.status(500).json({
+        error: error
+      })
+    })
+  }
+
 const getFeed = async (req, res) => {
   const {id} = req.params
   database.collection('Users').doc(id).get().then(async (user) => {
@@ -702,5 +774,6 @@ module.exports = {
   validateUserOTP,
   addUserToEvent,
   followOrg,
-  getFeed
+  getFeed,
+  checkIn
 }

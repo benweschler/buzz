@@ -8,7 +8,8 @@ import {
   FilterRow, ImageLoadError,
   LoadingIndicator,
   Scaffold,
-  Wrapper
+  Wrapper,
+  SchoolName
 } from "./styles/Feed.styled";
 import {useTheme} from "styled-components";
 import axios from "axios";
@@ -43,7 +44,7 @@ export default function Feed({toggleTheme}) {
   return (
     <Scaffold>
       <Wrapper>
-        <h1>Popular Events <span style={{color: "#a4a4a4"}}>at UCLA</span></h1>
+        <h1>Popular Events <SchoolName>at UCLA</SchoolName></h1>
         <TonightButton toggleTheme={toggleTheme}/>
         <FilterRow>
           {renderTagFilters(selectedTags, setSelectedTags)}

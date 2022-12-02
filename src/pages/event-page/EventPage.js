@@ -64,10 +64,7 @@ const EventPage = () => {
       console.log(eventData);
       const user = JSON.parse(localStorage.getItem("user")).id;
       const memberData = await axios.get(
-        "http://localhost:4000/api/utilities/org/" +
-          user +
-          "/" +
-          eventData.data.organization
+        "http://localhost:4000/api/utilities/org/" + user + "/" + eventData.organizationId
       );
       if (memberData.data.member) {
         setMember(true);
@@ -89,9 +86,10 @@ const EventPage = () => {
   }, [eventID]);
 
   const handleRsvp = async () => {
+    const userInfo=JSON.parse(localStorage.getItem('user'))
     const body = {
-      user: JSON.parse(localStorage.getItem("user")).id,
-      event: eventID,
+      user: userInfo.id,
+      event: eventID
     };
 
     const rsvp = await axios.patch(
@@ -112,6 +110,10 @@ const EventPage = () => {
           ...prevState, attending : prevState.attending - 1
         }})
     }
+    let userData=JSON.parse(localStorage.getItem('user'))
+    userData={...userData, events_registered: eventData}
+    JSON.stringify(userData)
+    localStorage.setItem(userData)
   };
 
   if(!eventData)
@@ -138,7 +140,7 @@ const EventPage = () => {
         <EventHeader>{eventData.title}</EventHeader>
         <MainInfo>
           <InfoLeftColumn>
-            <EventOrgLink to="/organization-page" state={{organizationID: eventData.organization}}>
+            <EventOrgLink to={"/organization-page/" + eventData.organization}>
               <OrganizerEvent> {eventData.organization_name}</OrganizerEvent> 
             </EventOrgLink>
             

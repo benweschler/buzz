@@ -20,6 +20,7 @@ const Navbar = () => {
   const handleClick = () => setClick(!click);
 
   const handleSignOut = async () => {
+    setClick(!click)
     const userID = JSON.parse(localStorage.getItem('user')).id;
     await axios.get(`http://localhost:4000/api/users/signout/${userID}`).catch((error) => {
       console.log(error);
@@ -38,17 +39,14 @@ const Navbar = () => {
 
       <StyledNavMenu clicked={click}>
         <ShowQRButton/>
-        <StyledNavItem>
+        <StyledNavItem onClick={handleClick}>
           <Link to="/feed">See What's Buzzin'</Link>
         </StyledNavItem>
-        <StyledNavItem>
+        <StyledNavItem onClick={handleClick}>
           <Link to="/user-page">My Account</Link>
         </StyledNavItem>
         <StyledNavItem onClick={handleSignOut}>
           <Link to="/log-or-sign-up">Sign Out</Link>
-        </StyledNavItem>
-        <StyledNavItem>
-          <Link to="/create-organization">Create Organization</Link>
         </StyledNavItem>
       </StyledNavMenu>
       <StyledNavMenuBackground clicked={click}>&nbsp;</StyledNavMenuBackground>

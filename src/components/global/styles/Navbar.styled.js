@@ -29,10 +29,11 @@ export const StyledNavMenu = styled.ul`
   gap: 0.3rem;
   @media (max-width: ${({theme}) => theme.mobile}) {
     position: fixed;
-    top: 0;
+    top: 10%;
+    bottom: 10%;
     flex-direction: column;
     justify-content: center;
-    height: 100%;
+    height: 80%;
     z-index: 800;
     text-align: center;
     align-items: center;
@@ -46,7 +47,7 @@ export const StyledNavMenu = styled.ul`
     
     li {
       position: relative;
-      padding: 15px 0;
+      padding: 10px 0;
     }
 
     a {
@@ -55,7 +56,7 @@ export const StyledNavMenu = styled.ul`
       text-decoration: none;
       letter-spacing: 0.15em;
       display: inline-block;
-      padding: 15px 20px;
+      padding: 10px 10px;
       position: relative;
     }
 
