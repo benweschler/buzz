@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 export const StyledNavbar = styled.div`
   width: 100%;
@@ -14,8 +15,10 @@ export const StyledNavbar = styled.div`
   transition: background-color 200ms ease-in;
 `;
 
-export const Logo = styled.h1`
+export const LogoLink = styled(Link)`
   margin-right: auto;
+`
+export const Logo = styled.h1`
   font-family: "Permanent Marker", cursive;
 `;
 
@@ -104,3 +107,5 @@ export const StyledNavMenuBackground = styled.div`
   transform: ${(props) => (props.clicked ? "scale(80)" : "scale(0)")};
   transition: transform 0.5s;
 `;
+
+

@@ -1,75 +1,19 @@
 import styled from "styled-components";
 
-export const StyledBanner = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 100%;
-  border: black;
-  border-radius: 3px;
-  margin: auto;
-  height: 500px;
-  padding-top: 100px;
-  
-`;
 
-export const StyledBannerImageBlurred = styled.img`
-  filter: blur(1px) brightness(70%);
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-  display: block;
-  margin: auto;
-  /* transform: scale(1.32);  */
-`;
-
-export const StyledBannerImage = styled.img`
-  overflow: hidden;
-  margin-left: 80px;
-  top: 40%;
-  border-radius: 5px;
-  outline: none;
-  display: block;
-  object-fit: cover;
-  margin-top: -50px;
-  z-index: 200;
-  height: 15rem;
-  width: 15rem;
-
-  @media (max-width: ${({ theme }) => theme.mobile}) {
-    width: 20rem;
-    height: 20rem;
-    margin-left: auto;
-    margin-right: auto;
-    
-  }
-`;
-
-export const StyledBannerText = styled.h2`
-  color: white;
-  position: absolute;
-  top: 30%;
-  left: 40%;
-  font-size: 2.5rem;
-  @media (max-width: ${({ theme }) => theme.mobile}) {
-    top: 20%;
-    left: 30%;
-  }
-`;
-
-export const StyledOrganizationEvents = styled.div`
+export const OrganizationEventsDiv = styled.div`
   padding-top: 30px;
   display: flex;
   flex-direction: column;
 `;
 
-export const StyledOrganizationDescription = styled.div`
+export const OrganizationDescription = styled.div`
   margin-top: 10px;
   display: flex;
   flex-direction: column;
 `;
 
-export const StyledOrgContainer = styled.div`
+export const OrgBottomContainer = styled.div`
   margin-top: 100px;
   display: flex;
   padding-left: 20px;
@@ -81,7 +25,7 @@ export const StyledOrgContainer = styled.div`
   }
 `;
 
-export const StyledOrgLeftColumn = styled.div`
+export const OrgLeftColumn = styled.div`
   display: flex;
   width: 35%;
   text-align: start;
@@ -90,7 +34,7 @@ export const StyledOrgLeftColumn = styled.div`
   }
 `;
 
-export const StyledOrgRightColumn = styled.div`
+export const OrgRightColumn = styled.div`
   display: flex;
   width: 35%;
   text-align: start;
@@ -102,7 +46,7 @@ export const StyledOrgRightColumn = styled.div`
   }
 `;
 
-export const StyledOrgButtonDiv = styled.div`
+export const OrgButtonDiv = styled.div`
   display: flex;
   flex-direction: row;
   border-radius: 8px;
@@ -124,7 +68,7 @@ export const StyledOrgButtonDiv = styled.div`
   }
 `;
 
-export const StyledOrgButton = styled.button`
+export const OrgButton = styled.button`
   background: #ff4742;
   border: 1px solid #ff4742;
   border-radius: 6px;
@@ -168,6 +112,6 @@ export const StyledOrgButton = styled.button`
   }
 `;
 
-export const StyledOrgEvent = styled.div`
+export const OrgEvent = styled.div`
 
 `

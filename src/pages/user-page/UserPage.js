@@ -1,7 +1,9 @@
+
+import { useState } from "react";
+import { useEffect } from "react";
+import { LeftColumnUser, RightColumnUser } from "./styles/UserBottom.styled";
 import {
-  StyledUserProfile,
-  StyledLeftColumn,
-  StyledRightColumn,
+  UserProfile,
   StyledUserAvatar,
   StyledUserInfo,
 } from "./styles/UserProfile.styled";
@@ -9,25 +11,35 @@ import {
 // import UserEventCard from "../../components/UserPage/UserEventCard"
 
 const UserPage = () => {
+  
+  const [user, setUser] = useState({})
+  useEffect(() => {
+    const localUser = JSON.parse(localStorage.getItem('user'))
+    setUser(localUser)
+  },[]);
+
+  const avatarString = "https://avatars.dicebear.com/api/initials/" + user.name +".svg"
+
   return (
     <>
-      <StyledUserProfile>
-        <StyledUserAvatar src="https://avatars.dicebear.com/api/initials/Julius Dunfoy.svg" />
+      <UserProfile>
+        <StyledUserAvatar src={avatarString} />
         <StyledUserInfo>
-          <h2>Julius Dunfoy</h2>
+          <h2>{user.name}</h2>
           <p>
             {" "}
-            Email: juliusdunfoy@ucla.edu <br />
-            Major: Linguistics & Computer Science
+            <strong>Email:</strong> {user.email} <br />
+            <strong>Major:</strong> {user.major}
           </p>
         </StyledUserInfo>
-      </StyledUserProfile>
-      <StyledLeftColumn>
+      </UserProfile>
+
+      <LeftColumnUser>
         <h2>Your Tickets</h2>
-      </StyledLeftColumn>
-      <StyledRightColumn>
+      </LeftColumnUser>
+      <RightColumnUser>
         <h2>Your Organizations</h2>
-      </StyledRightColumn>
+      </RightColumnUser>
       {/* {ExampleEvents.map((item, index) => (
         <UserEventCard key={index} item={item } />
       ))} */}

@@ -5,12 +5,14 @@ import {
   StyledHamburger,
   StyledNavMenuBackground,
   Logo,
+  LogoLink,
 } from "./styles/Navbar.styled";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import ShowQRButton from "../qr-code/ShowQRButton";
 import axios from 'axios';
-import ShowQRButton from "../qr-code/UserQR";
+import secureLocalStorage from 'react-secure-storage';
 
 const Navbar = () => {
   const [click, setClick] = useState(false);
@@ -25,11 +27,16 @@ const Navbar = () => {
 
     localStorage.setItem('token', JSON.stringify(""));
     localStorage.setItem('user', JSON.stringify({}));
+    console.log(secureLocalStorage.getItem('private-key'));
+    secureLocalStorage.setItem('private-key', JSON.stringify(""));
   }
 
   return (
     <StyledNavbar>
-      <Logo>Buzz</Logo>
+      <LogoLink to="/feed">
+        <Logo>Buzz</Logo>
+      </LogoLink>
+
       <StyledNavMenu clicked={click}>
         <ShowQRButton/>
         <StyledNavItem>

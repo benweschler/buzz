@@ -20,6 +20,7 @@ export default function Feed({toggleTheme}) {
   const [events, setEvents] = useState([])
   const theme = useTheme()
   useEffect(() => {
+    console.log("useEffect query in Feed")
     async function getEvents() {
       return axios.put(
         "http://localhost:4000/api/utilities/filter",
@@ -27,7 +28,6 @@ export default function Feed({toggleTheme}) {
       ).then((response) => setEvents(response["data"].events))
     }
 
-    setEvents([])
     getEvents().catch((e) => console.log("ERROR WITH FETCHING EVENTS:", e))
     console.log(events);
   }, [theme.brightness])
@@ -47,7 +47,7 @@ export default function Feed({toggleTheme}) {
         <h1>Popular Events <span style={{color: "#a4a4a4"}}>at UCLA</span></h1>
         <TonightButton toggleTheme={toggleTheme}/>
         <FilterRow>
-          {TagFilters(selectedTags, setSelectedTags)}
+          {renderTagFilters(selectedTags, setSelectedTags)}
         </FilterRow>
         <EventCards events={events} filter={filter}/>
       </Wrapper>
@@ -104,9 +104,9 @@ function EventCards({events, filter}) {
   );
 }
 
-function TagFilters(selectedTags, setSelectedTags) {
+function renderTagFilters(selectedTags, setSelectedTags) {
   let filters = []
-  for (let [name, icon] of Object.entries(Constants.tags)) {
+  for (const [name, icon] of Object.entries(Constants.tags)) {
     filters.push(
       <FilterChip
         key={name}

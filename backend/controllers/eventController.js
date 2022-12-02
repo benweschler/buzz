@@ -57,6 +57,13 @@ const createEvent = async (req, res) => {
         // Parse date
         let dateNum = 0;
         if (!isNaN(parseInt(req.body.date))) {
+            if(parseInt(req.body.date)<=Date.now())
+            {
+                res.status(400).json({
+                    error: "date must be in the future"
+                })
+                return
+            }
           dateNum = parseInt(req.body.date);
         }
 
