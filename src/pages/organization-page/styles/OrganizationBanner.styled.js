@@ -48,11 +48,14 @@ export const BannerImage = styled.img`
 export const BannerText = styled.h2`
   color: white;
   position: absolute;
-  top: 30%;
-  left: 40%;
-  font-size: 2.5rem;
+  margin: auto;
+  align-self: center;
+  font-family: 'Montserrat';
+  font-style: italic;
+  font-size: 4rem;
+  font-weight: 800;
+  
   @media (max-width: ${({ theme }) => theme.mobile}) {
-    top: 20%;
-    left: 30%;
+    font-size: 3rem;
   }
 `;

@@ -14,6 +14,7 @@ import {
   OrgRightColumn,
   OrgEventsContainer,
   EventsHeaderOrg,
+  CreateEventButton,
 } from "./styles/OrganizationBottom.styled";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -101,21 +102,7 @@ const OrganizationPage = () => {
             <h2> About </h2>
             <p>{orgData.description}</p>
           </OrganizationDescription>
-          <EventsHeaderOrg>
-            <h2> Our Events</h2>
-          </EventsHeaderOrg>
-          <OrganizationEventsDiv>
-            
-            <OrgEventsContainer>
-              <h3> One </h3>
-              <h3> Two </h3>
-              <h3> Three </h3>
-            </OrgEventsContainer>
-            {/* {console.log(orgData.events)}
-              {orgData.events.forEach(event=>{
-                renderName(event)
-              })} */}
-          </OrganizationEventsDiv>
+       
         </OrgLeftColumn>
 
         <OrgRightColumn>
@@ -130,8 +117,23 @@ const OrganizationPage = () => {
               {join ? "Joined" : "Join"}
             </OrgButton>
           </OrgButtonDiv>
-          
-          
+
+          <EventsHeaderOrg>
+            <h2> Our Events</h2>
+            <CreateEventButton> Create Event </CreateEventButton>
+          </EventsHeaderOrg>
+          <OrganizationEventsDiv>
+            
+            <OrgEventsContainer>
+              <h3> One </h3>
+              <h3> Two </h3>
+              <h3> Three </h3>
+            </OrgEventsContainer>
+            {/* {console.log(orgData.events)}
+              {orgData.events.forEach(event=>{
+                renderName(event)
+              })} */}
+          </OrganizationEventsDiv>
           
         </OrgRightColumn>
       </OrgBottomContainer>
