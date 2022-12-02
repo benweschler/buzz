@@ -166,10 +166,10 @@ function CreateEvent(props) {
         {BlockInput("Title", "text")}
 
         <Block>
-          <Input type="datetime-local"
+          <Input className="Date"
+            type="datetime-local"
             value={eventInfo.date}
-            name="date" onChange={handleChange}
-            style={{color:"grey"}}/>
+            name="date" onChange={handleChange}/>
           <Span className="FxBottom"/>
         </Block>
 
@@ -179,7 +179,7 @@ function CreateEvent(props) {
             <Block>
               <Input type="number"
                 value={eventInfo.capacity}
-                name="capacity" min="0" max="10000"
+                name="capacity" min="1" max="10000"
                 placeholder="Capacity" onChange={handleChange}/>
               <Span className="FxBottom"/>
             </Block>

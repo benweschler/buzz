@@ -10,6 +10,7 @@ import OrganizationPage from "./pages/organization-page/OrganizationPage";
 import UserPage from "./pages/user-page/UserPage";
 import LogRegCtrl from "./pages/form-pages/LogRegCtrl";
 import CreateEvent from "./pages/form-pages/CreateEvent";
+import CreateOrg from "./pages/form-pages/CreateOrg";
 
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -54,10 +55,9 @@ function App() {
           <Route path="/organization-page" element={<OrganizationPage/>}/>
           <Route path="/user-page" element={<UserPage/>}/>
           <Route path="/log-or-sign-up" element={<LogRegCtrl/>}/>
-          <Route
-            path="/create-event"
-            element={<CreateEvent orgID="NYp9XtXAV19Pjjg9ECd7"/>}
-          />
+          <Route  path="/create-event"
+            element={<CreateEvent orgID="NYp9XtXAV19Pjjg9ECd7"/>}/>
+          <Route path="/create-organization" element={<CreateOrg/>}/>
         </Routes>
       </Container>
     </ThemeProvider>
