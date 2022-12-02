@@ -10,10 +10,17 @@ import {
 // import ExampleEvents from "../../assets/ExampleEvents.json"
 // import UserEventCard from "../../components/UserPage/UserEventCard"
 import axios from 'axios';
+import { LoadingIndicator } from "../feed/styles/Feed.styled";
+import { HashLoader } from "react-spinners";
+import { useTheme } from "styled-components";
 
 const UserPage = () => {
 
-  const [user, setUser] = useState({})
+  const [user, setUser] = useState(null)
+  const [userData, setUserData] = useState(null)
+
+  const theme = useTheme()
+
   useEffect(() => {
     const localUser = JSON.parse(localStorage.getItem('user'))
     setUser(localUser)
@@ -23,13 +30,22 @@ const UserPage = () => {
         "http://localhost:4000/api/users/" + localUser.id
       );
       console.log(data.data);
+      setUserData(data.data);
     };
+
 
     readUser().catch(() => {
       console.log('ERROR');
     })
 
   },[]);
+
+  if(!userData)
+    return (
+      <LoadingIndicator>
+        <HashLoader size="150px" color={theme.main}/>
+      </LoadingIndicator>
+    )
 
   const avatarString = "https://avatars.dicebear.com/api/initials/" + user.name +".svg"
 
@@ -53,7 +69,9 @@ const UserPage = () => {
           <h2>Your Tickets</h2>
         </LeftColumnUser>
         <RightColumnUser>
+          
           <h2>Your Organizations</h2>
+          {buildOrgData(userData.organizations)}
         </RightColumnUser>
       </UserColumnDiv>
       
@@ -63,5 +81,15 @@ const UserPage = () => {
     </>
   );
 };
+
+function buildOrgData(orgData) {
+  const organizationObjects = JSON.parse(localStorage.getItem('user')).organizations;
+  console.log(organizationObjects);
+  return (
+    organizationObjects.map((org) =>
+      <h1 key={org.id}>{org.name}</h1>
+    )
+  )
+}
 
 export default UserPage;

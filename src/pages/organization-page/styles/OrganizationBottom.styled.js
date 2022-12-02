@@ -15,6 +15,7 @@ export const OrganizationDescription = styled.div`
 export const OrgBottomContainer = styled.div`
   margin-top: 40px;
   display: flex;
+  flex-direction: column;
   padding-left: 20px;
   padding-right: 20px;
   justify-content: space-between;
@@ -24,24 +25,26 @@ export const OrgBottomContainer = styled.div`
   }
 `;
 
-export const OrgLeftColumn = styled.div`
+export const OrgTopRow = styled.div`
   display: flex;
-  flex-direction: column;
-  width: 50%;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
   text-align: start;
   @media (max-width: ${({ theme }) => theme.mobile}) {
     width: 100%;
   }
 `;
 
-export const OrgRightColumn = styled.div`
+export const OrgBottomRow = styled.div`
   display: flex;
   flex-direction: column;
 
-  width: 50%;
+  width: 100%;
   text-align: start;
   padding-left: 20px;
-  justify-content: start;
+  justify-content: center;
 
   @media (max-width: ${({ theme }) => theme.mobile}) {
     width: 100%;
@@ -56,20 +59,17 @@ export const OrgButtonDiv = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 60%;
-  margin: 0 auto;
+  height: 4rem;
+  margin: 0 10px;
   margin-left: 40%;
   background: rgba(0,0,0, 0.03);
   box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
   @media (max-width: ${({ theme }) => theme.mobile}) {
     
-    
-    
     margin: auto;
-    justify-content: center;  
+    justify-content: space-between;  
     margin-top: 20px;
     z-index: 200;
-
-
     position: fixed;
     bottom: 10px; 
     width: 93%;
@@ -97,8 +97,8 @@ export const OrgButton = styled.button`
   line-height: 16px;
   min-height: 40px;
   outline: 0;
-  padding: 12px 14px;
-  margin: 15px 15px;
+
+  margin: 0 15px;
   text-align: center;
   text-rendering: geometricprecision;
   text-transform: none;
@@ -143,6 +143,10 @@ export const OrganizationEventsDiv = styled.div`
 
 
 export const OrgEventsContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 1.5rem;
+  width: 100%;
 
 `
 
@@ -174,7 +178,7 @@ export const CreateEventButton = styled.button`
   font-size: 100%;
   height: 40px;
   line-height: 1;
-  margin: 0 0;
+  margin: 0 25px;
   outline: none;
   overflow: hidden;
   padding: 0 25px;

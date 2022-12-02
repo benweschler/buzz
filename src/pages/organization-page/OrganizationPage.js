@@ -1,6 +1,5 @@
 import {
   BannerOrg,
-  BannerImage,
   BannerImageBlurred,
   BannerText,
 } from "./styles/OrganizationBanner.styled";
@@ -10,52 +9,62 @@ import {
   OrgButton,
   OrgButtonDiv,
   OrgBottomContainer,
-  OrgLeftColumn,
-  OrgRightColumn,
   OrgEventsContainer,
   EventsHeaderOrg,
   CreateEventButton,
+  OrgTopRow,
+  OrgBottomRow,
 } from "./styles/OrganizationBottom.styled";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
+import EventCard from "../feed/EventCard";
+import { EventOrgLink } from "../event-page/styles/EventPageInfoPanel.styled";
+import { LoadingIndicator } from "../feed/styles/Feed.styled";
+import { HashLoader } from "react-spinners";
+import { useTheme } from "styled-components";
 
 const OrganizationPage = () => {
   const location = useLocation();
   const { organizationID } = location.state;
 
-  const [orgData, setOrgData] = useState({});
+  const [orgData, setOrgData] = useState(null);
   const [follow, setFollow] = useState(false);
   const [join, setJoin] = useState(false);
+
+  const theme = useTheme()
+
+  useEffect(() => console.log("EFFECT2"), [])
+
   useEffect(() => {
     console.log("useEffect query in OrganizationPage");
-    const readOrg = async () => {
-      const data = await axios.get(
+    const getInfo = async () => {
+      const organizationData = await axios.get(
         "http://localhost:4000/api/organizations/" + organizationID
       );
-      console.log(data.data);
-      setOrgData(data.data);
-    };
+      setOrgData(organizationData.data);
 
-    const getOrgRelation = async () => {
-      const user = "gygBGe9hAjfKtcguPC6LgIb3bLl2";
-      const data = await axios.get(
+      const user = JSON.parse(localStorage.getItem("user")).id;
+      const followData = await axios.get(
         "http://localhost:4000/api/utilities/org/" + user + "/" + organizationID
       );
-      if (data.data.following) {
+
+      if (followData.data.following) {
         setFollow(true);
       } else {
         setFollow(false);
       }
-      if (data.data.member) {
+      if (followData.data.member) {
         setJoin(true);
       } else {
         setJoin(false);
       }
-    };
-    readOrg().catch(console.error);
-    getOrgRelation().catch(console.error);
-  }, []);
+
+    }
+
+    console.log("EFFECT")
+    getInfo().catch(console.error);
+  }, [organizationID]);
 
   const handleFollow = async () => {
     const body = {
@@ -88,6 +97,14 @@ const OrganizationPage = () => {
       setJoin(false);
     }
   };
+
+  if(!orgData)
+    return (
+      <LoadingIndicator>
+        <HashLoader size="150px" color={theme.main}/>
+      </LoadingIndicator>
+    )
+  
   return (
     <>
       <BannerOrg>
@@ -97,15 +114,11 @@ const OrganizationPage = () => {
       </BannerOrg>
 
       <OrgBottomContainer>
-        <OrgLeftColumn>
+        <OrgTopRow>
           <OrganizationDescription>
             <h2> About </h2>
             <p>{orgData.description}</p>
           </OrganizationDescription>
-       
-        </OrgLeftColumn>
-
-        <OrgRightColumn>
           <OrgButtonDiv>
             
             <OrgButton onClick={handleFollow} following={follow}>
@@ -117,28 +130,56 @@ const OrganizationPage = () => {
               {join ? "Joined" : "Join"}
             </OrgButton>
           </OrgButtonDiv>
+        </OrgTopRow>
+
+        <OrgBottomRow>
+          
 
           <EventsHeaderOrg>
             <h2> Our Events</h2>
-            <CreateEventButton> Create Event </CreateEventButton>
+            <EventOrgLink to="/create-event" state={{organizationID: organizationID}}>
+              <CreateEventButton> Create Event </CreateEventButton>
+            </EventOrgLink>
+            
           </EventsHeaderOrg>
           <OrganizationEventsDiv>
             
             <OrgEventsContainer>
-              <h3> One </h3>
-              <h3> Two </h3>
-              <h3> Three </h3>
+              {buildEventCards(orgData.events)}
             </OrgEventsContainer>
-            {/* {console.log(orgData.events)}
-              {orgData.events.forEach(event=>{
-                renderName(event)
-              })} */}
           </OrganizationEventsDiv>
           
-        </OrgRightColumn>
+        </OrgBottomRow>
       </OrgBottomContainer>
     </>
   );
-};
+}
+
+function buildEventCards(events) {
+  const cards = []
+
+  // TODO: sometimes, we're getting different number of events from the API call for an org.
+  // This ensures each card has a unique key
+  let keySuffix = 0;
+  for(const event of events) {
+    cards.push(
+      <EventCard
+        key={"" + event.id + keySuffix++}
+        eventID={event.id}
+        title={event.title}
+        organization={event.organization_name}
+        organizationID={event.organization}
+        image={event.image}
+        description={event.description}
+        attendees={event.attendees.length}
+        location={event.location}
+        price={event.price}
+        tags={event.tags}
+        date={event.date}
+      />)
+  }
+
+  return cards
+}
 
 export default OrganizationPage;
