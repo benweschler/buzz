@@ -4,13 +4,15 @@ import {
   StyledEventContainer,
   StyledEventDate,
   StyledEventDateDiv,
-  StyledEventDateIcon,
   StyledEventDescription,
+  StyledEventHeader,
+  StyledEventImage,
   StyledEventImageDiv,
   StyledEventInfoLeftColumn,
   StyledEventInfoRightColumn,
   StyledEventLeftColumn,
   StyledEventLocation,
+  StyledEventMainInfo,
   StyledEventOrganizer,
   StyledEventQRDiv,
   StyledEventQRHeader,
@@ -21,16 +23,16 @@ import {
   StyledRsvpMessage,
   StyledSecurityMessage,
 } from "./styles/EventPage.styled";
-import { StyledEventImage } from "./styles/EventPage.styled";
-import { StyledEventHeader } from "./styles/EventPage.styled";
-import { StyledEventMainInfo } from "./styles/EventPage.styled";
-import { IoCalendarClearOutline } from "react-icons/io5";
-import { IoLocationOutline } from "react-icons/io5";
-import { IoPersonOutline } from "react-icons/io5";
+import {
+  IoCalendarClearOutline,
+  IoLocationOutline,
+  IoPersonOutline
+} from "react-icons/io5";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import {useEffect, useState} from "react";
 import QrCodeScannerRoundedIcon from "@mui/icons-material/QrCodeScannerRounded";
-import { useLocation } from "react-router-dom";
+import {useLocation} from "react-router-dom";
+import {getTime} from "../../utils/dateUtils";
 
 const EventPage = () => {
   const {
@@ -42,7 +44,6 @@ const EventPage = () => {
       location,
       attendees,
       price,
-      tags,
       organizationId,
       description,
       capacity,
@@ -62,25 +63,23 @@ const EventPage = () => {
     const getOrgRelation = async () => {
       // user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
       const user =  "gygBGe9hAjfKtcguPC6LgIb3bLl2"
-      const org=organizationId
-      const data=await axios.get("http://localhost:4000/api/utilities/org/"+user+"/"+org)
-      if(data.data.member){
+      const data=await axios.get("http://localhost:4000/api/utilities/org/"+user+"/"+organizationId)
+      if(data["data"].member){
         setMember(true)
       }
       else{
         setMember(false)
       }
-      console.log(data.data.member)
+      console.log(data["data"].member)
     }
     
     const getRSVP = async () => {
       // user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
       const user =  "gygBGe9hAjfKtcguPC6LgIb3bLl2"
-      const event = eventId;
       const data = await axios.get(
-        "http://localhost:4000/api/utilities/" + user + "/" + event
+        "http://localhost:4000/api/utilities/" + user + "/" + eventId
       );
-      if (data.data.registered) {
+      if (data["data"].registered) {
         setActive(true);
       } else {
         setActive(false);
@@ -101,94 +100,12 @@ const EventPage = () => {
       "http://localhost:4000/api/users/register",
       body
     );
-    console.log(rsvp.data.registered);
-    if (rsvp.data.registered) {
+    console.log(rsvp["data"].registered);
+    if (rsvp["data"].registered) {
       setActive(true);
     } else {
       setActive(false);
     }
-  };
-
-  const getTime = (date) => {
-    const time = new Date(date);
-    let result = "";
-    const day = time.getDay();
-    switch (day) {
-      case 0:
-        result += "Sun, ";
-        break;
-      case 1:
-        result += "Mon, ";
-        break;
-      case 2:
-        result += "Tue, ";
-        break;
-      case 3:
-        result += "Wed, ";
-        break;
-      case 4:
-        result += "Thu, ";
-        break;
-      case 5:
-        result += "Fri, ";
-        break;
-      case 6:
-        result += "Sat, ";
-        break;
-      default:
-        return;
-    }
-    const month = time.getMonth();
-    switch (month) {
-      case 0:
-        result += "Jan ";
-        break;
-      case 1:
-        result += "Feb ";
-        break;
-      case 2:
-        result += "Mar ";
-        break;
-      case 3:
-        result += "Apr ";
-        break;
-      case 4:
-        result += "May ";
-        break;
-      case 5:
-        result += "Jun ";
-        break;
-      case 6:
-        result += "Jul ";
-        break;
-      case 7:
-        result += "Aug ";
-        break;
-      case 8:
-        result += "Sep ";
-        break;
-      case 9:
-        result += "Oct ";
-        break;
-      case 10:
-        result += "Nov ";
-        break;
-      case 11:
-        result += "Dec ";
-        break;
-      default:
-        return;
-    }
-    const dayOfMonth = time.getDate();
-    result += dayOfMonth + ", ";
-
-    const Hours = time.getHours();
-    let Mins = time.getMinutes();
-    if (Mins < 10) {
-      Mins = "0" + Mins;
-    }
-    result += Hours + ":" + Mins;
-    return result;
   };
 
   return (

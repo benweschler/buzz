@@ -6,28 +6,23 @@ import {
   Date,
   EventCardBody,
   Location,
-  Organizer,
+  OrganizerLink,
   PriceChip,
   Tags,
-  Title,
+  TitleLink,
 } from "./styles/EventCard.styled";
 
 export default function EventCard({
+  eventID,
   title,
   image,
   date,
-  organizer,
+  organization,
+  organizationID,
   location,
   attendees,
   price,
   tags,
-  /* TODO: reimplement navigation
-  organizationId,
-  description,
-  capacity,
-  ticketed,
-  eventId,
-  */
   onImageLoad,
 }) {
   return (
@@ -35,8 +30,20 @@ export default function EventCard({
       <img src={image} alt={title} onLoad={onImageLoad}/>
       <EventCardBody>
         <Date>{date}</Date>
-        <Title className="overflow-field">{title}</Title>
-        <Organizer className="overflow-field">{organizer}</Organizer>
+        <TitleLink
+          className="overflow-field"
+          to="/event-page"
+          state={{eventID: eventID}}
+        >
+          {title}
+        </TitleLink>
+        <OrganizerLink
+          className="overflow-field"
+          to="/organization-page"
+          state={{organizationID: organizationID}}
+        >
+          {organization}
+        </OrganizerLink>
         <Location>
           <ImLocation2/>
           {" " + location}

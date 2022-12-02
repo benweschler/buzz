@@ -15,15 +15,15 @@ import {
 import RoyceHall from "../../assets/images/Royce-Hall.jpg";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
-
 
 const OrganizationPage = () => {
+  /*
   const {
     state: {
       organizationId
     } = {},
-  } = useLocation(); 
+  } = useLocation();
+  */
 
   const [follow, setFollow] = useState(false)
   const [join, setJoin] = useState(false)
