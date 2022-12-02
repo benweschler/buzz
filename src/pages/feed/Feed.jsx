@@ -29,6 +29,7 @@ export default function Feed({toggleTheme}) {
 
     setEvents([])
     getEvents().catch((e) => console.log("ERROR WITH FETCHING EVENTS:", e))
+    console.log(events);
   }, [theme.brightness])
 
 

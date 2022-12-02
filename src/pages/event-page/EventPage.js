@@ -55,7 +55,7 @@ const EventPage = () => {
         "http://localhost:4000/api/events/" + eventID
       );
       setEvent(eventData.data);
-      const user = "gygBGe9hAjfKtcguPC6LgIb3bLl2";
+      const user = localStorage.getItem("user").id;
       const memberData = await axios.get(
         "http://localhost:4000/api/utilities/org/" +
           user +
@@ -85,7 +85,7 @@ const EventPage = () => {
   const handleRsvp = async () => {
     const body = {
       // user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
-      user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
+      user: localStorage.getItem("user").id,
       event: eventID,
     };
     const rsvp = await axios.patch(
