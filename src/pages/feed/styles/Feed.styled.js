@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import {StyledErrorMessage} from "../../../components/globalStyles";
 
 export const Scaffold = styled.div`
   display: flex;
@@ -15,10 +16,6 @@ export const Wrapper = styled.div`
   gap: 2rem;
   width: 100%
 `;
-
-export const SchoolName = styled.span`
-  color: rgba(0, 0, 0, 0.5);
-`
 
 export const EventView = styled.div`
   display: ${({visible}) => visible ? "grid" : "none"};
@@ -39,12 +36,6 @@ export const LoadingIndicator = styled.div`
   justify-content: center;
 `
 
-export const ImageLoadError = styled.div`
+export const ImageLoadError = styled(StyledErrorMessage)`
   padding: 75px;
-  font-size: 1.5rem;
-  font-style: italic;
-  font-weight: 400;
-  justify-self: center;
-  align-self: center;
-  color: red;
 `

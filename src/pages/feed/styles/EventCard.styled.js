@@ -3,11 +3,11 @@ import Color from "color";
 import {Link} from "react-router-dom";
 
 export const Card = styled.div`
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   border-radius: 0.2rem;
   position: relative;
-  display: flex;
-  flex-direction: column;
   justify-content: start;
   cursor: pointer;
   height: 25rem;

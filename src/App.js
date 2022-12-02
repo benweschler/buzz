@@ -11,9 +11,6 @@ import UserPage from "./pages/user-page/UserPage";
 import LogRegCtrl from "./pages/form-pages/LogRegCtrl";
 import CreateOrg from "./pages/form-pages/components/CreateOrg";
 import CreateEvent from "./pages/form-pages/CreateEvent";
-import EditEvent from "./pages/form-pages/EditEvent";
-
-
 
 function App() {
   const [theme, setTheme] = useState(lightTheme);
@@ -26,9 +23,9 @@ function App() {
       <Navbar/>
       <Container>
         <Routes>
-          
+
           <Route exact path="/" element={
-            (JSON.parse(localStorage.getItem('user')) && 
+            (JSON.parse(localStorage.getItem('user')) &&
             JSON.parse(localStorage.getItem('user')).id) ? (
               <Feed toggleTheme={toggleTheme}/>
             ) : (

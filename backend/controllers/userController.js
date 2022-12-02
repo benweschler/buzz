@@ -65,7 +65,7 @@ const createUser = async (req, res) => {
       const secret = new Uint8Array(20);
       crypto.getRandomValues(secret);
 
-      var enc = new TextDecoder('utf-8');
+      let enc = new TextDecoder('utf-8');
       const secretKey = enc.decode(secret);
 
       await database.collection('Users').doc(recordObj.uid).set({
