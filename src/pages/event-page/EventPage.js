@@ -100,6 +100,7 @@ const EventPage = () => {
       if (rsvp.data.registered) {
         setActive(true);
         setEventData(prevState => {
+          alert("Succeeded!")
           return{
             ...prevState, attending : prevState.attending + 1
           }})
@@ -114,10 +115,9 @@ const EventPage = () => {
       userData ={...userData, events_registered: eventData.events_registered}
       userData = JSON.stringify(userData)
       localStorage.setItem("user", userData)
-      console.log("userData: ", userData);
     }).catch((error) => {
       console.log(error)
-      alert("Error in RSVP!")
+      alert("Can't RSVP for this event anymore!")
     })
   };
 
