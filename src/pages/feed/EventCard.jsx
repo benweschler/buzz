@@ -24,10 +24,11 @@ export default function EventCard({
   price,
   tags,
   onImageLoad,
+  onImageError,
 }) {
   return (
     <Card className="card">
-      <img src={image} alt={title} onLoad={onImageLoad}/>
+      <img src={image} alt={title} onLoad={onImageLoad} onError={() => onImageError(title)}/>
       <EventCardBody>
         <Date>{date}</Date>
         <TitleLink

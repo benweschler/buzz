@@ -76,26 +76,43 @@ function CreateEvent(props) {
     setEventInfo(initialEventInfo)
     setTicketed(false)
     setSelectedTags([])
-    setFile('')
     setError('')
   }
 
   function handleSubmit(e) {
     e.preventDefault()
+    const prevEventInfo = eventInfo;
+    const prevTicketed = ticketed;
+    const prevSelectedTags = selectedTags;
+    function restoreState(){
+      setEventInfo(prevEventInfo);
+      setTicketed(prevTicketed);
+      setSelectedTags(prevSelectedTags); 
+    }
+
     handleReset()
 
     var completed = true;
     for (const entry in eventInfo){
       if (!eventInfo[entry]){
+        restoreState();
         completed = false;
       }
     }
     if (!completed){
-      setError("Input fields incompleted!");
+      restoreState();
+      setError("Input fields incomplete!");
+      return;
+    }
+
+    if (!selectedTags.length){
+      restoreState();
+      setError("Must select at least one tag!");
       return;
     }
 
     if (!file){
+      restoreState();
       setError("No file uploaded!");
       return;
     }
@@ -116,7 +133,15 @@ function CreateEvent(props) {
       'Content-Type': 'multipart/form-data'
     }).then((response) => {
       console.log(response)
-    }).catch((error) => {console.log(error)})
+    }).catch((error) => {
+      console.log(error);
+      restoreState();
+      if (error.response.data.error){
+        setError(error.response.data.error)
+      }else{
+        setError("Firebase error.")
+      }
+    })
   }
 
   const BlockInput = (name, type) => {
@@ -195,7 +220,7 @@ function CreateEvent(props) {
         <Flex className="Tab">
           Upload a photo
           <FileInput type="file" name="file"
-            accept="image/*, image/HEIC"
+            accept="image/*"
             onChange={handleFile}/>
           <Span className="FxSquare"/>
         </Flex>
