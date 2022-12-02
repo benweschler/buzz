@@ -11,8 +11,9 @@ import UserPage from "./pages/user-page/UserPage"
 import LogRegCtrl from "./pages/form-pages/LogRegCtrl";
 import CreateEvent from "./pages/form-pages/CreateEvent";
 
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import {useNavigate} from 'react-router-dom';
+const {auth} = require('./firebase/index.js');
 
 function App() {
   const navigate = useNavigate();
@@ -20,13 +21,10 @@ function App() {
   const toggleTheme = () =>
     setTheme(theme.brightness === 'light' ? darkTheme : lightTheme);
 
-  useEffect(() => {
-    async function getCurrentUser() {
-      const token = JSON.parse(localStorage.getItem('token'));
-      const userID = JSON.parse(localStorage.getItem('user')).id;
-      if (userID && (token.length > 0)) {
-        return axios.get(
-          `http://localhost:4000/api/users/token/${token}`
+    useEffect(() => {
+      async function getCurrentUser(id) {
+        axios.get(
+          `http://localhost:4000/api/users/${id}`
         ).then((response) => {
           console.log(response);
           if (response.data.success) {
@@ -37,10 +35,17 @@ function App() {
           }
         })
       }
-    }
 
-    getCurrentUser().catch((e) => console.log("ERROR WITH AUTHENTICATING USER:", e))
-  }, []);
+      auth.onIdTokenChanged(function(user) {
+        if (user) {
+          // User is signed in or token was refreshed.
+          console.log('User has signed in!')
+          getCurrentUser(user.uid);
+        } else {
+          navigate('/');
+        }
+      });
+    }, []);
 
   return (
     <ThemeProvider theme={theme}>

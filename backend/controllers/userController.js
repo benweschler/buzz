@@ -6,13 +6,14 @@ const {database, storage} = require('../firebase-admin/index');
 const {auth: clientAuth} = require('../../src/firebase/index');
 const {auth: adminAuth} = require('../firebase-admin/index');
 const {FieldValue} = require('@google-cloud/firestore');
-const {signInWithEmailAndPassword} = require('firebase/auth');
+const {signInWithEmailAndPassword, signOut} = require('firebase/auth');
 const jsSHA = require('jssha');
 const {v4} = require('uuid');
 const crypto = require('crypto');
 const {sortByRecency} = require('./utilityController');
 const {INITIAL_USER_KEYS} = require('../constants/userConstants.js');
 const {WINDOW_TIME} = require('../constants/utilityConstants');
+
 
 // When designing basic functionality for CRUD operations, I used
 // https://firebase.google.com/docs/firestore/manage-data/add-data
@@ -65,83 +66,59 @@ const createUser = async (req, res) => {
       crypto.getRandomValues(secret);
 
       await database.collection('Users').doc(recordObj.uid).set({
-        ...req.body,
-        "clubs_following": [],
-        "events_registered": [],
-        "interests": [],
-        "organizations": [],
-        "secret": secret,
-        "id": recordObj.uid
+          ...req.body,
+          "clubs_following": [],
+          "events_registered": [],
+          "organizations": [],
+          "secret": secret,
+          "id": recordObj.uid
       }).catch((error) => {
-        console.log('Error creating user document in Firestore');
+          console.log('Error creating user document in Firestore');
+          res.status(500).json({
+              error: error
+          })
+      })
+
+      console.log('Created user document with id: ' + recordObj.uid);
+
+      const bucket = storage.bucket();
+      const fullPath = `UserImages/${v4()}`;
+      const bucketFile = bucket.file(fullPath);
+
+      await bucketFile.save(req.file.buffer, {
+        contentType: req.file.mimetype,
+        gzip: true
+      });
+
+      const [url] = await bucketFile.getSignedUrl({
+        action: 'read',
+        expires: '01-01-2030'
+      });
+
+      await database.collection('Users').doc(recordObj.uid).update({
+        image: url
+      }).catch((error) => {
         res.status(500).json({
           error: error
         })
       })
 
-      if (userCreated) {
-          // Don't want the password to be included in the document
-          delete req.body.password;
 
-          // Create the shared secret
-          const secret = new Uint8Array(20);
-          crypto.getRandomValues(secret);
+      // Sign in the user and return the token to the front-end
+      const userCredential = await signInWithEmailAndPassword(clientAuth, email, password).catch((error) => {
+        res.status(400).json({
+          error: error
+        })
+      })
 
-          await database.collection('Users').doc(recordObj.uid).set({
-              ...req.body,
-              "clubs_following": [],
-              "events_registered": [],
-              "organizations": [],
-              "secret": secret,
-              "id": recordObj.uid
-          }).catch((error) => {
-              console.log('Error creating user document in Firestore');
-              res.status(500).json({
-                  error: error
-              })
-          })
+      let userRef = await database.collection('Users').doc(recordObj.uid).get()
+      let userData = userRef.data();
 
-          console.log('Created user document with id: ' + recordObj.uid);
-
-          const bucket = storage.bucket();
-          const fullPath = `UserImages/${v4()}`;
-          const bucketFile = bucket.file(fullPath);
-
-          await bucketFile.save(req.file.buffer, {
-            contentType: req.file.mimetype,
-            gzip: true
-          });
-
-          const [url] = await bucketFile.getSignedUrl({
-            action: 'read',
-            expires: '01-01-2030'
-          });
-
-          await database.collection('Users').doc(recordObj.uid).update({
-            image: url
-          }).catch((error) => {
-            res.status(500).json({
-              error: error
-            })
-          })
-
-
-          // Sign in the user and return the token to the front-end
-          const userCredential = await signInWithEmailAndPassword(clientAuth, email, password).catch((error) => {
-            res.status(400).json({
-              error: error
-            })
-          })
-
-          let userRef = await database.collection('Users').doc(recordObj.uid).get()
-          let userData = userRef.data();
-
-          res.status(200).json({
-            id: recordObj.uid,
-            user_data: userData,
-            token: userCredential.user.stsTokenManager.accessToken
-          })
-      }
+      res.status(200).json({
+        id: recordObj.uid,
+        user_data: userData,
+        token: userCredential.user.stsTokenManager.accessToken
+      })
     }
   }
 }
@@ -161,11 +138,6 @@ const readUser = async (req, res) => {
         })
       }
       const user = {...userDoc.data(), events_registered: events}
-
-      const hmac = new jsSHA("SHA-1", "HEX");
-      hmac.setHMACKey(userDoc.data().secret, "UINT8ARRAY");
-
-      const hmacString = hmac.getHMAC('HEX');
 
       res.status(200).json(user)
     } else {
@@ -367,7 +339,7 @@ const revokeToken = async (req, res) => {
     })
   } else {
     const {id} = req.params;
-    adminAuth.revokeRefreshTokens(id).then(() => {
+    signOut(clientAuth).then(() => {
       res.status(200).json({
         id: id
       })
@@ -435,17 +407,9 @@ const addUserToOrg = async (req, res) => {
             "member": member,
             "organizations": organizations
           })
-      })//.catch((error) => {
-    //     res.status(500).json({
-    //       error: error
-    //     })
-    //   })
+      })
     }
-  })//.catch((error) => {
-//     res.status(500).json({
-//       error: error
-//     })
-//   })
+  })
 }
 
 const addUserToEvent = async (req, res) => {
