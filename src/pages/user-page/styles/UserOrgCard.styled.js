@@ -7,13 +7,15 @@ export const OrgCardWrapper = styled.div`
     flex-direction: row;    
     height: 9rem;
     width: 100%;
-    margin: auto;
+    margin: 0.5rem auto;
     box-shadow: rgba(0, 0, 0, 0.1) 3px 5px 9px;
     border-radius: 10px;
+    
+
     &:hover {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     transform: scale(1.01);
-    transition: transform 250ms ease-in
+    transition: transform 250ms ease-in;
   }
 `
 

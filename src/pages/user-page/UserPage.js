@@ -76,8 +76,8 @@ const UserPage = () => {
         <LeftColumnUser>
           <TicketHeaderUser>
             <h2>Your Tickets</h2>
-          </TicketHeaderUser>  
-          
+          </TicketHeaderUser>
+
           <UserTicketsDiv>
             <TicketsContainer>
               {buildEventCards(userData.events_registered)}
@@ -91,20 +91,18 @@ const UserPage = () => {
               <CreateEventButton> Create Organization </CreateEventButton>
             </EventOrgLink>
           </OrgTopRow>
-        
-        <UserTicketsDiv>
-        
-          {buildOrgData(userData.organizations)}
+
+          <UserTicketsDiv>
+            {buildOrgData(userData.organizations)}
           </UserTicketsDiv>
         </RightColumnUser>
       </UserColumnDiv>
-
     </>
   );
 };
 
 function buildOrgData(orgData) {
-  return orgData.map((org) => <OrgCard name={org.name} image={org.image}/>);
+  return orgData.map((org) => <OrgCard name={org.name} image={org.image} id={org.id}/>);
 }
 
 export default UserPage;
