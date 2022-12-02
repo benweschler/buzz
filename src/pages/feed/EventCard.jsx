@@ -12,6 +12,7 @@ import {
   Tags,
   TitleLink,
 } from "./styles/EventCard.styled";
+import formatUnixTime from "../../utils/dateUtils";
 
 export default function EventCard({
   eventID,
@@ -32,7 +33,7 @@ export default function EventCard({
       <img src={image} alt={title} onLoad={onImageLoad} onError={() => onImageError(title)}/>
       <EventCardBody>
         <CardBodyTopRow>
-          <Date>{date}</Date>
+          <Date>{formatUnixTime(date)}</Date>
           {price !== 0 ? <PriceChip>{"$" + price}</PriceChip> : null}
         </CardBodyTopRow>
         <TitleLink
