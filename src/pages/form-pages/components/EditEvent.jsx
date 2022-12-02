@@ -13,11 +13,11 @@ import {
     FileInput,
     Label,
     Switch,
-  } from './Form.styled'
+  } from '../Form.styled'
 import axios from "axios"
 import styled from "styled-components"
-import TagChipRow from "./components/TagChipRow"
-import Constants from "../../constants/Constants"
+import TagChipRow from "./TagChipRow"
+import Constants from "../../../constants/Constants"
 
 const TagChipRowStyle = styled.div`
   display: flex;
@@ -25,15 +25,6 @@ const TagChipRowStyle = styled.div`
   flex-direction: row;
   gap: 1rem;
 `
-
-const initialEventInfo = {
-    title: '',
-    date: '',
-    location: '',
-    capacity: '',
-    price: '',
-    description: '',
-  };
 
 function toTagStr(tagList) {
   var TagStr = "";
@@ -45,10 +36,21 @@ function toTagStr(tagList) {
   return TagStr;
 }
 
-function CreateEvent(props) {
+function EditEvent(props) {
+  const initialEventInfo = {
+    title: props.title,
+    date: props.date,
+    location: props.location,
+    capacity: props.capacity,
+    price: props.price,
+    description: props.description,
+  };
+  const initialTicketed = props.ticketed;
+  const initialSelectedTags = props.tags;
+
   const [eventInfo, setEventInfo] = useState(initialEventInfo);
-  const [ticketed, setTicketed] = useState(false);
-  const [selectedTags, setSelectedTags] = useState([])
+  const [ticketed, setTicketed] = useState(initialTicketed);
+  const [selectedTags, setSelectedTags] = useState(initialSelectedTags);
   const [file, setFile] = useState('');
   const [error, setError] = useState('');
 
@@ -65,7 +67,6 @@ function CreateEvent(props) {
       ? selectedTags.filter(t => t !== tag)
       : [...selectedTags, tag];
     setSelectedTags(newSelection)
-    console.log(newSelection)
   }
 
   function handleFile(input) {
@@ -121,14 +122,14 @@ function CreateEvent(props) {
     Event.append('title', eventInfo.title);
     Event.append('date', Date.parse(eventInfo.date));
     Event.append('location', eventInfo.location);
-    Event.append('organization', props.orgID);
+    Event.append('organization', props.organizer);
     Event.append('capacity', eventInfo.capacity);
     Event.append('price', eventInfo.price);
     Event.append('description', eventInfo.description);
     Event.append('ticketed', ticketed);
     Event.append('file', file);
     Event.append('tags', toTagStr(selectedTags));
-    
+
     axios.post("http://localhost:4000/api/events/", Event, {
       'Content-Type': 'multipart/form-data'
     }).then((response) => {
@@ -247,4 +248,4 @@ function CreateEvent(props) {
     )
   }
   
-export default CreateEvent;
+export default EditEvent;

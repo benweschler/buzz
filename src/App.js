@@ -9,8 +9,8 @@ import {Container} from "./components/global/styles/Container.styled";
 import OrganizationPage from "./pages/organization-page/OrganizationPage";
 import UserPage from "./pages/user-page/UserPage";
 import LogRegCtrl from "./pages/form-pages/LogRegCtrl";
-import CreateEvent from "./pages/form-pages/CreateEvent";
-import CreateOrg from "./pages/form-pages/CreateOrg";
+import CreateOrEditEvent from "./pages/form-pages/CreateOrEditEvent";
+import CreateOrg from "./pages/form-pages/components/CreateOrg";
 
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -58,7 +58,7 @@ function App() {
           <Route path="/user-page" element={<UserPage/>}/>
           <Route path="/log-or-sign-up" element={<LogRegCtrl/>}/>
           <Route  path="/create-event"
-            element={<CreateEvent orgID="NYp9XtXAV19Pjjg9ECd7"/>}/>
+            element={<CreateOrEditEvent orgID="AO0movdTMMnS3wfVHhGC"/>}/>
           <Route path="/create-organization" element={<CreateOrg/>}/>
         </Routes>
       </Container>
