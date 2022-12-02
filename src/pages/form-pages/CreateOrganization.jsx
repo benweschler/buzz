@@ -11,7 +11,7 @@ import {
   Button,
   TextArea,
   FileInput
-} from '../Form.styled';
+} from './Form.styled';
 
 function getUsrID() {
   const usrObj = JSON.parse(localStorage.getItem('user'));
@@ -24,7 +24,7 @@ const initOrgInfo = {
 
 const initFile = '';
 
-function CreateOrg(props) {
+function CreateOrganization(props) {
   const [orgInfo, setOrgInfo] = useState(initOrgInfo);
   const [file, setFile] = useState(initFile);
   const [error, setError] = useState('');
@@ -132,4 +132,4 @@ function CreateOrg(props) {
   )
 }
 
-export default CreateOrg;
+export default CreateOrganization;

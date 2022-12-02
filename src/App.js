@@ -9,7 +9,7 @@ import {Container} from "./components/global/styles/Container.styled";
 import OrganizationPage from "./pages/organization-page/OrganizationPage";
 import UserPage from "./pages/user-page/UserPage";
 import LogRegCtrl from "./pages/form-pages/LogRegCtrl";
-import CreateOrg from "./pages/form-pages/components/CreateOrg";
+import CreateOrganization from "./pages/form-pages/CreateOrganization";
 import CreateEvent from "./pages/form-pages/CreateEvent";
 
 function App() {
@@ -37,7 +37,7 @@ function App() {
           <Route path="/organization-page/:id" element={<OrganizationPage/>}/>
           <Route path="/user-page" element={<UserPage/>}/>
           <Route path="/log-or-sign-up" element={<LogRegCtrl/>}/>
-          <Route path="/create-organization" element={<CreateOrg/>}/>
+          <Route path="/create-organization" element={<CreateOrganization/>}/>
           <Route path="/create-event/:id" element={<CreateEvent/>}/>
         </Routes>
       </Container>
