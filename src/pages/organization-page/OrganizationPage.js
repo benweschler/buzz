@@ -1,4 +1,3 @@
-import { Container } from "../../components/global/styles/Container.styled";
 import {
   StyledBanner,
   StyledBannerImage,
@@ -9,30 +8,31 @@ import {
   StyledOrgButton,
   StyledOrgButtonDiv,
   StyledOrgContainer,
+  StyledOrgEvent,
   StyledOrgLeftColumn,
   StyledOrgRightColumn,
 } from "./styles/OrganizationPage.styled";
-import RoyceHall from "../../assets/images/Royce-Hall.jpg";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 
 const OrganizationPage = () => {
-  /*
   const {
     state: {
       organizationId
     } = {},
   } = useLocation();
-  */
 
+  const [orgData, setOrgData] = useState({})
   const [follow, setFollow] = useState(false)
   const [join, setJoin] = useState(false)
   useEffect(() => {
     
     const readOrg = async () => {
-      
+      const data= await axios.get("http://localhost:4000/api/organizations/" + organizationId)
+      console.log(data.data)
+      setOrgData(data.data)
     }
-
 
     const getOrgRelation = async () => {
       const user="gygBGe9hAjfKtcguPC6LgIb3bLl2"
@@ -54,7 +54,7 @@ const OrganizationPage = () => {
     }
     readOrg().catch(console.error);
     getOrgRelation().catch(console.error);
-  }, [join, follow]);
+  }, [join, follow, organizationId]);
 
   const handleFollow = async() => {
     const body={
@@ -86,9 +86,9 @@ const OrganizationPage = () => {
   return (
     <>
       <StyledBanner>
-        <StyledBannerImageBlurred src={RoyceHall} />
-        <StyledBannerText>Royce Theater Club</StyledBannerText>
-        <StyledBannerImage src={RoyceHall} />
+        <StyledBannerImageBlurred src={orgData.image} />
+        <StyledBannerText>{orgData.name}</StyledBannerText>
+        <StyledBannerImage src={orgData.image} />
         <StyledOrgButtonDiv>
           <StyledOrgButton onClick={handleFollow} following={follow}> {follow ? "Following" : "Follow"} </StyledOrgButton>
           <StyledOrgButton onClick={handleJoin} joined={join}> {join ? "Joined" : "Join" }</StyledOrgButton>
@@ -99,23 +99,20 @@ const OrganizationPage = () => {
 
       <StyledOrgContainer>
         <StyledOrgLeftColumn>
-          <Container>
             <StyledOrganizationDescription>
               <h2> About </h2>
-              <p>
-                Welcome to Royce Theater Club! <br />
-                We are happy you're here, Please check out our events!!
-              </p>
+              <p>{orgData.description}</p>
             </StyledOrganizationDescription>
-          </Container>
         </StyledOrgLeftColumn>
 
         <StyledOrgRightColumn>
-          <Container>
+          <h2> Our Events:</h2>
             <StyledOrganizationEvents>
-              <h2> Our Events:</h2>
+              {/* {console.log(orgData.events)}
+              {orgData.events.forEach(event=>{
+                renderName(event)
+              })} */}
             </StyledOrganizationEvents>
-          </Container>
         </StyledOrgRightColumn>
       </StyledOrgContainer>
     </>

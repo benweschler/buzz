@@ -25,14 +25,6 @@ const Navbar = () => {
           <Link to="/feed">See What's Buzzin'</Link>
         </StyledNavItem>
         <StyledNavItem>
-          <Link to="/organization-page">Organization</Link>
-        </StyledNavItem>
-        {click && (
-          <StyledNavItem>
-            <a href="/event-page">QR Scanner</a>
-          </StyledNavItem>
-        )}
-        <StyledNavItem>
           <Link to="/user-page">My Account</Link>
         </StyledNavItem>
         <StyledNavItem>

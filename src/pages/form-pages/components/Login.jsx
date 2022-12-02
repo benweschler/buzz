@@ -79,8 +79,10 @@ function Login(props) {
           {error ? error : ''}
         </Block>
 
-        <Block className="Separator"/>
-
+        <Flex className="Column">
+          <Block className="Separator"/>
+        </Flex>
+    
         <Button className="Primary" type="submit">
           Log in
         </Button>
