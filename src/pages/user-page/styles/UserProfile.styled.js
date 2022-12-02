@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
-export const StyledUserProfile = styled.div`
+
+export const UserProfile = styled.div`
   display: flex;
   flex-direction: row;
   padding: 10px;
@@ -22,17 +23,7 @@ export const StyledUserAvatar = styled.img`
   border-radius: 3px;
 `;
 
-export const StyledLeftColumn = styled.div`
-  float: left;
-  width: 50%;
-  text-align: center;
-`;
-export const StyledRightColumn = styled.div`
-  float: left;
-  width: 50%;
-  padding-left: 20px;
-  text-align: center;
-`;
+
 
 export const StyledUserInfo = styled.div`
   display: flex;
@@ -46,3 +37,5 @@ export const StyledUserInfo = styled.div`
     
   }
 `;
+
+

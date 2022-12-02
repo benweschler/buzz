@@ -17,11 +17,9 @@ import axios from "axios";
 import { useLocation } from "react-router-dom";
 
 const OrganizationPage = () => {
-  const {
-    state: {
-      organizationId
-    } = {},
-  } = useLocation();
+  // const location = useLocation()
+  // const {organizationID} = location.state
+  const organizationID = "5vJvgrDO0740G6gwvF1k"
 
   const [orgData, setOrgData] = useState({})
   const [follow, setFollow] = useState(false)
@@ -29,15 +27,14 @@ const OrganizationPage = () => {
   useEffect(() => {
     
     const readOrg = async () => {
-      const data= await axios.get("http://localhost:4000/api/organizations/" + organizationId)
+      const data= await axios.get("http://localhost:4000/api/organizations/" + organizationID)
       console.log(data.data)
       setOrgData(data.data)
     }
 
     const getOrgRelation = async () => {
       const user="gygBGe9hAjfKtcguPC6LgIb3bLl2"
-      const org="AO0movdTMMnS3wfVHhGC"
-      const data=await axios.get("http://localhost:4000/api/utilities/org/"+user+"/"+org)
+      const data=await axios.get("http://localhost:4000/api/utilities/org/"+user+"/"+organizationID)
       if(data.data.following)
       {
         setFollow(true)
@@ -54,7 +51,7 @@ const OrganizationPage = () => {
     }
     readOrg().catch(console.error);
     getOrgRelation().catch(console.error);
-  }, [join, follow, organizationId]);
+  }, []);
 
   const handleFollow = async() => {
     const body={
