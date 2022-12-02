@@ -11,9 +11,11 @@ export function generateUserOTP(secret) {
 
   // Do HMAC-SHA1 with the secret
   // eslint-disable-next-line
-  const hmac = new jsSHA("SHA-1", "HEX");
-  hmac.setHMACKey(secret, "UINT8ARRAY");
+  const hmac = new jsSHA("SHA-1", "TEXT");
+  hmac.setHMACKey(secret, "TEXT");
   hmac.update(sequenceValue.toString(16));
 
-  return hmac.getHMAC('HEX');
+  const hmacHex = hmac.getHMAC('HEX');
+
+  return hmacHex;
 }
