@@ -1,6 +1,5 @@
 // Firebase Imports
 const admin = require('firebase-admin');
-const {getStorage} = require('firebase-admin/storage');
 
 // Initializing Admin SDK with environment variables:
 // https://www.benmvp.com/blog/initializing-firebase-admin-node-sdk-env-vars/
