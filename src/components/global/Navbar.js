@@ -5,6 +5,7 @@ import {
   StyledHamburger,
   StyledNavMenuBackground,
   Logo,
+  LogoLink,
 } from "./styles/Navbar.styled";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { useState } from "react";
@@ -32,7 +33,10 @@ const Navbar = () => {
 
   return (
     <StyledNavbar>
-      <Logo>Buzz</Logo>
+      <LogoLink to="/feed">
+        <Logo>Buzz</Logo>
+      </LogoLink>
+      
       <StyledNavMenu clicked={click}>
         <ShowQRButton/>
         <StyledNavItem>
