@@ -405,6 +405,7 @@ const addUserToOrg = async (req, res) => {
           return
         }
         let member=true
+        let organizations=userDoc.data().organizations
         if(orgDoc.data().members.includes(req.body.user)){
             if(orgDoc.data().members.length==1){
                 res.status(400).json({
@@ -419,6 +420,7 @@ const addUserToOrg = async (req, res) => {
                 "organizations": FieldValue.arrayRemove(req.body.organization)
               }) 
             member=false
+            organizations=organizations.filter(x=>x!=req.body.organization)
         }
         else {
           orgRef.update({
@@ -428,21 +430,23 @@ const addUserToOrg = async (req, res) => {
             "organizations": FieldValue.arrayUnion(req.body.organization)
           })
           member=true
+          organizations.push(req.body.organization)
         }
           res.status(200).json({
-            "member": member
+            "member": member,
+            "organizations": organizations
           })
-      }).catch((error) => {
-        res.status(500).json({
-          error: error
-        })
-      })
+      })//.catch((error) => {
+    //     res.status(500).json({
+    //       error: error
+    //     })
+    //   })
     }
-  }).catch((error) => {
-    res.status(500).json({
-      error: error
-    })
-  })
+  })//.catch((error) => {
+//     res.status(500).json({
+//       error: error
+//     })
+//   })
 }
 
 const addUserToEvent = async (req, res) => {
@@ -477,6 +481,7 @@ const addUserToEvent = async (req, res) => {
             })
             return
           }
+          let events=userDoc.data().events_registered
           let registered=false
           if(!eventDoc.data().attendees.includes(req.body.user)){
             if (attendees >= capacity) {
@@ -492,6 +497,7 @@ const addUserToEvent = async (req, res) => {
             "events_registered": FieldValue.arrayUnion(req.body.event)
           })
           registered=true
+          events.push(req.body.event)
         }
         else{
             eventRef.update({
@@ -501,9 +507,11 @@ const addUserToEvent = async (req, res) => {
                 "events_registered": FieldValue.arrayRemove(req.body.event)
             })
            registered=false
+           events=events.filter(x=>x!=req.body.event)
         }
           res.status(200).json({
-            "registered": registered
+            "registered": registered,
+            "events_registered": events
           })
         }
       }).catch((error) => {
@@ -544,6 +552,7 @@ const followOrg = async (req, res) => {
           return
         }
        let following=false
+       let orgs=userDoc.data().clubs_following
         if(orgDoc.data().followers.includes(req.body.user)){
             orgRef.update({
                 "followers": FieldValue.arrayRemove(req.body.user)
@@ -552,6 +561,7 @@ const followOrg = async (req, res) => {
                 "clubs_following": FieldValue.arrayRemove(req.body.organization)
               })
               following=false
+              orgs=orgs.filter(x=>x!=req.body.organization)
         }
          else {
           orgRef.update({
@@ -561,9 +571,11 @@ const followOrg = async (req, res) => {
             "clubs_following": FieldValue.arrayUnion(req.body.organization)
           })
           following=true
+          orgs.push(req.body.organization)
         }
           res.status(200).json({
-            "following": following
+            "following": following,
+            "clubs_following": orgs
           })
       }).catch((error) => {
         res.status(500).json({

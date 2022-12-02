@@ -3,19 +3,23 @@ import EventCard from './EventCard'
 import Constants from '../../constants/Constants'
 import FilterChip from "./FilterChip";
 import TonightButton from "./TonightButton"
-import {EventView, FilterRow, Scaffold, Wrapper} from "./styles/Feed.styled";
+import {
+  EventView,
+  FilterRow,
+  LoadingIndicator,
+  Scaffold,
+  Wrapper
+} from "./styles/Feed.styled";
 import {useTheme} from "styled-components";
 import axios from "axios";
-
+import {HashLoader} from 'react-spinners'
+import {fireAfterCalls} from "../../utils/fireAfterCalls";
 
 export default function Feed({toggleTheme}) {
-
-
   const [selectedTags, setSelectedTags] = useState([])
   const [events, setEvents] = useState([])
   const theme = useTheme()
   useEffect(() => {
-    
     async function getEvents() {
       return axios.put(
         "http://localhost:4000/api/utilities/filter",
@@ -23,7 +27,6 @@ export default function Feed({toggleTheme}) {
       ).then((response) => setEvents(response["data"].events))
     }
 
-     
     setEvents([])
     getEvents().catch((e) => console.log("ERROR WITH FETCHING EVENTS:", e))
   }, [theme.brightness])
@@ -45,15 +48,26 @@ export default function Feed({toggleTheme}) {
         <FilterRow>
           {TagFilters(selectedTags, setSelectedTags)}
         </FilterRow>
-        <EventView>{buildEventCards(events, filter)}</EventView>
+        <EventCards events={events} filter={filter}/>
       </Wrapper>
     </Scaffold>
   );
 }
 
-function buildEventCards(events, filter) {
+function EventCards({events, filter}) {
+  const [imagesAreLoading, setImagesAreLoading] = useState(true)
+  const theme = useTheme()
+
   const cards = [];
   if (events.length === 0) return cards
+
+  const onImageLoad = fireAfterCalls(
+    events.length,
+    () => {
+      setImagesAreLoading(false)
+    }
+  )
+
   events = events.filter(filter)
   for (let event of events) {
     cards.push(
@@ -68,16 +82,29 @@ function buildEventCards(events, filter) {
         price={event.price}
         tags={event.tags}
         date={event.date}
-        //extras for passing to event-page
+        //Extras for passing to event-page
         organizationId={event.organization}
         capacity={event.capacity}
         ticketed={event.ticketed}
         eventId={event.id}
-        
+        // Track image load status
+        onImageLoad={onImageLoad}
       />
     );
   }
-  return cards;
+
+  return (
+    <>
+      {imagesAreLoading &&
+        <LoadingIndicator>
+          <HashLoader size="150px" color={theme["main"]}/>
+        </LoadingIndicator>
+      }
+      <EventView visible={!imagesAreLoading}>
+        {cards}
+      </EventView>
+    </>
+  );
 }
 
 function TagFilters(selectedTags, setSelectedTags) {

@@ -28,7 +28,6 @@ export const StyledNavMenu = styled.ul`
     top: 0;
     flex-direction: column;
     justify-content: center;
-    width: 100%;
     height: 100%;
     z-index: 800;
     text-align: center;
@@ -105,5 +104,3 @@ export const StyledNavMenuBackground = styled.div`
   transform: ${(props) => (props.clicked ? "scale(80)" : "scale(0)")};
   transition: transform 0.5s;
 `;
-
-

@@ -71,9 +71,7 @@ const filter = async (req, res) => {
       })
     }
   } else {
-    console.log(Date.now())
     const query = await database.collection("Events").where("date", ">", Date.now()).get()
-    console.log(query.docs.length)
     query.forEach((event) => {
       events.push(event.data())
     })

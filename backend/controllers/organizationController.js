@@ -15,10 +15,12 @@ const createOrganization = async (req, res) => {
         }
     })
 
-    if (missingFields.length !== 0) {
+    const fileUndefined = (req.file == undefined)
+    if (missingFields.length !== 0 || fileUndefined) {
         res.status(400).json({
             error: 'One or more fields are missing',
-            missing_fields: missingFields
+            missing_fields: missingFields,
+            file_undefined: fileUndefined
         })
     } else {
         // Have to check the database if there is the same name in the organization
@@ -160,26 +162,66 @@ const readOrganizationByName = async (req, res) => {
 }
 
 const updateOrganization = async (req, res)=>{
-    const {id} = req.params;
-    const orgRef = database.collection('Organizations').doc(id);
-
-    orgRef.get().then((orgDoc) => {
-        if (orgDoc.exists) {
-            orgRef.update(req.body).then(() => {
-                res.status(200).json({
-                    id: id
-                })
-            })
-        } else {
-            res.status(404).json({
-                error: 'Organization could not be found'
-            })
-        }
-    }).catch((error) => {
-        res.status(500).json({
-            error: error
-        })
+  const {id} = req.params;
+  const organizationRef = database.collection('Organizations').doc(id);
+  if ((Object.keys(req.body).length == 0) && (req.file == undefined)) {
+    res.status(400).json({
+      error: "No keys have been entered"
     })
+  } else {
+    const organizationDoc = await organizationRef.get().catch((error) => {
+      res.status(500).json({
+        error: error
+      })
+    })
+
+    if (organizationDoc.exists) {
+      if (Object.keys(req.body).length !== 0) {
+        await organizationRef.update(req.body).catch((error) => {
+          res.status(500).json({
+            error: error
+          })
+        });
+      }
+
+      if (req.file == undefined) {
+        res.status(200).json({
+          id: id
+        })
+      } else {
+        const bucket = storage.bucket();
+        const fullPath = `OrganizationImages/${v4()}`;
+        const bucketFile = bucket.file(fullPath);
+
+        await bucketFile.save(req.file.buffer, {
+          contentType: req.file.mimetype,
+          gzip: true
+        });
+
+        const [url] = await bucketFile.getSignedUrl({
+          action: 'read',
+          expires: '01-01-2030'
+        });
+
+        await organizationRef.update({
+          image: url
+        }).catch((error) => {
+          res.status(500).json({
+            error: error
+          })
+        })
+
+        res.status(200).json({
+          id: id,
+          url: url
+        })
+      }
+    } else {
+      res.status(404).json({
+        error: 'Document does not exist'
+      })
+    }
+  }
 };
 
 const deleteOrganization = async (req, res)=>{
