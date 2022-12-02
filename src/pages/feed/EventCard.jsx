@@ -3,6 +3,7 @@ import {ImLocation2} from "react-icons/im";
 import {
   Attendees,
   Card,
+  CardBodyTopRow,
   Date,
   EventCardBody,
   Location,
@@ -30,7 +31,10 @@ export default function EventCard({
     <Card className="card">
       <img src={image} alt={title} onLoad={onImageLoad} onError={() => onImageError(title)}/>
       <EventCardBody>
-        <Date>{date}</Date>
+        <CardBodyTopRow>
+          <Date>{date}</Date>
+          {price !== 0 ? <PriceChip>{"$" + price}</PriceChip> : null}
+        </CardBodyTopRow>
         <TitleLink
           className="overflow-field"
           to="/event-page"
@@ -54,7 +58,6 @@ export default function EventCard({
           {" " + attendees} attending
         </Attendees>
         <Tags>{tags.join(" • ")}</Tags>
-        {price !== 0 ? <PriceChip>{"$" + price}</PriceChip> : null}
       </EventCardBody>
     </Card>
   );
