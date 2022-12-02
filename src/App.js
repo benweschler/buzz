@@ -38,8 +38,8 @@ function App() {
             )
             }/>
           <Route path="/feed" element={<Feed toggleTheme={toggleTheme}/>}/>
-          <Route path="/event-page" element={<EventPage/>}/>
-          <Route path="/organization-page" element={<OrganizationPage/>}/>
+          <Route path="/event-page/:id" element={<EventPage/>}/>
+          <Route path="/organization-page/:id" element={<OrganizationPage/>}/>
           <Route path="/user-page" element={<UserPage/>}/>
           <Route path="/log-or-sign-up" element={<LogRegCtrl/>}/>
           <Route  path="/create-event"
