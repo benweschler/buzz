@@ -103,6 +103,14 @@ const OrganizationPage = () => {
         <HashLoader size="150px" color={theme.main}/>
       </LoadingIndicator>
     )
+
+    function renderCreateEvent(join){
+      if (join){
+        return(
+          <CreateEventButton> Create Event </CreateEventButton>
+        )
+      }
+    }
   
   return (
     <>
@@ -137,7 +145,7 @@ const OrganizationPage = () => {
           <EventsHeaderOrg>
             <h2> Our Events</h2>
             <EventOrgLink to={"/create-event/" + organizationID}>
-              <CreateEventButton> Create Event </CreateEventButton>
+              {renderCreateEvent(join)}
             </EventOrgLink>
             
           </EventsHeaderOrg>
