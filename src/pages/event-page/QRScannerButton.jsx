@@ -6,8 +6,9 @@ import {modalStyle} from "../../components/modalStyles";
 import Modal from "@mui/material/Modal";
 import QRScannerCard from "./QRScannerCard";
 import {NavBarItem} from "../../components/global/styles/Navbar.styled";
+import {QRScannerButtonRow} from "./styles/QRScannerButton.styled";
 
-export default function QRScannerButton() {
+export default function QRScannerButton({eventID}) {
   const [open, setOpen] = useState(false)
 
   const handleOpen = () => setOpen(true)
@@ -16,7 +17,9 @@ export default function QRScannerButton() {
   return (
     <>
       <NavBarItem onClick={handleOpen}>
-        <QrCodeScannerRoundedIcon/>
+        <QRScannerButtonRow>
+          Scan Tickets <QrCodeScannerRoundedIcon/>
+        </QRScannerButtonRow>
       </NavBarItem>
       <Modal
         aria-labelledby="transition-modal-title"
@@ -27,7 +30,7 @@ export default function QRScannerButton() {
       >
         <Fade in={open}>
           <Box sx={modalStyle}>
-            <QRScannerCard onClose={handleClose}/>
+            <QRScannerCard eventID={eventID} onClose={handleClose}/>
           </Box>
         </Fade>
       </Modal>

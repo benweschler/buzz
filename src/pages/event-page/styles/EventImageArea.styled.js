@@ -29,4 +29,5 @@ export const SecurityMessage = styled.p`
   font-size: 0.8rem;
   padding-left: 10px;
   padding-top: 5px;
+  padding-bottom: 1rem;
 `;

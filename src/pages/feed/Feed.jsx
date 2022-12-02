@@ -2,7 +2,6 @@ import {useEffect, useState} from 'react';
 import EventCard from './EventCard'
 import Constants from '../../constants/Constants'
 import FilterChip from "./FilterChip";
-import TonightButton from "./TonightButton"
 import {
   EventView,
   FilterRow, ImageLoadError,
@@ -13,25 +12,31 @@ import {
 import {useTheme} from "styled-components";
 import axios from "axios";
 import {HashLoader} from 'react-spinners'
-import QRScannerButton from "./QRScannerButton";
+import TonightButton from "./TonightButton";
 import FollowingButton from "./FollowingButton";
 
 export default function Feed({toggleTheme}) {
   const [selectedTags, setSelectedTags] = useState([])
   const [events, setEvents] = useState([])
-  const theme = useTheme()
+  const [tonight, setTonight] = useState(false)
+  const [following, setFollowing] = useState(false)
   useEffect(() => {
     console.log("useEffect query in Feed")
 
     async function getEvents() {
       return axios.put(
         'http://localhost:4000/api/utilities/filter',
-        {tags: [], tonight: theme.brightness === "dark"}
+        {
+          tags: [],
+          tonight: tonight,
+          feed: following,
+          user: JSON.parse(localStorage.getItem('user')).id
+        }
       ).then((response) => setEvents(response["data"].events))
     }
 
     getEvents().catch((e) => console.log("ERROR WITH FETCHING EVENTS:", e))
-  }, [theme.brightness])
+  }, [tonight, following])
 
 
   function filter(element) {
@@ -42,13 +47,40 @@ export default function Feed({toggleTheme}) {
     return true;
   }
 
+  function handleFollowingClick(outsideToggle=false) {
+    setFollowing(prevState => {
+      if(outsideToggle && (prevState === false)) return prevState
+      if (!prevState && tonight)
+        handleTonightClick(true)
+
+      return !prevState
+    })
+  }
+
+  function handleTonightClick(outsideToggle=false) {
+    setTonight(prevState => {
+      if(outsideToggle && (prevState === false)) return prevState
+      if (!prevState && following)
+        handleFollowingClick(true)
+
+      return !prevState
+    })
+    toggleTheme()
+  }
+
   return (
     <Scaffold>
       <Wrapper>
-        <QRScannerButton/>
         <h1>Popular Events <span style={{color: "grey"}}>at UCLA</span></h1>
-        <TonightButton toggleTheme={toggleTheme}/>
-        <FollowingButton/>
+        <TonightButton
+          isActive={tonight}
+          onSelect={handleTonightClick}
+        />
+        <FollowingButton
+          className="feedButton"
+          isActive={following}
+          onSelect={handleFollowingClick}
+        />
         <FilterRow>
           {renderTagFilters(selectedTags, setSelectedTags)}
         </FilterRow>

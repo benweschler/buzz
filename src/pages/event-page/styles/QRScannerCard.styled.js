@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import {StyledMessage} from "../../../components/globalStyles";
 
 export const CloseButton = styled.div`
   color: rgba(255, 255, 255, 0.75);
@@ -15,4 +16,8 @@ export const TopRow = styled.div`
 
 export const ScannerTitle = styled.h3`
   color: white;
+`
+
+export const SuccessMessage = styled(StyledMessage)`
+  color: green;
 `

@@ -2,13 +2,12 @@ import {useState} from "react";
 import {ModalCardScaffold} from "../../components/modalStyles";
 import {
   CloseButton,
-  ScannerTitle,
+  ScannerTitle, SuccessMessage,
   TopRow,
 } from "./styles/QRScannerCard.styled";
 import QrReader from "react-qr-scanner";
 import axios from "axios";
 import {StyledErrorMessage, StyledMessage} from "../../components/globalStyles";
-import styled from "styled-components";
 import {IoClose} from "react-icons/io5";
 
 const ScanStatus = {
@@ -20,12 +19,11 @@ const ScanStatus = {
   success: "success",
 }
 
-export default function QRScannerCard({onClose}) {
+export default function QRScannerCard({onClose, eventID}) {
   const [lastScanTime, setLastScanTime] = useState(null)
   const [status, setStatus] = useState(ScanStatus.scanning)
 
   const COOLDOWN_MILLIS = 3000
-  const DUMMY_EVENT_ID = "MdzxhREIDkn8VnvRfOz4"
 
   function onReaderError(e) {
     console.log("Error reading QR code:", e)
@@ -72,10 +70,12 @@ export default function QRScannerCard({onClose}) {
 
   async function processOtp(otp, userID) {
     const isValid = await validateOtp(otp, userID)
+      .catch((e) => console.log("Error validating otp:", e))
 
     if (!isValid) return setStatus(ScanStatus.failedAuthentication)
 
-    const response = await checkUserIn(userID, DUMMY_EVENT_ID)
+    const response = await checkUserIn(userID, eventID)
+      .catch((e) => console.log("Error checking user in:", e))
     const registered = response.registered
     const alreadyChecked = response.alreadyChecked
 
@@ -113,13 +113,14 @@ async function checkUserIn(userID, eventID) {
     user: userID,
     event: eventID
   }
+
   const response = await axios.patch(
     'http://localhost:4000/api/users/checkIn', body)
     .catch((e) => console.log("Error checking user in:", e))
 
   return {
-    registered: response.registered,
-    alreadyChecked: response.alreadyChecked
+    registered: response.data.registered,
+    alreadyChecked: response.data.alreadyChecked
   }
 }
 
@@ -149,7 +150,3 @@ function ScanStatusMessage({status}) {
     <StyledErrorMessage>{message}</StyledErrorMessage>
   )
 }
-
-const SuccessMessage = styled(StyledMessage)`
-  color: green;
-`

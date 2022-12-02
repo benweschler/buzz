@@ -18,14 +18,14 @@ export const StyledTonightButton = styled.div`
     cursor: pointer;
 
     border: ${({theme}) => theme.brightness === "light"
-  ? "black"
-  : "rgba(239,71,161,0.5)"} 1px solid;
+            ? "black"
+            : "rgba(239,71,161,0.5)"} 1px solid;
     background: ${({theme}) => theme.brightness === "light"
-  ? theme.highlightCard
-  : "rgba(239,71,161,0.5)"};
+            ? theme.highlightCard
+            : "rgba(239,71,161,0.5)"};
     color: ${({theme}) => theme.text};
   }
-  
+
   .explosion {
     z-index: 300000;
   }

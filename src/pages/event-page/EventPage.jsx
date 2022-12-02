@@ -17,12 +17,10 @@ import {
   EventHeader,
   EventOrgLink,
   InfoLeftColumn,
-  InfoRightColumn,
   LocationEvent,
   MainInfo,
   OrganizerEvent,
   QRDivEvent,
-  QRHeader,
 } from "./styles/EventPageInfoPanel.styled";
 import {
   RsvpAbout,
@@ -37,12 +35,12 @@ import {
 } from "react-icons/io5";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import QrCodeScannerRoundedIcon from "@mui/icons-material/QrCodeScannerRounded";
 import formatUnixTime from "../../utils/dateUtils";
 import { useParams } from "react-router-dom";
 import { LoadingIndicator } from "../feed/styles/Feed.styled";
 import { HashLoader } from "react-spinners";
 import { useTheme } from "styled-components";
+import QRScannerButton from "./QRScannerButton";
 
 const EventPage = () => {
   const params = useParams();
@@ -71,10 +69,12 @@ const EventPage = () => {
       } else {
         setMember(false);
       }
-      console.log("MEMBER DATA:", memberData.data.member);
+      console.log("MEMBER DATA:", memberData["data"].member);
       const registeredData = await axios.get(
         'http://localhost:4000/api/utilities/' + user + "/" + eventID
       );
+      console.log("EVENT ID", eventID)
+      console.log("REGISTERED DATA:", registeredData.data)
       if (registeredData.data.registered) {
         setActive(true);
       } else {
@@ -139,6 +139,11 @@ const EventPage = () => {
           Your tickets are secured by advanced encryption and stored in a
           personal QR code.
         </SecurityMessage>
+        {member && (
+          <QRDivEvent>
+            <QRScannerButton eventID={eventID}/>
+          </QRDivEvent>
+        )}
       </LeftColumnEvent>
 
       <EventRightColumn>
@@ -165,14 +170,6 @@ const EventPage = () => {
               <DateEvent>{formatUnixTime(eventData.date)}</DateEvent>
             </EventDateDiv>
           </InfoLeftColumn>
-          <InfoRightColumn>
-            {member && (
-              <QRDivEvent>
-                <QrCodeScannerRoundedIcon />
-                <QRHeader> QR Scanner </QRHeader>
-              </QRDivEvent>
-            )}
-          </InfoRightColumn>
         </MainInfo>
 
         <RsvpDiv>
