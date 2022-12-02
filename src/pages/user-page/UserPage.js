@@ -10,11 +10,16 @@ import {
 // import ExampleEvents from "../../assets/ExampleEvents.json"
 // import UserEventCard from "../../components/UserPage/UserEventCard"
 import axios from 'axios';
+import { LoadingIndicator } from "../feed/styles/Feed.styled";
+import { HashLoader } from "react-spinners";
+import { useTheme } from "styled-components";
 
 const UserPage = () => {
 
-  const [user, setUser] = useState({})
-  const [userData, setUserData] = useState({})
+  const [user, setUser] = useState(null)
+  const [userData, setUserData] = useState(null)
+
+  const theme = useTheme()
 
   useEffect(() => {
     const localUser = JSON.parse(localStorage.getItem('user'))
@@ -34,6 +39,13 @@ const UserPage = () => {
     })
 
   },[]);
+
+  if(!userData)
+    return (
+      <LoadingIndicator>
+        <HashLoader size="150px" color={theme.main}/>
+      </LoadingIndicator>
+    )
 
   const avatarString = "https://avatars.dicebear.com/api/initials/" + user.name +".svg"
 

@@ -41,7 +41,7 @@ export const OrgBottomRow = styled.div`
   display: flex;
   flex-direction: column;
 
-  width: 50%;
+  width: 100%;
   text-align: start;
   padding-left: 20px;
   justify-content: center;
@@ -143,6 +143,10 @@ export const OrganizationEventsDiv = styled.div`
 
 
 export const OrgEventsContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 1.5rem;
+  width: 100%;
 
 `
 
@@ -174,7 +178,7 @@ export const CreateEventButton = styled.button`
   font-size: 100%;
   height: 40px;
   line-height: 1;
-  margin: 0 0;
+  margin: 0 25px;
   outline: none;
   overflow: hidden;
   padding: 0 25px;
