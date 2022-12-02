@@ -93,29 +93,32 @@ const EventPage = () => {
       event: eventID
     };
 
-    const rsvp = await axios.patch(
+    await axios.patch(
       "http://localhost:4000/api/users/register",
       body
-    );
-
-    if (rsvp.data.registered) {
-      setActive(true);
-      setEventData(prevState => {
-        return{
-          ...prevState, attending : prevState.attending + 1
-        }})
-    } else {
-      setActive(false);
-      setEventData(prevState => {
-        return{
-          ...prevState, attending : prevState.attending - 1
-        }})
-    }
-    let userData=JSON.parse(localStorage.getItem('user'))
-    userData ={...userData, events_registered: eventData.events_registered}
-    userData = JSON.stringify(userData)
-    localStorage.setItem("user", userData)
-    console.log("userData: ", userData);
+    ).then((rsvp) => {
+      if (rsvp.data.registered) {
+        setActive(true);
+        setEventData(prevState => {
+          return{
+            ...prevState, attending : prevState.attending + 1
+          }})
+      } else {
+        setActive(false);
+        setEventData(prevState => {
+          return{
+            ...prevState, attending : prevState.attending - 1
+          }})
+      }
+      let userData=JSON.parse(localStorage.getItem('user'))
+      userData ={...userData, events_registered: eventData.events_registered}
+      userData = JSON.stringify(userData)
+      localStorage.setItem("user", userData)
+      console.log("userData: ", userData);
+    }).catch((error) => {
+      console.log(error)
+      alert("Error in RSVP!")
+    })
   };
 
   if(!eventData)
