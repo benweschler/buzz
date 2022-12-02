@@ -34,7 +34,7 @@ function App() {
           <Route path="/organization-page" element={<OrganizationPage />} />
           <Route path="/user-page" element={<UserPage />} />
           <Route path="/log-or-sign-up" element={<LogRegCtrl/>} />
-          <Route path="/create-event" element={<CreateEvent/>} />
+          <Route path="/create-event" element={<CreateEvent orgID="NYp9XtXAV19Pjjg9ECd7"/>} />
         </Routes>
       </Container>
     </ThemeProvider>

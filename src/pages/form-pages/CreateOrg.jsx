@@ -10,16 +10,16 @@ import {
   Span,
   Button,
   FileInput
-} from '../Form.styled';
+} from './Form.styled';
 
-const initUserInfo = {
+const initOrgInfo = {
   name: '', email: '', password: '', major: ''
 };
 
 const initFile = '';
 
-function Register(props) {
-  const [userInfo, setUserInfo] = useState(initUserInfo);
+function CreateOrg(props) {
+  const [userInfo, setUserInfo] = useState(initOrgInfo);
   const [file, setFile] = useState(initFile);
   const [error, setError] = useState('');
 
@@ -34,7 +34,7 @@ function Register(props) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    setUserInfo(initUserInfo);
+    setUserInfo(initOrgInfo);
     setFile(initFile);
     setError('');
 
@@ -147,4 +147,4 @@ function Register(props) {
   )
 }
 
-export default Register;
+export default CreateOrg;

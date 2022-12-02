@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
-const sharedStyles = {
-  grey: "rgb(204, 204, 204)",
+const shared = {
+  white: 'rgb(247,247,247)',
+  grey: 'grey',
   highlight: ({theme}) => theme.main
 };
 
@@ -11,15 +12,16 @@ export const Block = styled.div`
   position: relative;
   margin: 10px 0;
   flex-basis: 180px;
+`
 
-  &.Separator {
-    height: 1px;
-    width: 70%;
-    margin: 40px 0 10px;
-    flex-basis: auto;
-    background-color: ${sharedStyles.grey};
-    border-radius: 10px;
-  }
+export const Separator = styled.div`
+  height: 1px;
+  width: 70%;
+  margin: 40px 0 10px;
+  flex-basis: auto;
+  background-color: ${shared.grey};
+  border-radius: 10px;
+  box-shadow: 0 2px 3px black;
 `
 
 /* flex container: 
@@ -37,13 +39,25 @@ export const Flex = styled.div`
     flex-direction: column;
     justify-content: center;
   }
+
+  &.Tab{
+    border-left: 4px solid ${shared.grey};
+    padding: 5px 10px 15px;
+    color: grey;
+    font-size: 1.8rem;
+    gap: 0.5rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `
 
 export const FormWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 100%;
   padding: 0 20px;
 `;
 
@@ -52,7 +66,7 @@ export const Form = styled.form`
   max-width: 500px;
   min-width: 300px;
   padding: 40px;
-  background: rgb(247,247,247);
+  background: ${shared.white};
 
   &.CreateEvent{
     max-width: 700px;
@@ -65,9 +79,9 @@ export const Input = styled.input`
   width: 100%;
   height: 4rem;
   padding: 5px 10px 15px;
-  background: rgb(247, 247, 247);
+  background: ${shared.white};
   border: none;
-  border-bottom: 4px solid rgb(204, 204, 204);
+  border-bottom: 4px solid ${shared.grey};
   font-size: 1.8rem;
   
   &:focus {
@@ -82,35 +96,22 @@ export const Input = styled.input`
 export const TextArea = styled.textarea`
   resize: none;
   width: 100%;
-  height: 100%;
+  height: 8rem;
   padding: 5px 10px 15px;
-  background: rgb(247, 247, 247);
+  background: ${shared.white};
   border: none;
-  border-left: 4px solid rgb(204, 204, 204);
+  border-left: 4px solid ${shared.grey};
   font-size: 1.5rem;
+  overflow:auto;
 
   &:focus {
     outline: none;
-    background: rgb(250, 250, 250);
-    transition: 0.4s;
   }
 
   &::placeholder {
-    font-size: 1.8rem;
+    font-size: 1em;
   }
 `;
-
-export const FileInputWrapper = styled.div`
-  border-left: 4px solid rgb(204, 204, 204);
-  padding: 5px 10px 15px;
-  color: grey;
-  font-size: 1.8rem;
-  gap: 0.5rem;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-`
 
 export const Span = styled.span`
   &.FxBottom {
@@ -126,22 +127,22 @@ export const Span = styled.span`
     width: 100%;
     transition: 0.4s;
     left: 0;
-    background-color: ${sharedStyles.highlight};
+    background-color: ${shared.highlight};
   }
 
   &.FxSquare {
     position: absolute;
     height: 100%;
+    width: 0;
     bottom: 0;
     left: 0;
-    width: 0;
-    transition: 0.4s;
+
   }
 
   ${TextArea}:focus + &.FxSquare {
     width: 100%;
     transition: 0.4s;
-    border: 4px solid ${sharedStyles.highlight};
+    border: 4px solid ${shared.highlight};
   }
 `;
 
@@ -156,25 +157,25 @@ export const Button = styled.button`
   cursor: pointer;
 
   &.Primary {
-    background-color: ${sharedStyles.highlight};
-    color: rgb(247,247,247);
+    background-color: ${shared.highlight};
+    color: ${shared.white};
     border: none;
 
     &:hover {
-      color: ${sharedStyles.highlight};
-      background-color: rgb(247,247,247);
-      border: 2px solid #b3b3b3;
+      color: ${shared.highlight};
+      background-color: ${shared.white};
+      border: 2px solid ${shared.grey};
     }
   }
 
   &.Secondary {
-    border: 2px solid #b3b3b3;
-    background-color: rgb(247, 247, 247);
-    color: ${sharedStyles.highlight};
+    border: 2px solid ${shared.grey};
+    background-color: ${shared.white};
+    color: ${shared.highlight};
     
     &:hover {
-      color: rgb(247,247,247);
-      background-color: ${sharedStyles.highlight};
+      color: ${shared.white};
+      background-color: ${shared.highlight};
     }
   }
 `;
@@ -225,7 +226,7 @@ export const HiddenInput = styled.input`
 export const Select = styled.select`
   width: 100%;
   height: 35px;
-  background: rgb(247, 247, 247);
+  background: ${shared.white};
   color: gray;
   font-size: 14px;
   border: 2px solid #b3b3b3;
@@ -241,5 +242,4 @@ export const Select = styled.select`
 `;
 
 export const FileInput = styled.input`
-  height: 2rem;
 `;

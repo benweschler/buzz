@@ -3,6 +3,7 @@ import {useState} from "react";
 import {
   Block,
   Flex,
+  Separator,
   FormWrapper,
   Form,
   Input,
@@ -80,7 +81,7 @@ function Login(props) {
         </Block>
 
         <Flex className="Column">
-          <Block className="Separator"/>
+          <Separator/>
         </Flex>
     
         <Button className="Primary" type="submit">
