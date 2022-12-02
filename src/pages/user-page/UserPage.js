@@ -4,6 +4,7 @@ import {
   LeftColumnUser,
   OrgTopRow,
   RightColumnUser,
+  TicketHeaderUser,
   TicketsContainer,
   UserColumnDiv,
   UserTicketsDiv,
@@ -73,7 +74,10 @@ const UserPage = () => {
 
       <UserColumnDiv>
         <LeftColumnUser>
-          <h2>Your Tickets</h2>
+          <TicketHeaderUser>
+            <h2>Your Tickets</h2>
+          </TicketHeaderUser>  
+          
           <UserTicketsDiv>
             <TicketsContainer>
               {buildEventCards(userData.events_registered)}

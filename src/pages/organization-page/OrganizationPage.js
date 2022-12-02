@@ -67,9 +67,10 @@ const OrganizationPage = () => {
   }, [organizationID]);
 
   const handleFollow = async () => {
+    const user = JSON.parse(localStorage.getItem("user")).id;
     const body = {
-      user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
-      organization: "AO0movdTMMnS3wfVHhGC",
+      user: user,
+      organization: organizationID,
     };
     const doFollow = await axios.patch(
       "http://localhost:4000/api/users/follow",
@@ -83,9 +84,10 @@ const OrganizationPage = () => {
     }
   };
   const handleJoin = async () => {
+    const user = JSON.parse(localStorage.getItem("user")).id;
     const body = {
-      user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
-      organization: "AO0movdTMMnS3wfVHhGC",
+      user: user,
+      organization: organizationID,
     };
     const doJoin = await axios.patch(
       "http://localhost:4000/api/users/add",

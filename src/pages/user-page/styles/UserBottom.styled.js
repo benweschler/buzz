@@ -1,7 +1,9 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 export const UserColumnDiv = styled.div`
     display: flex;
+    
     align-items: flex-start;
     justify-content: center;
     width: 100%;
@@ -72,5 +74,25 @@ export const OrgTopRow = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  height: 100px;
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+      gap: 30px;
+      flex-direction: column;
+    }
 
+`
+
+export const TicketHeaderUser = styled.div`
+display: flex;
+height: 100px;
+align-items: center;
+justify-content: center;
+
+`
+
+export const CreateEventLink = styled(Link)`
+  height: 100%;
+  display: flex;  
+  align-items: center;
+  justify-content: center;    
 `
