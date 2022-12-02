@@ -20,6 +20,7 @@ export default function Feed({toggleTheme}) {
   const [events, setEvents] = useState([])
   const theme = useTheme()
   useEffect(() => {
+    console.log("useEffect query in Feed")
     async function getEvents() {
       return axios.put(
         "http://localhost:4000/api/utilities/filter",

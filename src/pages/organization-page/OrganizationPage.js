@@ -25,7 +25,7 @@ const OrganizationPage = () => {
   const [follow, setFollow] = useState(false)
   const [join, setJoin] = useState(false)
   useEffect(() => {
-    
+    console.log("useEffect query in OrganizationPage")
     const readOrg = async () => {
       const data= await axios.get("http://localhost:4000/api/organizations/" + organizationID)
       console.log(data.data)
