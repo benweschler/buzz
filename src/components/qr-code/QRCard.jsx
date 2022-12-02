@@ -48,9 +48,7 @@ export default function QRCard({onClose}) {
       <div>
         <TopRow>
           <IDTitle>Personal Buzz ID</IDTitle>
-          <CloseButton onClick={onClose}>
-            <IoClose/>
-          </CloseButton>
+          <CloseButton onClick={onClose}><IoClose/></CloseButton>
         </TopRow>
         <IDUserName>Ben Weschler</IDUserName>
       </div>

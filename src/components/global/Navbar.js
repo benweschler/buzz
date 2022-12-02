@@ -38,15 +38,15 @@ const Navbar = () => {
       </LogoLink>
 
       <StyledNavMenu clicked={click}>
-        <ShowQRButton/>
+        <ShowQRButton className="navLink" />
         <NavBarItem onClick={handleClick}>
-          <Link to="/feed">See What's Buzzin'</Link>
+          <Link className="navLink" to="/feed">See What's Buzzin'</Link>
         </NavBarItem>
         <NavBarItem onClick={handleClick}>
-          <Link to="/user-page">My Account</Link>
+          <Link className="navLink" to="/user-page">My Account</Link>
         </NavBarItem>
         <NavBarItem onClick={handleSignOut}>
-          <Link to="/log-or-sign-up">Sign Out</Link>
+          <Link className="navLink" to="/log-or-sign-up">Sign Out</Link>
         </NavBarItem>
       </StyledNavMenu>
       <StyledNavMenuBackground clicked={click}>&nbsp;</StyledNavMenuBackground>

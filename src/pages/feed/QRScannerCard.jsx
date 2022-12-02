@@ -1,10 +1,15 @@
 import {useState} from "react";
 import {ModalCardScaffold} from "../../components/modalStyles";
-import {ScannerTitle,} from "./styles/QRScannerCard.styled";
+import {
+  CloseButton,
+  ScannerTitle,
+  TopRow,
+} from "./styles/QRScannerCard.styled";
 import QrReader from "react-qr-scanner";
 import axios from "axios";
 import {StyledErrorMessage, StyledMessage} from "../../components/globalStyles";
 import styled from "styled-components";
+import {IoClose} from "react-icons/io5";
 
 const ScanStatus = {
   scanning: "scanning",
@@ -15,7 +20,7 @@ const ScanStatus = {
   success: "success",
 }
 
-export default function QRScannerCard() {
+export default function QRScannerCard({onClose}) {
   const [lastScanTime, setLastScanTime] = useState(null)
   const [status, setStatus] = useState(ScanStatus.scanning)
 
@@ -81,7 +86,10 @@ export default function QRScannerCard() {
 
   return (
     <ModalCardScaffold>
-      <ScannerTitle>Scan a Buzz ID Code</ScannerTitle>
+      <TopRow>
+        <ScannerTitle>Scan a Buzz ID Code</ScannerTitle>
+        <CloseButton onClick={onClose}><IoClose/></CloseButton>
+      </TopRow>
       <ScanStatusMessage status={status}/>
       <QrReader
         style={{height: "25rem", width: "25rem"}}

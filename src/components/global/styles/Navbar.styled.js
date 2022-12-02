@@ -80,7 +80,7 @@ export const StyledNavMenu = styled.ul`
   }
 `;
 
-export const NavBarItem = styled.li`
+export const NavBarItem = styled.div`
   background: transparent;
   color: ${({theme}) => theme.text};
   border-radius: 0.5rem;

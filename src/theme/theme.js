@@ -36,6 +36,8 @@ export const GlobalStyles = createGlobalStyle`
     text-decoration: none;
     color: ${({theme}) => theme.text};
     transition: color 100ms ease-in;
+  }
+  .navLink {
     padding: 0.5rem;
   }
   a:hover {
