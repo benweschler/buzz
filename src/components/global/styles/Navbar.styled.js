@@ -10,6 +10,7 @@ export const StyledNavbar = styled.div`
   align-items: center;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
   position: fixed;
+  top: 0;
   z-index: 700;
   background-color: ${({theme}) => theme.body};
   transition: background-color 200ms ease-in;

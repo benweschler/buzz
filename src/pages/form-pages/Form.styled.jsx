@@ -1,10 +1,15 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const shared = {
   white: 'rgb(247,247,247)',
   grey: 'grey',
   highlight: ({theme}) => theme.main
 };
+
+const placeholderFont = css`
+  font-family: 'Monserrat', sans-serif;
+  font-size: 1.8rem;
+`
 
 /* normal container: 
 supports absolutely-positioned children */
@@ -21,7 +26,7 @@ export const Separator = styled.div`
   flex-basis: auto;
   background-color: ${shared.grey};
   border-radius: 10px;
-  box-shadow: 0 2px 3px black;
+  box-shadow: 0 2px 10px black;
 `
 
 /* flex container: 
@@ -56,9 +61,9 @@ export const Flex = styled.div`
 export const FormWrapper = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100%;
+  height: 100vh;
   padding: 0 20px;
+  margin-top: 60px;
 `;
 
 export const Form = styled.form`
@@ -91,6 +96,13 @@ export const Input = styled.input`
   &::placeholder {
     font-size: 1.8rem;
   }
+
+  &.Date {
+    ${placeholderFont}
+    ${({ value }) => !value && `
+      color: ${shared.grey};
+    `}
+  }
 `;
 
 export const TextArea = styled.textarea`
@@ -102,14 +114,14 @@ export const TextArea = styled.textarea`
   border: none;
   border-left: 4px solid ${shared.grey};
   font-size: 1.5rem;
-  overflow:auto;
+  font-family: 'Monserrat', sans-serif;
 
   &:focus {
     outline: none;
   }
 
   &::placeholder {
-    font-size: 1em;
+    ${placeholderFont};
   }
 `;
 
