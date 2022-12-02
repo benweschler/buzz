@@ -11,6 +11,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from 'axios';
 import ShowQRButton from "../qr-code/UserQR";
+import secureLocalStorage from 'react-secure-storage';
 
 const Navbar = () => {
   const [click, setClick] = useState(false);
@@ -25,6 +26,8 @@ const Navbar = () => {
 
     localStorage.setItem('token', JSON.stringify(""));
     localStorage.setItem('user', JSON.stringify({}));
+    console.log(secureLocalStorage.getItem('private-key'));
+    secureLocalStorage.setItem('private-key', JSON.stringify(""));
   }
 
   return (

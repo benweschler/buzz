@@ -11,6 +11,8 @@ import {
   Button,
   FileInput
 } from '../Form.styled';
+import jsSHA from 'jssha';
+import secureLocalStorage from 'react-secure-storage';
 
 const initUserInfo = {
   name: '', email: '', password: '', major: ''
@@ -66,8 +68,17 @@ function Register(props) {
     axios.post('http://localhost:4000/api/users/', Register, {
       'Content-Type': 'multipart/form-data'
     }).then((response) => {
+      // Secret key
+      const hmac = new jsSHA("SHA-1", "HEX");
+      hmac.setHMACKey(response.data.user_data.secret, "UINT8ARRAY");
+      const hmacString = hmac.getHMAC('HEX');
+
+      let userData = response.data.user_data;
+      delete userData.secret;
       localStorage.setItem('token', JSON.stringify(response.data.token));
-      localStorage.setItem('user', JSON.stringify(response.data.user_data));
+      localStorage.setItem('user', JSON.stringify(userData));
+
+      secureLocalStorage.setItem("private-key", hmacString);
     }).catch((error) => {
       if (error.response.data.error.code && (error.response.data.error.code === "auth/email-already-exists")) {
         setError('Email already exists in database!');
