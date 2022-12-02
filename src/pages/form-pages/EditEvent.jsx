@@ -17,7 +17,7 @@ import {
 import axios from "axios"
 import styled from "styled-components"
 import TagChipRow from "./components/TagChipRow"
-import { useParams } from "react-router-dom";
+import Constants from "../../constants/Constants"
 
 const TagChipRowStyle = styled.div`
   display: flex;
@@ -26,35 +26,33 @@ const TagChipRowStyle = styled.div`
   gap: 1rem;
 `
 
-const initialEventInfo = {
-    title: '',
-    date: '',
-    location: '',
-    capacity: '',
-    price: '',
-    description: '',
-  };
-
 function toTagStr(tagList) {
   var TagStr = "";
   for (let i = 0; i < tagList.length; i++) {
     if (tagList[i]){
-      TagStr=TagStr.concat(" ", tagList[i]);
+      TagStr=TagStr.concat(" ", Constants.tags[i])
     }
   }
   return TagStr;
 }
 
-function CreateEvent() {
+function EditEvent(props) {
+  const initialEventInfo = {
+    title: props.title,
+    date: props.date,
+    location: props.location,
+    capacity: props.capacity,
+    price: props.price,
+    description: props.description,
+  };
+  const initialTicketed = props.ticketed;
+  const initialSelectedTags = props.tags;
+
   const [eventInfo, setEventInfo] = useState(initialEventInfo);
-  const [ticketed, setTicketed] = useState(false);
-  const [selectedTags, setSelectedTags] = useState([])
+  const [ticketed, setTicketed] = useState(initialTicketed);
+  const [selectedTags, setSelectedTags] = useState(initialSelectedTags);
   const [file, setFile] = useState('');
   const [error, setError] = useState('');
-
-  const params = useParams();
-  const orgID = params.id;
-
 
   function handleChange({ target: {name, value} }) {
     setEventInfo({...eventInfo, [name]: value});
@@ -68,8 +66,7 @@ function CreateEvent() {
     const newSelection = selectedTags.includes(tag)
       ? selectedTags.filter(t => t !== tag)
       : [...selectedTags, tag];
-    setSelectedTags(newSelection);
-    console.log(newSelection);
+    setSelectedTags(newSelection)
   }
 
   function handleFile(input) {
@@ -125,7 +122,7 @@ function CreateEvent() {
     Event.append('title', eventInfo.title);
     Event.append('date', Date.parse(eventInfo.date));
     Event.append('location', eventInfo.location);
-    Event.append('organization', orgID);
+    Event.append('organization', props.organizer);
     Event.append('capacity', eventInfo.capacity);
     Event.append('price', eventInfo.price);
     Event.append('description', eventInfo.description);
@@ -243,7 +240,7 @@ function CreateEvent() {
         </Button>
         <Button className="Secondary"
           type="reset" onClick={handleReset}>
-          Reset form
+          Reset to previous
         </Button>
         
       </Form>
@@ -251,4 +248,4 @@ function CreateEvent() {
     )
   }
   
-export default CreateEvent;
+export default EditEvent;

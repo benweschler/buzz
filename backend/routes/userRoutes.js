@@ -15,7 +15,8 @@ const {
   validateUserOTP,
   addUserToEvent,
   followOrg,
-  getFeed
+  getFeed,
+  checkIn
 } = require('../controllers/userController');
 
 const router = express.Router();
@@ -46,6 +47,9 @@ router.get('*', readUserByEmail);
 
 //Add user as member to organization
 router.patch(/add$/, addUserToOrg);
+
+//check in user
+router.patch(/checkIn$/, checkIn)
 
 //follow org
 router.patch(/follow$/, followOrg);

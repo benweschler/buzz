@@ -39,14 +39,14 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import QrCodeScannerRoundedIcon from "@mui/icons-material/QrCodeScannerRounded";
 import formatUnixTime from "../../utils/dateUtils";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { LoadingIndicator } from "../feed/styles/Feed.styled";
 import { HashLoader } from "react-spinners";
 import { useTheme } from "styled-components";
 
 const EventPage = () => {
-  const location = useLocation();
-  const { eventID } = location.state;
+  const params = useParams();
+  const eventID = params.id
 
   const [active, setActive] = useState(false);
   const [member, setMember] = useState(false);
@@ -57,16 +57,14 @@ const EventPage = () => {
   useEffect(() => {
     console.log("useEffect query in EventPage");
     const getInfo = async () => {
+      const eventId = "UZOKqjWI96Y6SMjxgQhb";
       const eventData = await axios.get(
-        "http://localhost:4000/api/events/" + eventID
+        "http://localhost:4000/api/events/" + eventId
       );
       setEventData(eventData.data);
       const user = JSON.parse(localStorage.getItem("user")).id;
       const memberData = await axios.get(
-        "http://localhost:4000/api/utilities/org/" +
-          user +
-          "/" +
-          eventData.data.organization
+        "http://localhost:4000/api/utilities/org/" + user + "/" + event.organizationId
       );
       if (memberData.data.member) {
         setMember(true);
@@ -77,7 +75,7 @@ const EventPage = () => {
       const registeredData = await axios.get(
         "http://localhost:4000/api/utilities/" + user + "/" + eventID
       );
-      if (registeredData.data.registered) {
+      if (data.data.registered) {
         setActive(true);
       } else {
         setActive(false);
@@ -88,10 +86,11 @@ const EventPage = () => {
   }, [eventID]);
 
   const handleRsvp = async () => {
+    const userInfo=JSON.parse(localStorage.get('user'))
     const body = {
       // user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
-      user: localStorage.getItem("user").id,
-      event: eventID,
+      user: userInfo.id,
+      event: eventId
     };
     const rsvp = await axios.patch(
       "http://localhost:4000/api/users/register",
@@ -103,6 +102,10 @@ const EventPage = () => {
     } else {
       setActive(false);
     }
+    let userData=JSON.parse(localStorage.getItem('user'))
+    userData={...userData, events_registered: events}
+    JSON.stringify(userData)
+    localStorage.setItem(userData)
   };
 
   if(!eventData)

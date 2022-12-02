@@ -17,7 +17,7 @@ import {
 } from "./styles/OrganizationBottom.styled";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import EventCard from "../feed/EventCard";
 import { EventOrgLink } from "../event-page/styles/EventPageInfoPanel.styled";
 import { LoadingIndicator } from "../feed/styles/Feed.styled";
@@ -27,8 +27,8 @@ import buildEventCards from "../../utils/buildEventCards";
 
 
 const OrganizationPage = () => {
-  const location = useLocation();
-  const { organizationID } = location.state;
+  const params = useParams();
+  const organizationID = params.id;
 
   const [orgData, setOrgData] = useState(null);
   const [follow, setFollow] = useState(false);
@@ -137,7 +137,7 @@ const OrganizationPage = () => {
 
           <EventsHeaderOrg>
             <h2> Our Events</h2>
-            <EventOrgLink to="/create-event" state={{organizationID: organizationID}}>
+            <EventOrgLink to={"/create-event/" + organizationID}>
               <CreateEventButton> Create Event </CreateEventButton>
             </EventOrgLink>
             

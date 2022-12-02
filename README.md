@@ -68,3 +68,17 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+# Getting started with Buzz
+
+Buzz is a platform for hosting and joining events created by organizations. Users can sign up for Buzz, sign up for events, create organizations, and create events for those organizations.
+
+This web application was created using React on the front-end and NodeJS with Express on the back-end. Firebase is used as a database for the application, an authenticator for signing up or signing in users, and storage for user-submitted images.
+
+## Running Buzz
+
+To run Buzz, you must first install all of the dependencies by using the command `npm install`.
+After doing so, the server can be started by running the command `node ./backend/server.js` from the buzz directory.
+Lastly, execute the command `nmp start` to initialize the react project.
+
