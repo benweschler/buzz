@@ -4,7 +4,6 @@ import {
   StyledEventContainer,
   StyledEventDate,
   StyledEventDateDiv,
-  StyledEventDateIcon,
   StyledEventDescription,
   StyledEventImageDiv,
   StyledEventInfoLeftColumn,
@@ -32,15 +31,14 @@ import {
 import axios from "axios";
 import { useState, useEffect } from "react";
 import QrCodeScannerRoundedIcon from "@mui/icons-material/QrCodeScannerRounded";
-import { useLocation } from "react-router-dom";
 import { getTime } from "../../utils/dateUtils";
 
 
 const EventPage = () => {
-  const location = useLocation();
+  //TODO const location = useLocation();
   // const {eventID} = location.state
   const eventID = "eIUuIrsmQBg5SAbHhHQo"
-  // const { state: { eventID } = {} } = useLocation();
+  //TODO const { state: { eventID } = {} } = useLocation();
 
   const [active, setActive] = useState(false);
   const [member, setMember] = useState(false);

@@ -10,13 +10,11 @@ import {
   OrgButton,
   OrgButtonDiv,
   OrgBottomContainer,
-  OrgEvent,
   OrgLeftColumn,
   OrgRightColumn,
 } from "./styles/OrganizationBottom.styled";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
 
 const OrganizationPage = () => {
   // const location = useLocation()

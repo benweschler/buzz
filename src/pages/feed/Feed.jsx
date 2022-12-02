@@ -5,7 +5,7 @@ import FilterChip from "./FilterChip";
 import TonightButton from "./TonightButton"
 import {
   EventView,
-  FilterRow,
+  FilterRow, ImageLoadError,
   LoadingIndicator,
   Scaffold,
   Wrapper
@@ -13,7 +13,6 @@ import {
 import {useTheme} from "styled-components";
 import axios from "axios";
 import {HashLoader} from 'react-spinners'
-import {fireAfterCalls} from "../../utils/fireAfterCalls";
 
 export default function Feed({toggleTheme}) {
   const [selectedTags, setSelectedTags] = useState([])
@@ -21,6 +20,7 @@ export default function Feed({toggleTheme}) {
   const theme = useTheme()
   useEffect(() => {
     console.log("useEffect query in Feed")
+
     async function getEvents() {
       return axios.put(
         "http://localhost:4000/api/utilities/filter",
@@ -29,7 +29,6 @@ export default function Feed({toggleTheme}) {
     }
 
     getEvents().catch((e) => console.log("ERROR WITH FETCHING EVENTS:", e))
-    console.log(events);
   }, [theme.brightness])
 
 
@@ -56,18 +55,25 @@ export default function Feed({toggleTheme}) {
 }
 
 function EventCards({events, filter}) {
+  const [_, setNumLoadedImages] = useState(0)
   const [imagesAreLoading, setImagesAreLoading] = useState(true)
+  const [failedImageLoads, setFailedImageLoads] = useState([])
   const theme = useTheme()
 
   const cards = [];
   if (events.length === 0) return cards
 
-  const onImageLoad = fireAfterCalls(
-    events.length,
-    () => {
+  const onImageLoad = () => setNumLoadedImages(prevState => {
+    const newCount = prevState + 1
+    if(newCount >= events.length)
       setImagesAreLoading(false)
-    }
-  )
+
+    return newCount
+  })
+
+  function onImageError(eventTitle) {
+    setFailedImageLoads(prev => [...prev, eventTitle])
+  }
 
   events = events.filter(filter)
   for (let event of events) {
@@ -86,6 +92,7 @@ function EventCards({events, filter}) {
         tags={event.tags}
         date={event.date}
         onImageLoad={onImageLoad}
+        onImageError={onImageError}
       />
     );
   }
@@ -96,6 +103,12 @@ function EventCards({events, filter}) {
         <LoadingIndicator>
           <HashLoader size="150px" color={theme["main"]}/>
         </LoadingIndicator>
+      }
+      {failedImageLoads.length !== 0 &&
+        <ImageLoadError>
+          Failed to load images for the following events:
+          {" " + failedImageLoads.join(", ")}
+        </ImageLoadError>
       }
       <EventView visible={!imagesAreLoading}>
         {cards}

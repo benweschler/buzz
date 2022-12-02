@@ -34,3 +34,13 @@ export const LoadingIndicator = styled.div`
   flex-direction: row;
   justify-content: center;
 `
+
+export const ImageLoadError = styled.div`
+  padding: 75px;
+  font-size: 1.5rem;
+  font-style: italic;
+  font-weight: 400;
+  justify-self: center;
+  align-self: center;
+  color: red;
+`
