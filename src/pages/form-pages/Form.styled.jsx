@@ -62,7 +62,6 @@ export const FormWrapper = styled.div`
   display: flex;
   justify-content: center;
   height: 100vh;
-  padding: 0 20px;
   margin-top: 60px;
 `;
 
