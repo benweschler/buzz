@@ -71,6 +71,7 @@ const createEvent = async (req, res) => {
 
         await eventRef.set({
           "capacity": capacityNum,
+          "attending": 0,
           "description": req.body.description,
           "location": req.body.location,
           "title": req.body.title,
