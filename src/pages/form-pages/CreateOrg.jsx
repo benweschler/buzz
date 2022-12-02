@@ -9,38 +9,48 @@ import {
   Input,
   Span,
   Button,
+  TextArea,
   FileInput
 } from './Form.styled';
 
+function getUsrID() {
+  const usrObj = JSON.parse(localStorage.getItem('user'));
+  return usrObj.id;
+}
+
 const initOrgInfo = {
-  name: '', email: '', password: '', major: ''
+  name: '', description: ''
 };
 
 const initFile = '';
 
 function CreateOrg(props) {
-  const [userInfo, setUserInfo] = useState(initOrgInfo);
+  const [orgInfo, setOrgInfo] = useState(initOrgInfo);
   const [file, setFile] = useState(initFile);
   const [error, setError] = useState('');
 
 
   function handleChange({target: {name, value}}) {
-    setUserInfo({...userInfo, [name]: value});
+    setOrgInfo({...orgInfo, [name]: value});
   }
 
   function handleFile(input) {
     setFile(input.target.files[0]);
   }
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    setUserInfo(initOrgInfo);
+  function handleReset() {
+    setOrgInfo(initOrgInfo);
     setFile(initFile);
     setError('');
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    handleReset();
 
     let completed = true;
-    for (const entry in userInfo) {
-      if (!userInfo[entry]) {
+    for (const entry in orgInfo) {
+      if (!orgInfo[entry]) {
         console.log("missing field: " + entry);
         completed = false;
       }
@@ -56,26 +66,18 @@ function CreateOrg(props) {
     }
 
 
-    const Register = new FormData();
-    Register.append("name", userInfo.name);
-    Register.append("email", userInfo.email);
-    Register.append("password", userInfo.password);
-    Register.append("major", userInfo.major);
-    Register.append("file", file);
+    const Organization = new FormData();
+    Organization.append("name", orgInfo.name);
+    Organization.append("description", orgInfo.description);
+    Organization.append("member", getUsrID());
+    Organization.append("file", file);
+    
 
-    axios.post('http://localhost:4000/api/users/', Register, {
+    axios.post('http://localhost:4000/api/organizations/', Organization, {
       'Content-Type': 'multipart/form-data'
     }).then((response) => {
-      localStorage.setItem('token', JSON.stringify(response.data.token));
-      localStorage.setItem('user', JSON.stringify(response.data.user_data));
+      console.log(response);
     }).catch((error) => {
-      if (error.response.data.error.code && (error.response.data.error.code === "auth/email-already-exists")) {
-        setError('Email already exists in database!');
-        return;
-      } else if (error.response.data.error && (error.response.data.error === "One or more fields are missing")) {
-        setError('One or more fields are missing!');
-        return;
-      }
       console.log(error);
     })
   }
@@ -84,40 +86,23 @@ function CreateOrg(props) {
     <FormWrapper>
       <Form onSubmit={handleSubmit}>
         <Flex>
-          <h1>Sign up</h1>
+          <h1>Create an organization</h1>
         </Flex>
 
         <Block>
           <Input type="name" name="name"
                  placeholder="name"
-                 value={userInfo.name}
+                 value={orgInfo.name}
                  onChange={handleChange}/>
-          <Span/>
+          <Span className="FxBottom"/>
         </Block>
 
-        <Block>
-          <Input style={{fontSize: "1.3rem"}}
-                 type="email" name="email"
-                 placeholder="email"
-                 value={userInfo.email}
-                 onChange={handleChange}/>
-          <Span/>
-        </Block>
-
-        <Block>
-          <Input type="password" name="password"
-                 placeholder="password"
-                 value={userInfo.password}
-                 onChange={handleChange}/>
-          <Span/>
-        </Block>
-
-        <Block>
-          <Input type="text" name="major"
-                 placeholder="major"
-                 value={userInfo.major}
-                 onChange={handleChange}/>
-          <Span/>
+        <Block className="Tab">
+          <TextArea name="description"
+          placeholder= "Write your bio here."
+          value={orgInfo.description}
+          onChange={handleChange}/>
+          <Span className="FxSquare"/>
         </Block>
 
         <Flex className="Tab">
@@ -136,11 +121,11 @@ function CreateOrg(props) {
         </Flex>
 
         <Button className="Primary" type="submit">
-          Sign up
+          Create
         </Button>
-        <Button className="Secondary"
-                onClick={() => props.switchForm('Login')}>
-          Log in
+        <Button className="Secondary" type="reset"
+                onClick={handleReset}>
+          Reset 
         </Button>
       </Form>
     </FormWrapper>

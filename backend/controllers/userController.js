@@ -160,7 +160,14 @@ const readUser = async (req, res) => {
           events.push(event.data())
         })
       }
-      const user = {...userDoc.data(), events_registered: events}
+      organizations=[]
+      for (let i = 0; i < userDoc.data().organizations.length; i++) {
+        orgRef = database.collection('Organizations').doc(userDoc.data().organizations[i])
+        await orgRef.get().then((org) => {
+          organizations.push(org.data())
+        })
+    }
+      const user = {...userDoc.data(), events_registered: events, organizations: organizations}
 
       const hmac = new jsSHA("SHA-1", "HEX");
       hmac.setHMACKey(userDoc.data().secret, "UINT8ARRAY");

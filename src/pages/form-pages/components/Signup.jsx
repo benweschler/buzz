@@ -103,7 +103,7 @@ function Register(props) {
                  placeholder="name"
                  value={userInfo.name}
                  onChange={handleChange}/>
-          <Span/>
+          <Span className="FxBottom"/>
         </Block>
 
         <Block>
@@ -112,7 +112,7 @@ function Register(props) {
                  placeholder="email"
                  value={userInfo.email}
                  onChange={handleChange}/>
-          <Span/>
+          <Span className="FxBottom"/>
         </Block>
 
         <Block>
@@ -120,7 +120,7 @@ function Register(props) {
                  placeholder="password"
                  value={userInfo.password}
                  onChange={handleChange}/>
-          <Span/>
+          <Span className="FxBottom"/>
         </Block>
 
         <Block>
@@ -128,7 +128,7 @@ function Register(props) {
                  placeholder="major"
                  value={userInfo.major}
                  onChange={handleChange}/>
-          <Span/>
+          <Span className="FxBottom"/>
         </Block>
 
         <Flex className="Tab">
@@ -149,7 +149,7 @@ function Register(props) {
         <Button className="Primary" type="submit">
           Sign up
         </Button>
-        <Button className="Secondary"
+        <Button className="Secondary" type="button"
                 onClick={() => props.switchForm('Login')}>
           Log in
         </Button>
