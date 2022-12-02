@@ -15,6 +15,7 @@ import {
   DateEvent,
   EventDateDiv,
   EventHeader,
+  EventOrgLink,
   InfoLeftColumn,
   InfoRightColumn,
   LocationEvent,
@@ -38,36 +39,20 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import QrCodeScannerRoundedIcon from "@mui/icons-material/QrCodeScannerRounded";
 import formatUnixTime from "../../utils/dateUtils";
-import { useLocation } from "react-router-dom";
-
-//old import code
-// onClick={() => {
-//   navigate("/event-page", {
-//     state: {
-//       title: title,
-//       image: image,
-//       date: date,
-//       organizer: organizer,
-//       location: location,
-//       attendees: attendees,
-//       price: price,
-//       tags: tags,
-//       organizationId: organizationId,
-//       description: description,
-//       capacity: capacity,
-//       ticketed: ticketed,
-//       eventId: eventId,
-//     },
-//   });
-// }}
+import { useParams } from "react-router-dom";
+import { LoadingIndicator } from "../feed/styles/Feed.styled";
+import { HashLoader } from "react-spinners";
+import { useTheme } from "styled-components";
 
 const EventPage = () => {
-  const location = useLocation();
-  const { eventID } = location.state;
+  const params = useParams();
+  const eventID = params.id
 
   const [active, setActive] = useState(false);
   const [member, setMember] = useState(false);
-  const [event, setEvent] = useState({});
+  const [eventData, setEventData] = useState(null);
+
+  const theme = useTheme()
 
   useEffect(() => {
     console.log("useEffect query in EventPage");
@@ -76,9 +61,8 @@ const EventPage = () => {
       const eventData = await axios.get(
         "http://localhost:4000/api/events/" + eventId
       );
-      setEvent(eventData.data);
-      const user = "gygBGe9hAjfKtcguPC6LgIb3bLl2";
-      
+      setEventData(eventData.data);
+      const user = JSON.parse(localStorage.getItem("user")).id;
       const memberData = await axios.get(
         "http://localhost:4000/api/utilities/org/" + user + "/" + event.organizationId
       );
@@ -87,16 +71,9 @@ const EventPage = () => {
       } else {
         setMember(false);
       }
-
-      console.log(memberData.data.member)
-    }
-    
-    const getRSVP = async () => {
-      // user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
-      const user =  "gygBGe9hAjfKtcguPC6LgIb3bLl2"
-      const event = eventId;
-      const data = await axios.get(
-        "http://localhost:4000/api/utilities/" + user + "/" + event.eventId
+      console.log("MEMBER DATA:", memberData.data.member);
+      const registeredData = await axios.get(
+        "http://localhost:4000/api/utilities/" + user + "/" + eventID
       );
       if (data.data.registered) {
         setActive(true);
@@ -104,11 +81,9 @@ const EventPage = () => {
         setActive(false);
       }
     };
-    getRSVP().catch(console.error);
-    getInfo().catch(console.error);
-  }, );
 
-
+    getInfo().catch((e) => console.log("Error fetching event data on event page:", e));
+  }, [eventID]);
 
   const handleRsvp = async () => {
     const userInfo=JSON.parse(localStorage.get('user'))
@@ -133,11 +108,18 @@ const EventPage = () => {
     localStorage.setItem(userData)
   };
 
+  if(!eventData)
+    return (
+      <LoadingIndicator>
+        <HashLoader size="150px" color={theme.main}/>
+      </LoadingIndicator>
+    )
+
   return (
     <EventContainer>
       <LeftColumnEvent>
         <ImageDivEvent>
-          <ImageEvent src={event.image} />
+          <ImageEvent src={eventData.image} />
         </ImageDivEvent>
         <SecurityMessage>
           Buzz takes your privacy and security seriously. <br />
@@ -147,24 +129,27 @@ const EventPage = () => {
       </LeftColumnEvent>
 
       <EventRightColumn>
-        <EventHeader>{event.title}</EventHeader>
+        <EventHeader>{eventData.title}</EventHeader>
         <MainInfo>
           <InfoLeftColumn>
-            <OrganizerEvent> {event.organizer}</OrganizerEvent>
+            <EventOrgLink to="/organization-page" state={{organizationID: eventData.organization}}>
+              <OrganizerEvent> {eventData.organization_name}</OrganizerEvent> 
+            </EventOrgLink>
+            
             <CapacityDiv>
               <IoPersonOutline />
               <CapacityEvent>
-                {event.attending} / {event.capacity}{" "}
+                {eventData.attending} / {eventData.capacity}{" "}
               </CapacityEvent>
             </CapacityDiv>
             <LocationEvent>
               <IoLocationOutline />
-              <h3> {event.location} </h3>
+              <h3> {eventData.location} </h3>
             </LocationEvent>
             <EventDateDiv>
               <IoCalendarClearOutline />
 
-              <DateEvent>{formatUnixTime(event.date)}</DateEvent>
+              <DateEvent>{formatUnixTime(eventData.date)}</DateEvent>
             </EventDateDiv>
           </InfoLeftColumn>
           <InfoRightColumn>
@@ -179,7 +164,7 @@ const EventPage = () => {
 
         <RsvpDiv>
           <RsvpAbout>
-            <h4> Price: {event.ticketed ? "$" + event.price : "Free!"}</h4>
+            <h4> Price: {eventData.ticketed ? "$" + eventData.price : "Free!"}</h4>
             <RsvpMessage>
               No extra upfront costs, or cheeky data mining 👀
             </RsvpMessage>
@@ -191,7 +176,7 @@ const EventPage = () => {
 
         <EventDescription>
           <h2> About </h2>
-          <p>{event.description}</p>
+          <p>{eventData.description}</p>
         </EventDescription>
       </EventRightColumn>
     </EventContainer>

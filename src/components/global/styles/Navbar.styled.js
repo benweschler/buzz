@@ -35,6 +35,7 @@ export const StyledNavMenu = styled.ul`
     height: 100%;
     z-index: 800;
     text-align: center;
+    align-items: center;
     scale: ${(props) => (props.clicked ? "100%" : "0")};
     width: ${(props) => (props.clicked ? "100%" : "0")};
     opacity: ${(props) => (props.clicked ? "1" : "0")};

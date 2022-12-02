@@ -11,7 +11,7 @@ import {
   Button,
   TextArea,
   FileInput
-} from './Form.styled';
+} from '../Form.styled';
 
 function getUsrID() {
   const usrObj = JSON.parse(localStorage.getItem('user'));
