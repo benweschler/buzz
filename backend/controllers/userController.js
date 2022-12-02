@@ -6,7 +6,7 @@ const {database, storage} = require('../firebase-admin/index');
 const {auth: clientAuth} = require('../../src/firebase/index');
 const {auth: adminAuth} = require('../firebase-admin/index');
 const {FieldValue} = require('@google-cloud/firestore');
-const {signInWithEmailAndPassword, signOut} = require('firebase/auth');
+const {signInWithEmailAndPassword, signOut, setPersistence, browserLocalPersistence} = require('firebase/auth');
 const jsSHA = require('jssha');
 const {v4} = require('uuid');
 const crypto = require('crypto');
@@ -108,9 +108,18 @@ const createUser = async (req, res) => {
 
 
       // Sign in the user and return the token to the front-end
-      const userCredential = await signInWithEmailAndPassword(clientAuth, email, password).catch((error) => {
+      /*const userCredential = await signInWithEmailAndPassword(clientAuth, email, password).catch((error) => {
         res.status(400).json({
           error: error
+        })
+      })*/
+
+      await setPersistence(clientAuth, browserLocalPersistence).then(() => {
+        return signInWithEmailAndPassword(clientAuth, email, password).catch((error) => {
+          res.status(400).json({
+            error: error
+          })
+          return;
         })
       })
 
@@ -120,7 +129,6 @@ const createUser = async (req, res) => {
       res.status(200).json({
         id: recordObj.uid,
         user_data: userData,
-        token: userCredential.user.stsTokenManager.accessToken
       })
     }
   }
@@ -278,12 +286,11 @@ const deleteUser = async (req, res) => {
 
 // Signs in user and generates a token
 const authenticateUser = async (req, res) => {
-  try {
     const {email, password} = req.body;
 
     // Use Firebase v9 syntax to sign the user in with email and password,
     // since firebase on the client side is v9
-    signInWithEmailAndPassword(clientAuth, email, password)
+    /*signInWithEmailAndPassword(clientAuth, email, password)
       .then((userCredential) => {
         console.log(userCredential.user.uid);
         database.collection('Users').doc(userCredential.user.uid).get().then((userDoc) => {
@@ -310,13 +317,38 @@ const authenticateUser = async (req, res) => {
         success: false,
         error: error
       })
+    })*/
+
+    await setPersistence(clientAuth, browserLocalPersistence).then(() => {
+      console.log('Persistence set!');
+      return signInWithEmailAndPassword(clientAuth, email, password).then((userCredential) => {
+        console.log('Signed in with email and password!');
+        console.log(userCredential.user.uid);
+        database.collection('Users').doc(userCredential.user.uid).get().then((userDoc) => {
+          let userData = {};
+
+          if (userDoc.exists) {
+            // Get the token that firebase generates and return it
+            userData = userDoc.data();
+            res.status(200).json({
+              success: true,
+              user_data: userData
+            })
+          } else {
+            res.status(500).json({
+              success: false,
+              error: 'User not found'
+            })
+          }
+
+        })
+      }).catch((error) => {
+        res.status(400).json({
+          error: error
+        })
+        return;
+      })
     })
-  } catch (error) {
-    res.status(400).json({
-      success: false,
-      error: error
-    })
-  }
 }
 
 const verifyToken = async (req, res) => {
@@ -350,6 +382,7 @@ const revokeToken = async (req, res) => {
   } else {
     const {id} = req.params;
     signOut(clientAuth).then(() => {
+      console.log('User signed out!')
       res.status(200).json({
         id: id
       })
