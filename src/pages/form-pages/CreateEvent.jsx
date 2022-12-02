@@ -43,6 +43,7 @@ function toTagStr(tagList) {
       TagStr=TagStr.concat(" ", tagList[i]);
     }
   }
+  TagStr = TagStr.slice(1);
   return TagStr;
 }
 
@@ -135,6 +136,9 @@ function CreateEvent() {
     Event.append('ticketed', ticketed);
     Event.append('file', file);
     Event.append('tags', toTagStr(selectedTags));
+    
+    console.log("FormData", Event);
+    console.log("Tag string", toTagStr(selectedTags));
 
     axios.post('http://localhost:4000/api/events/', Event, {
       'Content-Type': 'multipart/form-data'
