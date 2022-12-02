@@ -21,6 +21,7 @@ export const StyledUserAvatar = styled.img`
   height: 250px;
   border: 4px solid #000;
   border-radius: 3px;
+  object-fit: cover;
 `;
 
 
