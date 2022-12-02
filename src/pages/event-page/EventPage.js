@@ -37,9 +37,30 @@ import {
 import axios from "axios";
 import { useState, useEffect } from "react";
 import QrCodeScannerRoundedIcon from "@mui/icons-material/QrCodeScannerRounded";
+import { useLocation } from "react-router-dom";
 import { getTime } from "../../utils/dateUtils";
 import { useLocation } from "react-router-dom";
 
+//old import code
+// onClick={() => {
+//   navigate("/event-page", {
+//     state: {
+//       title: title,
+//       image: image,
+//       date: date,
+//       organizer: organizer,
+//       location: location,
+//       attendees: attendees,
+//       price: price,
+//       tags: tags,
+//       organizationId: organizationId,
+//       description: description,
+//       capacity: capacity,
+//       ticketed: ticketed,
+//       eventId: eventId,
+//     },
+//   });
+// }}
 
 const EventPage = () => {
   const location = useLocation();
@@ -52,41 +73,50 @@ const EventPage = () => {
   useEffect(() => {
     console.log("useEffect query in EventPage");
     const getInfo = async () => {
+      const eventId = "UZOKqjWI96Y6SMjxgQhb";
       const eventData = await axios.get(
-        "http://localhost:4000/api/events/" + eventID
+        "http://localhost:4000/api/events/" + eventId
       );
       setEvent(eventData.data);
-      const user = JSON.parse(localStorage.getItem("user")).id;
+      const user = "gygBGe9hAjfKtcguPC6LgIb3bLl2";
+      
       const memberData = await axios.get(
-        "http://localhost:4000/api/utilities/org/" +
-          user +
-          "/" +
-          eventData.data.organization
+        "http://localhost:4000/api/utilities/org/" + user + "/" + event.organizationId
       );
       if (memberData.data.member) {
         setMember(true);
       } else {
         setMember(false);
       }
-      console.log(memberData.data.member);
-      const registeredData = await axios.get(
-        "http://localhost:4000/api/utilities/" + user + "/" + eventID
+
+      console.log(memberData.data.member)
+    }
+    
+    const getRSVP = async () => {
+      // user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
+      const user =  "gygBGe9hAjfKtcguPC6LgIb3bLl2"
+      const event = eventId;
+      const data = await axios.get(
+        "http://localhost:4000/api/utilities/" + user + "/" + event.eventId
       );
-      if (registeredData.data.registered) {
+      if (data.data.registered) {
         setActive(true);
       } else {
         setActive(false);
       }
     };
-
+    getRSVP().catch(console.error);
     getInfo().catch(console.error);
-  }, []);
+  }, );
+
+
 
   const handleRsvp = async () => {
+    const userInfo=JSON.parse(localStorage.get('user'))
     const body = {
       // user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
-      user: localStorage.getItem("user").id,
-      event: eventID,
+      user: userInfo.id,
+      event: eventId
     };
     const rsvp = await axios.patch(
       "http://localhost:4000/api/users/register",
@@ -98,6 +128,10 @@ const EventPage = () => {
     } else {
       setActive(false);
     }
+    let userData=JSON.parse(localStorage.getItem('user'))
+    userData={...userData, events_registered: events}
+    JSON.stringify(userData)
+    localStorage.setItem(userData)
   };
 
   return (
