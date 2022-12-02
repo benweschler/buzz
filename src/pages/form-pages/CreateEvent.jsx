@@ -76,7 +76,6 @@ function CreateEvent(props) {
     setEventInfo(initialEventInfo)
     setTicketed(false)
     setSelectedTags([])
-    setFile('')
     setError('')
   }
 
@@ -85,7 +84,6 @@ function CreateEvent(props) {
     const prevEventInfo = eventInfo;
     const prevTicketed = ticketed;
     const prevSelectedTags = selectedTags;
-    const prevFile = File;
     function restoreState(){
       setEventInfo(prevEventInfo);
       setTicketed(prevTicketed);
