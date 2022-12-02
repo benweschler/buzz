@@ -1,0 +1,147 @@
+import {useState} from "react";
+import {ModalCardScaffold} from "../../components/modalStyles";
+import {ScannerTitle,} from "./styles/QRScannerCard.styled";
+import QrReader from "react-qr-scanner";
+import axios from "axios";
+import {StyledErrorMessage, StyledMessage} from "../../components/globalStyles";
+import styled from "styled-components";
+
+const ScanStatus = {
+  scanning: "scanning",
+  error: "error",
+  failedAuthentication: "failedAuthentication",
+  alreadyRegistered: "alreadyRegistered",
+  noTicket: "noTicket",
+  success: "success",
+}
+
+export default function QRScannerCard() {
+  const [lastScanTime, setLastScanTime] = useState(null)
+  const [status, setStatus] = useState(ScanStatus.scanning)
+
+  const COOLDOWN_MILLIS = 3000
+  const DUMMY_EVENT_ID = "MdzxhREIDkn8VnvRfOz4"
+
+  function onReaderError(e) {
+    console.log("Error reading QR code:", e)
+    setStatus(ScanStatus.error)
+  }
+
+  function onScan(code) {
+    if (!code) return;
+
+    code = code.text
+
+    let userID, otp
+    try {
+      const data = JSON.parse(code)
+      userID = data.userID
+      otp = data.otp
+    } catch (e) {
+      setStatus(ScanStatus.error)
+      console.log("Error scanning QR code:", e)
+    }
+
+    if (!isOnCoolDown()) {
+      processOtp(otp, userID).catch((e) => {
+        console.log("Error processing otp:", e)
+        return setStatus(ScanStatus.error)
+      })
+    }
+  }
+
+  function isOnCoolDown() {
+    const current = Date.now()
+    if (lastScanTime == null) {
+      setLastScanTime(current)
+      return false
+    }
+
+    const coolingDown = current - lastScanTime < COOLDOWN_MILLIS
+
+    if (coolingDown) return true
+
+    setLastScanTime(current)
+    return false
+  }
+
+  async function processOtp(otp, userID) {
+    const isValid = await validateOtp(otp, userID)
+
+    if (!isValid) return setStatus(ScanStatus.failedAuthentication)
+
+    const response = await checkUserIn(userID, DUMMY_EVENT_ID)
+    const registered = response.registered
+    const alreadyChecked = response.alreadyChecked
+
+    if (alreadyChecked) return setStatus(ScanStatus.alreadyRegistered)
+    if (!registered) return setStatus(ScanStatus.noTicket)
+    return setStatus(ScanStatus.success)
+  }
+
+  return (
+    <ModalCardScaffold>
+      <ScannerTitle>Scan a Buzz ID Code</ScannerTitle>
+      <ScanStatusMessage status={status}/>
+      <QrReader
+        style={{height: "25rem", width: "25rem"}}
+        onError={onReaderError}
+        onScan={onScan}
+      />
+    </ModalCardScaffold>
+  )
+}
+
+async function validateOtp(otp, userID) {
+  const data = await axios.get(
+    `http://localhost:4000/api/users/validateOTP/${userID}/${otp}`)
+    .catch((e) => console.log("Error validating OTP:", e))
+
+  return data.data.authentication
+}
+
+async function checkUserIn(userID, eventID) {
+  const body = {
+    user: userID,
+    event: eventID
+  }
+  const response = await axios.patch(
+    "http://localhost:4000/api/users/checkIn", body)
+    .catch((e) => console.log("Error checking user in:", e))
+
+  return {
+    registered: response.registered,
+    alreadyChecked: response.alreadyChecked
+  }
+}
+
+function ScanStatusMessage({status}) {
+  const statusMap = {
+    scanning: "Scan a Buzz Personal ID",
+    error: "Error validating ID",
+    failedAuthentication: "Personal ID failed authentication",
+    alreadyRegistered: "Already been registered at this event",
+    noTicket: "No ticket to this event",
+    success: "Accepted",
+  }
+
+  const message = statusMap[status]
+
+  if (status === ScanStatus.scanning) {
+    return (
+      <StyledMessage>{message}</StyledMessage>
+    )
+  } else if (status === ScanStatus.success) {
+    return (
+      <SuccessMessage>{message}</SuccessMessage>
+    )
+  }
+
+  return (
+    <StyledErrorMessage>{message}</StyledErrorMessage>
+  )
+}
+
+const SuccessMessage = styled(StyledMessage)`
+  color: green;
+`

@@ -18,7 +18,6 @@ import {
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import EventCard from "../feed/EventCard";
 import { EventOrgLink } from "../event-page/styles/EventPageInfoPanel.styled";
 import { LoadingIndicator } from "../feed/styles/Feed.styled";
 import { HashLoader } from "react-spinners";
