@@ -17,7 +17,6 @@ import {
 import axios from "axios"
 import styled from "styled-components"
 import TagChipRow from "./TagChipRow"
-import Constants from "../../../constants/Constants"
 
 const TagChipRowStyle = styled.div`
   display: flex;
@@ -39,9 +38,10 @@ function toTagStr(tagList) {
   var TagStr = "";
   for (let i = 0; i < tagList.length; i++) {
     if (tagList[i]){
-      TagStr=TagStr.concat(" ", Constants.tags[i])
+      TagStr=TagStr.concat(" ", tagList[i]);
     }
   }
+  console.log(TagStr);
   return TagStr;
 }
 
@@ -64,7 +64,8 @@ function CreateEvent(props) {
     const newSelection = selectedTags.includes(tag)
       ? selectedTags.filter(t => t !== tag)
       : [...selectedTags, tag];
-    setSelectedTags(newSelection)
+    setSelectedTags(newSelection);
+    console.log(newSelection);
   }
 
   function handleFile(input) {
@@ -79,8 +80,6 @@ function CreateEvent(props) {
   }
 
   function handleSubmit(e) {
-    console.log(toTagStr(selectedTags))
-    return;
     e.preventDefault()
     const prevEventInfo = eventInfo;
     const prevTicketed = ticketed;

@@ -2,16 +2,13 @@ import CreateEvent from "./components/CreateEvent"
 import EditEvent from "./components/EditEvent"
 import { useLocation } from 'react-router-dom'
 
-function CreateOrEditEvent() {
+function CreateOrEditEvent(props) {
     const location = useLocation();
-    const OrganizationID = location.state({OrganizationID});
-    const EventID = location.state({EventID});
+    //const OrganizationID = location.state({OrganizationID});
+    //const EventID = location.state({EventID});
 
     return(
-        EventID === undefined ? 
-        <CreateEvent OrgID={OrganizationID} />
-            :
-        <EditEvent EventID={EventID} />
+        <CreateEvent OrgID={props.orgID} />
     )
 }
 
