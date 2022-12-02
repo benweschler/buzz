@@ -32,6 +32,31 @@ import { useState, useEffect } from "react";
 import QrCodeScannerRoundedIcon from "@mui/icons-material/QrCodeScannerRounded";
 import { useLocation } from "react-router-dom";
 
+
+//old import code
+// onClick={() => {
+//   navigate("/event-page", {
+//     state: {
+//       title: title,
+//       image: image,
+//       date: date,
+//       organizer: organizer,
+//       location: location,
+//       attendees: attendees,
+//       price: price,
+//       tags: tags,
+//       organizationId: organizationId,
+//       description: description,
+//       capacity: capacity,
+//       ticketed: ticketed,
+//       eventId: eventId,
+//     },
+//   });
+// }}
+
+
+
+
 const EventPage = () => {
   const {
     state: {
