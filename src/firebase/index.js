@@ -4,12 +4,10 @@ const {initializeApp} = require('firebase/app')
 //import { getAuth } from 'firebase/auth'
 const {getAuth} = require('firebase/auth');
 const {getStorage} = require('firebase/storage');
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: process.env.APIKEY,
+  apiKey: "AIzaSyAwJPGdZrwdXhlW3vZw2Mfcrt4pERvvaVE",
   authDomain: "buzz-8222d.firebaseapp.com",
   projectId: "buzz-8222d",
   storageBucket: "buzz-8222d.appspot.com",

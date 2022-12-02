@@ -46,7 +46,7 @@ const Navbar = () => {
           <Link to="/user-page">My Account</Link>
         </StyledNavItem>
         <StyledNavItem onClick={handleSignOut}>
-          <Link to="/log-or-sign-up">Sign Out</Link>
+          <Link to="/">Sign Out</Link>
         </StyledNavItem>
         <StyledNavItem>
           <Link to="/create-event">Create Event</Link>

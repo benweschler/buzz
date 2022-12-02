@@ -37,6 +37,6 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-app.listen(process.env.SERVER_PORT, () => {
-  console.log('App listening on port ' + process.env.SERVER_PORT);
+app.listen(process.env.REACT_APP_SERVER_PORT, () => {
+  console.log('App listening on port ' + process.env.REACT_APP_SERVER_PORT);
 })

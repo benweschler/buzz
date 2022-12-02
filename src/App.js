@@ -12,8 +12,9 @@ import LogRegCtrl from "./pages/form-pages/LogRegCtrl";
 import CreateEvent from "./pages/form-pages/CreateEvent";
 import CreateOrg from "./pages/form-pages/CreateOrg";
 
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+const {auth} = require('./firebase/index.js');
 
 function App() {
   const navigate = useNavigate();
@@ -21,27 +22,28 @@ function App() {
   const toggleTheme = () =>
     setTheme(theme.brightness === "light" ? darkTheme : lightTheme);
 
-  useEffect(() => {
-    console.log("useEffect query in App")
-
-    async function getCurrentUser() {
-      const token = JSON.parse(localStorage.getItem('token'));
-      const userID = JSON.parse(localStorage.getItem('user')).id;
-      if (userID && (token.length > 0)) {
-        return axios.get(
-          `http://localhost:4000/api/users/token/${token}`
+    useEffect(() => {
+      async function getCurrentUser(id) {
+        axios.get(
+          `http://localhost:4000/api/users/${id}`
         ).then((response) => {
           if (response.data.success)
             navigate('/feed')
         })
       }
-    }
 
-    getCurrentUser()
-      .catch((e) => console.log("ERROR WITH AUTHENTICATING USER:", e))
-    //TODO: figure out why eslint says useEffect needs navigate as a dependency
+      auth.onIdTokenChanged(function(user) {
+        if (user) {
+          // User is signed in or token was refreshed.
+          console.log('User has signed in!')
+          getCurrentUser(user.uid);
+        } else {
+          navigate('/');
+        }
+      });
+    // TODO: figure out why eslint warns that this useEffect should depend on navigate
     // eslint-disable-next-line
-  }, []);
+    }, []);
 
   return (
     <ThemeProvider theme={theme}>
