@@ -65,6 +65,9 @@ const createOrganization = async (req, res) => {
                 }).then((docRef) => {
                     console.log('Created organization document with id: ' + docRef.id);
                     organizationID = docRef.id;
+                    database.collection('Organizations').doc(docRef.id).update({
+                        id: docRef.id
+                    })
                 }).catch((error) => {
                     res.status(500).json({
                         error: error
