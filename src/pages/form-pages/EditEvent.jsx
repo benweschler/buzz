@@ -13,11 +13,11 @@ import {
     FileInput,
     Label,
     Switch,
-  } from '../Form.styled'
+  } from './Form.styled'
 import axios from "axios"
 import styled from "styled-components"
-import TagChipRow from "./TagChipRow"
-import Constants from "../../../constants/Constants"
+import TagChipRow from "./components/TagChipRow"
+import Constants from "../../constants/Constants"
 
 const TagChipRowStyle = styled.div`
   display: flex;
@@ -240,7 +240,7 @@ function EditEvent(props) {
         </Button>
         <Button className="Secondary"
           type="reset" onClick={handleReset}>
-          Reset form
+          Reset to previous
         </Button>
         
       </Form>

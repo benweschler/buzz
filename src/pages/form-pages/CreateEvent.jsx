@@ -13,10 +13,11 @@ import {
     FileInput,
     Label,
     Switch,
-  } from '../Form.styled'
+  } from './Form.styled'
 import axios from "axios"
 import styled from "styled-components"
-import TagChipRow from "./TagChipRow"
+import TagChipRow from "./components/TagChipRow"
+import { useParams } from "react-router-dom";
 
 const TagChipRowStyle = styled.div`
   display: flex;
@@ -41,16 +42,19 @@ function toTagStr(tagList) {
       TagStr=TagStr.concat(" ", tagList[i]);
     }
   }
-  console.log(TagStr);
   return TagStr;
 }
 
-function CreateEvent(props) {
+function CreateEvent() {
   const [eventInfo, setEventInfo] = useState(initialEventInfo);
   const [ticketed, setTicketed] = useState(false);
   const [selectedTags, setSelectedTags] = useState([])
   const [file, setFile] = useState('');
   const [error, setError] = useState('');
+
+  const params = useParams();
+  const orgID = params.id;
+
 
   function handleChange({ target: {name, value} }) {
     setEventInfo({...eventInfo, [name]: value});
@@ -121,7 +125,7 @@ function CreateEvent(props) {
     Event.append('title', eventInfo.title);
     Event.append('date', Date.parse(eventInfo.date));
     Event.append('location', eventInfo.location);
-    Event.append('organization', props.orgID);
+    Event.append('organization', orgID);
     Event.append('capacity', eventInfo.capacity);
     Event.append('price', eventInfo.price);
     Event.append('description', eventInfo.description);

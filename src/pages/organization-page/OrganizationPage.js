@@ -137,7 +137,7 @@ const OrganizationPage = () => {
 
           <EventsHeaderOrg>
             <h2> Our Events</h2>
-            <EventOrgLink to="/create-event" state={{organizationID: organizationID}}>
+            <EventOrgLink to={"/create-event/" + organizationID}>
               <CreateEventButton> Create Event </CreateEventButton>
             </EventOrgLink>
             
