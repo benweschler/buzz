@@ -76,34 +76,30 @@ const EventPage = () => {
   const [event, setEvent] = useState({});
 
   useEffect(() => {
-    const getEvent = async () => {
+    const getInfo = async () => {
       const eventId = "UZOKqjWI96Y6SMjxgQhb";
-      const data = await axios.get(
+      const eventData = await axios.get(
         "http://localhost:4000/api/events/" + eventId
       );
-      setEvent(data.data);
-    };
-
-    const getOrgRelation = async () => {
-      // user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
+      setEvent(eventData.data);
       const user = "gygBGe9hAjfKtcguPC6LgIb3bLl2";
-      const org = event.organizationId;
-      const data = await axios.get(
-        "http://localhost:4000/api/utilities/org/" + user + "/" + org
+      
+      const memberData = await axios.get(
+        "http://localhost:4000/api/utilities/org/" + user + "/" + event.organizationId
       );
-      if (data.data.member) {
+      if (memberData.data.member) {
         setMember(true);
       } else {
         setMember(false);
       }
-      console.log(data.data.member);
-    };
 
+      console.log(memberData.data.member)
+    }
     
-  
     const getRSVP = async () => {
       // user: "gygBGe9hAjfKtcguPC6LgIb3bLl2",
-      const user = "gygBGe9hAjfKtcguPC6LgIb3bLl2";
+      const user =  "gygBGe9hAjfKtcguPC6LgIb3bLl2"
+      const event = eventId;
       const data = await axios.get(
         "http://localhost:4000/api/utilities/" + user + "/" + event.eventId
       );
@@ -114,9 +110,7 @@ const EventPage = () => {
       }
     };
     getRSVP().catch(console.error);
-
-    getEvent().catch(console.error);
-    getOrgRelation().catch(console.error);
+    getInfo().catch(console.error);
   }, );
 
 
@@ -137,88 +131,6 @@ const EventPage = () => {
     } else {
       setActive(false);
     }
-  };
-
-  const getTime = (date) => {
-    const time = new Date(date);
-    let result = "";
-    const day = time.getDay();
-    switch (day) {
-      case 0:
-        result += "Sun, ";
-        break;
-      case 1:
-        result += "Mon, ";
-        break;
-      case 2:
-        result += "Tue, ";
-        break;
-      case 3:
-        result += "Wed, ";
-        break;
-      case 4:
-        result += "Thu, ";
-        break;
-      case 5:
-        result += "Fri, ";
-        break;
-      case 6:
-        result += "Sat, ";
-        break;
-      default:
-        return;
-    }
-    const month = time.getMonth();
-    switch (month) {
-      case 0:
-        result += "Jan ";
-        break;
-      case 1:
-        result += "Feb ";
-        break;
-      case 2:
-        result += "Mar ";
-        break;
-      case 3:
-        result += "Apr ";
-        break;
-      case 4:
-        result += "May ";
-        break;
-      case 5:
-        result += "Jun ";
-        break;
-      case 6:
-        result += "Jul ";
-        break;
-      case 7:
-        result += "Aug ";
-        break;
-      case 8:
-        result += "Sep ";
-        break;
-      case 9:
-        result += "Oct ";
-        break;
-      case 10:
-        result += "Nov ";
-        break;
-      case 11:
-        result += "Dec ";
-        break;
-      default:
-        return;
-    }
-    const dayOfMonth = time.getDate();
-    result += dayOfMonth + ", ";
-
-    const Hours = time.getHours();
-    let Mins = time.getMinutes();
-    if (Mins < 10) {
-      Mins = "0" + Mins;
-    }
-    result += Hours + ":" + Mins;
-    return result;
   };
 
   return (

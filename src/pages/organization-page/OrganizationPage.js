@@ -16,14 +16,13 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 
-
-
 const OrganizationPage = () => {
   const {
     state: {
       organizationId
     } = {},
-  } = useLocation(); 
+  } = useLocation();
+
   const [orgData, setOrgData] = useState({})
   const [follow, setFollow] = useState(false)
   const [join, setJoin] = useState(false)
@@ -83,7 +82,6 @@ const OrganizationPage = () => {
     else{
       setJoin(false)
     }
-
   }
   return (
     <>
@@ -103,9 +101,7 @@ const OrganizationPage = () => {
         <StyledOrgLeftColumn>
             <StyledOrganizationDescription>
               <h2> About </h2>
-              <p>
-                {orgData.description}
-              </p>
+              <p>{orgData.description}</p>
             </StyledOrganizationDescription>
         </StyledOrgLeftColumn>
 
