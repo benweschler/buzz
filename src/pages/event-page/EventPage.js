@@ -37,9 +37,6 @@ import { getTime } from "../../utils/dateUtils";
 
 
 const EventPage = () => {
-
-  
-
   const location = useLocation();
   // const {eventID} = location.state
   const eventID = "eIUuIrsmQBg5SAbHhHQo"
@@ -50,6 +47,7 @@ const EventPage = () => {
   const [event, setEvent] = useState({});
 
   useEffect(() => {
+    console.log("useEffect query in EventPage")
     const getInfo = async () => {
       const eventData = await axios.get(
         "http://localhost:4000/api/events/" + eventID
