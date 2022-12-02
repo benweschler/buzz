@@ -30,32 +30,34 @@ export default function EventCard({
 }) {
   const navigate = useNavigate();
   return (
-    <Card
-      className="card"
-      
-    >
+    <Card className="card">
       <img src={image} alt={title} />
       <EventCardBody>
         <Date>{date}</Date>
-        <Title className="overflow-field" onClick={() => {
-        navigate("/event-page", {
-          state: {
-            title: title,
-            image: image,
-            date: date,
-            organizer: organizer,
-            location: location,
-            attendees: attendees,
-            price: price,
-            tags: tags,
-            organizationId: organizationId,
-            description: description,
-            capacity: capacity,
-            ticketed: ticketed,
-            eventId: eventId,
-          },
-        });
-      }}>{title}</Title>
+        <Title
+          className="overflow-field"
+          onClick={() => {
+            navigate("/event-page", {
+              state: {
+                title: title,
+                image: image,
+                date: date,
+                organizer: organizer,
+                location: location,
+                attendees: attendees,
+                price: price,
+                tags: tags,
+                organizationId: organizationId,
+                description: description,
+                capacity: capacity,
+                ticketed: ticketed,
+                eventId: eventId,
+              },
+            });
+          }}
+        >
+          {title}
+        </Title>
         <Organizer
           className="overflow-field"
           onClick={() => {
