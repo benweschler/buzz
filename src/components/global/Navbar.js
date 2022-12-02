@@ -25,7 +25,6 @@ const Navbar = () => {
       console.log(error);
     })
 
-    localStorage.setItem('token', JSON.stringify(""));
     localStorage.setItem('user', JSON.stringify({}));
     console.log(secureLocalStorage.getItem('private-key'));
     secureLocalStorage.setItem('private-key', JSON.stringify(""));
@@ -46,7 +45,7 @@ const Navbar = () => {
           <Link to="/user-page">My Account</Link>
         </StyledNavItem>
         <StyledNavItem onClick={handleSignOut}>
-          <Link to="/">Sign Out</Link>
+          <Link to="/log-or-sign-up">Sign Out</Link>
         </StyledNavItem>
         <StyledNavItem>
           <Link to="/create-event">Create Event</Link>
