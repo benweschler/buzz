@@ -131,7 +131,7 @@ const EventPage = () => {
         <EventHeader>{eventData.title}</EventHeader>
         <MainInfo>
           <InfoLeftColumn>
-            <EventOrgLink to="/organization-page" state={{organizationID: eventData.organization}}>
+            <EventOrgLink to={"/organization-page/" + eventData.organization}>
               <OrganizerEvent> {eventData.organization_name}</OrganizerEvent> 
             </EventOrgLink>
             

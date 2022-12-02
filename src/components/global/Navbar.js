@@ -48,12 +48,6 @@ const Navbar = () => {
         <StyledNavItem onClick={handleSignOut}>
           <Link to="/log-or-sign-up">Sign Out</Link>
         </StyledNavItem>
-        <StyledNavItem onClick={handleClick}>
-          <Link to="/create-event">Create Event</Link>
-        </StyledNavItem>
-        <StyledNavItem onClick={handleClick}>
-          <Link to="/create-organization">Create Organization</Link>
-        </StyledNavItem>
       </StyledNavMenu>
       <StyledNavMenuBackground clicked={click}>&nbsp;</StyledNavMenuBackground>
       <StyledHamburger onClick={handleClick}>

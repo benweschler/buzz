@@ -21,6 +21,8 @@ import { HashLoader } from "react-spinners";
 import { useTheme } from "styled-components";
 import buildEventCards from "../../utils/buildEventCards";
 import OrgCard from "./OrgCard";
+import { EventOrgLink } from "../event-page/styles/EventPageInfoPanel.styled";
+import { CreateEventButton } from "../organization-page/styles/OrganizationBottom.styled";
 
 const UserPage = () => {
   const [user, setUser] = useState(null);
@@ -81,6 +83,9 @@ const UserPage = () => {
         <RightColumnUser>
           <OrgTopRow>
             <h2>Your Organizations</h2>
+            <EventOrgLink to={"/create-organization"}>
+              <CreateEventButton> Create Organization </CreateEventButton>
+            </EventOrgLink>
           </OrgTopRow>
         
         <UserTicketsDiv>

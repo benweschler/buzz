@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Feed from "./pages/feed/Feed";
 import { ThemeProvider } from "styled-components";
 import { GlobalStyles, lightTheme, darkTheme } from "./theme/theme";
@@ -13,13 +13,9 @@ import CreateOrg from "./pages/form-pages/components/CreateOrg";
 import CreateEvent from "./pages/form-pages/CreateEvent";
 import EditEvent from "./pages/form-pages/EditEvent";
 
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import {onAuthStateChanged} from 'firebase/auth';
-const {auth} = require('./firebase/index.js');
+
 
 function App() {
-  const navigate = useNavigate();
   const [theme, setTheme] = useState(lightTheme);
   const toggleTheme = () =>
     setTheme(theme.brightness === "light" ? darkTheme : lightTheme);

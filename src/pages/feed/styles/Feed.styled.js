@@ -16,6 +16,10 @@ export const Wrapper = styled.div`
   width: 100%
 `;
 
+export const SchoolName = styled.span`
+  color: rgba(0, 0, 0, 0.5);
+`
+
 export const EventView = styled.div`
   display: ${({visible}) => visible ? "grid" : "none"};
   grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));

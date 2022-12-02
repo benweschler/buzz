@@ -12,6 +12,7 @@ import {
   TextArea,
   FileInput
 } from '../Form.styled';
+import { useParams } from 'react-router-dom';
 
 function getUsrID() {
   const usrObj = JSON.parse(localStorage.getItem('user'));
@@ -25,6 +26,9 @@ const initOrgInfo = {
 const initFile = '';
 
 function CreateOrg(props) {
+  const params = useParams();
+  const userID = params.id;
+  
   const [orgInfo, setOrgInfo] = useState(initOrgInfo);
   const [file, setFile] = useState(initFile);
   const [error, setError] = useState('');
