@@ -17,7 +17,7 @@ import {
 } from "./styles/OrganizationBottom.styled";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import EventCard from "../feed/EventCard";
 import { EventOrgLink } from "../event-page/styles/EventPageInfoPanel.styled";
 import { LoadingIndicator } from "../feed/styles/Feed.styled";
@@ -25,8 +25,8 @@ import { HashLoader } from "react-spinners";
 import { useTheme } from "styled-components";
 
 const OrganizationPage = () => {
-  const location = useLocation();
-  const { organizationID } = location.state;
+  const params = useParams();
+  const organizationID = params.id;
 
   const [orgData, setOrgData] = useState(null);
   const [follow, setFollow] = useState(false);

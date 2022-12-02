@@ -38,15 +38,13 @@ export default function EventCard({
         </CardBodyTopRow>
         <TitleLink
           className="overflow-field"
-          to="/event-page"
-          state={{eventID: eventID}}
+          to={"/event-page/" + eventID}
         >
           {title}
         </TitleLink>
         <OrganizerLink
           className="overflow-field"
-          to="/organization-page"
-          state={{organizationID: organizationID}}
+          to={"/organization-page/" + organizationID}
         >
           {organization}
         </OrganizerLink>

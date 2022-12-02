@@ -39,14 +39,14 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import QrCodeScannerRoundedIcon from "@mui/icons-material/QrCodeScannerRounded";
 import formatUnixTime from "../../utils/dateUtils";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { LoadingIndicator } from "../feed/styles/Feed.styled";
 import { HashLoader } from "react-spinners";
 import { useTheme } from "styled-components";
 
 const EventPage = () => {
-  const location = useLocation();
-  const { eventID } = location.state;
+  const params = useParams();
+  const eventID = params.id
 
   const [active, setActive] = useState(false);
   const [member, setMember] = useState(false);
