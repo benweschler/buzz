@@ -15,7 +15,6 @@ const {
   validateUserOTP,
   addUserToEvent,
   followOrg,
-  getFeed,
   checkIn
 } = require('../controllers/userController');
 
@@ -32,9 +31,6 @@ router.get('/signout/:id', revokeToken);
 
 // Validate OTP QRCode
 router.get('/validateOTP/:id/:hmac', validateUserOTP);
-
-// get feed
-router.get('/feed/:id', getFeed);
 
 // Create a user in Firestore and in Firebase Auth
 router.post('/', upload.single('file'), createUser);

@@ -1,8 +1,9 @@
 const {database} = require("../firebase-admin/index"); //import firebase
 const {FieldValue} = require("@google-cloud/firestore");
+const { Feed } = require("@mui/icons-material");
 
 const sortByPop = (events) => {
-  if (events.length === 0) return [];
+  if (events.length === 0||events.length===NaN) return [];
 
   return events.sort((event1, event2) =>
     event1.attendees.length < event2.attendees.length
@@ -60,17 +61,46 @@ const filterTags = (events, tags) => {
   return results
 }
 
+const getFeed = async (id) => {
+  let results = []
+  const user=await database.collection("Users").doc(id).get()
+  const organizations=user.data().clubs_following
+  console.log(organizations)
+  for(let i=0;i<organizations.length;i++)
+  {
+    let org = await database.collection('Organizations').doc(organizations[i]).get()
+    if (!org.exists) {
+      return []
+    }
+    database.collection('Events').where("organization", "==", org.id).where("date", ">", Date.now()).orderBy('date').get().then((snapshot) => {
+      snapshot.forEach((doc) => {
+        results.push(doc.data());
+      });
+      })
+    }
+    return results
+  }
+ 
 
 const filter = async (req, res) => {
   let events = []
-  if (req.body.tonight) {
+  if (req.body.tonight==true) {
     events = await eventsTonight()
     if (events == []) {
       res.status(404).json({
         error: "No events found for tonight"
       })
     }
-  } else {
+  } else if(req.body.feed==true){
+    if(!req.body.user){
+      res.status(404).json({
+        error:"no user passed in"
+      })
+      return
+    }
+    events=await getFeed(req.body.user)
+  }
+  else {
     const query = await database.collection("Events").where("date", ">", Date.now()).get()
     query.forEach((event) => {
       events.push(event.data())

@@ -10,7 +10,6 @@ const {signInWithEmailAndPassword, signOut, setPersistence, browserLocalPersiste
 const jsSHA = require('jssha');
 const {v4} = require('uuid');
 const crypto = require('crypto');
-const {sortByRecency} = require('./utilityController');
 const {INITIAL_USER_KEYS} = require('../constants/userConstants.js');
 const {WINDOW_TIME} = require('../constants/utilityConstants');
 
@@ -535,6 +534,9 @@ const addUserToEvent = async (req, res) => {
             eventRef.update({
                 "attending": newAttending
               })
+            eventRef.update({
+              "attended": FieldValue.arrayRemove(req.body.user)
+            })
             userRef.update({
                 "events_registered": FieldValue.arrayRemove(req.body.event)
             })
@@ -677,45 +679,7 @@ const checkIn = async (req, res) => {
     })
   }
 
-const getFeed = async (req, res) => {
-  const {id} = req.params
-  database.collection('Users').doc(id).get().then(async (user) => {
-    if (!user.exists) {
-      res.status(404).json({
-        error: "user not found"
-      })
-      return
-    }
-    const orgNum = user.data().clubs_following.length
-    if (orgNum == 0) {
-      res.status(400).json({
-        error: "user is not following any clubs"
-      })
-      return
-    }
-    const orgs = user.data().clubs_following
-    let results = []
-    for (let i = 0; i < orgNum; i++) {
-      await database.collection('Organizations').doc(orgs[i]).get().then(async (org) => {
-        if (org.exists) {
-          for (let i = 0; i < org.data().events.length; i++) {
-            let event = await database.collection('Events').doc(org.data().events[i]).get()
-            if (event.exists && (event.data().date > Date.now()))
-              results.push(event.data())
-          }
-        }
-      }).catch((error) => {
-        res.status(500).json({
-          error: error
-        })
-      })
-    }
-    results = sortByRecency(results)
-    res.status(200).json({
-      events: results
-    })
-  })
-}
+
 
 const validateUserOTP = async (req, res) => {
   const {id, hmac} = req.params;
@@ -774,6 +738,5 @@ module.exports = {
   validateUserOTP,
   addUserToEvent,
   followOrg,
-  getFeed,
   checkIn
 }
