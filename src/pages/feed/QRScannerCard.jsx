@@ -102,7 +102,7 @@ export default function QRScannerCard({onClose}) {
 
 async function validateOtp(otp, userID) {
   const data = await axios.get(
-    `http://localhost:4000/api/users/validateOTP/${userID}/${otp}`)
+    'http://localhost:4000/api/users/validateOTP/${userID}/${otp}')
     .catch((e) => console.log("Error validating OTP:", e))
 
   return data.data.authentication
@@ -114,7 +114,7 @@ async function checkUserIn(userID, eventID) {
     event: eventID
   }
   const response = await axios.patch(
-    "http://localhost:4000/api/users/checkIn", body)
+    'http://localhost:4000/api/users/checkIn', body)
     .catch((e) => console.log("Error checking user in:", e))
 
   return {

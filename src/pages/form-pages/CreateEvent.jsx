@@ -136,7 +136,7 @@ function CreateEvent() {
     Event.append('file', file);
     Event.append('tags', toTagStr(selectedTags));
 
-    axios.post("http://localhost:4000/api/events/", Event, {
+    axios.post('http://localhost:4000/api/events/', Event, {
       'Content-Type': 'multipart/form-data'
     }).then((response) => {
       console.log(response)
