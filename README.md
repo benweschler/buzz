@@ -8,7 +8,7 @@ This web application was created using React on the front-end and NodeJS with Ex
 
 To run Buzz, you must first install all of the dependencies by using the command `npm install`.
 After doing so, the server can be started by running the command `node ./backend/server.js` from the buzz directory.
-Lastly, execute the command `npm start` to initialize the react project.
+Lastly, execute the command `npm start` to initialize the react project. For the back-end functionality to work, you need three files. You first need the .env file, which stores the environment variables that the back-end needs to read. In addition, you need the configuration information for Firebase, which would be stored under /src/firebase/index.js. Finally, you need the service account information for the Firebase Admin SDK, which would be stored at /backend/firebase-admin/.firebase/service-account.json.
 
 # Features
 ## Authentication

@@ -30,3 +30,4 @@ yarn-error.log*
 
 .env
 /backend/firebase-admin/.firebase/service-account.json
+/src/firebase/index.js
