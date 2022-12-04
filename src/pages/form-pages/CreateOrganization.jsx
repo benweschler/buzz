@@ -13,6 +13,7 @@ import {
   FileInput
 } from './Form.styled';
 import { useNavigate } from "react-router-dom";
+import Constants from "../../constants/Constants";
 
 function getUsrID() {
   const usrObj = JSON.parse(localStorage.getItem('user'));
@@ -25,7 +26,7 @@ const initOrgInfo = {
 
 const initFile = '';
 
-function CreateOrganization(props) {
+function CreateOrganization() {
   const [orgInfo, setOrgInfo] = useState(initOrgInfo);
   const [file, setFile] = useState(initFile);
   const [error, setError] = useState('');
@@ -76,7 +77,7 @@ function CreateOrganization(props) {
     Organization.append("file", file);
     
 
-    axios.post('http://localhost:4000/api/organizations/', Organization, {
+    axios.post(`${Constants.API_ENDPOINT}/api/organizations/`, Organization, {
       'Content-Type': 'multipart/form-data'
     }).then((response) => {
       console.log(response);

@@ -23,6 +23,7 @@ import { LoadingIndicator } from "../feed/styles/Feed.styled";
 import { HashLoader } from "react-spinners";
 import { useTheme } from "styled-components";
 import buildEventCards from "../../utils/buildEventCards";
+import Constants from "../../constants/Constants";
 
 
 const OrganizationPage = () => {
@@ -39,13 +40,13 @@ const OrganizationPage = () => {
     console.log("useEffect query in OrganizationPage");
     const getInfo = async () => {
       const organizationData = await axios.get(
-        "http://localhost:4000/api/organizations/" + organizationID
+        `${Constants.API_ENDPOINT}/api/organizations/` + organizationID
       );
       setOrgData(organizationData.data);
 
       const user = JSON.parse(localStorage.getItem("user")).id;
       const followData = await axios.get(
-        "http://localhost:4000/api/utilities/org/" + user + "/" + organizationID
+        `${Constants.API_ENDPOINT}/api/utilities/org/` + user + "/" + organizationID
       );
 
       if (followData.data.following) {
@@ -58,10 +59,7 @@ const OrganizationPage = () => {
       } else {
         setJoin(false);
       }
-
     }
-
-    console.log("EFFECT")
     getInfo().catch(console.error);
   }, [organizationID]);
 
@@ -72,7 +70,7 @@ const OrganizationPage = () => {
       organization: organizationID,
     };
     const doFollow = await axios.patch(
-      "http://localhost:4000/api/users/follow",
+      `${Constants.API_ENDPOINT}/api/users/follow`,
       body
     );
     console.log(doFollow.data.following);
@@ -89,7 +87,7 @@ const OrganizationPage = () => {
       organization: organizationID,
     };
     const doJoin = await axios.patch(
-      "http://localhost:4000/api/users/add",
+      `${Constants.API_ENDPOINT}/api/users/add`,
       body
     );
     if (doJoin["data"].member) {

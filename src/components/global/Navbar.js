@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import ShowQRButton from "../qr-code/ShowQRButton";
 import axios from 'axios';
 import secureLocalStorage from 'react-secure-storage';
+import Constants from "../../constants/Constants";
 
 const Navbar = () => {
   const [click, setClick] = useState(false);
@@ -22,7 +23,7 @@ const Navbar = () => {
   const handleSignOut = async () => {
     setClick(!click)
     const userID = JSON.parse(localStorage.getItem('user')).id;
-    await axios.get(`http://localhost:4000/api/users/signout/${userID}`).catch((error) => {
+    await axios.get(`${Constants.API_ENDPOINT}/api/users/signout/${userID}`).catch((error) => {
       console.log(error);
     })
 

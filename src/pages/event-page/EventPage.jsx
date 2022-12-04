@@ -41,6 +41,7 @@ import { LoadingIndicator } from "../feed/styles/Feed.styled";
 import { HashLoader } from "react-spinners";
 import { useTheme } from "styled-components";
 import QRScannerButton from "./QRScannerButton";
+import Constants from "../../constants/Constants";
 
 const EventPage = () => {
   const params = useParams();
@@ -56,26 +57,22 @@ const EventPage = () => {
     console.log("useEffect query in EventPage");
     const getInfo = async () => {
       const eventData = await axios.get(
-        'http://localhost:4000/api/events/' + eventID
+        `${Constants.API_ENDPOINT}/api/events/` + eventID
       );
-      setEventData(eventData.data);
-      console.log(eventData);
+      setEventData(eventData["data"]);
       const user = JSON.parse(localStorage.getItem("user")).id;
       const memberData = await axios.get(
-        'http://localhost:4000/api/utilities/org/' + user + "/" + eventData.data.organization
+        `${Constants.API_ENDPOINT}/api/utilities/org/` + user + "/" + eventData["data"].organization
       );
-      if (memberData.data.member) {
+      if (memberData["data"].member) {
         setMember(true);
       } else {
         setMember(false);
       }
-      console.log("MEMBER DATA:", memberData["data"].member);
       const registeredData = await axios.get(
-        'http://localhost:4000/api/utilities/' + user + "/" + eventID
+        `${Constants.API_ENDPOINT}/api/utilities/` + user + "/" + eventID
       );
-      console.log("EVENT ID", eventID)
-      console.log("REGISTERED DATA:", registeredData.data)
-      if (registeredData.data.registered) {
+      if (registeredData["data"].registered) {
         setActive(true);
       } else {
         setActive(false);
@@ -87,20 +84,18 @@ const EventPage = () => {
 
   const handleRsvp = async () => {
     const userInfo=JSON.parse(localStorage.getItem('user'))
-    console.log("userInfo: ", userInfo);
     const body = {
       user: userInfo.id,
       event: eventID
     };
 
     await axios.patch(
-      'http://localhost:4000/api/users/register',
+      `${Constants.API_ENDPOINT}/api/users/register`,
       body
     ).then((rsvp) => {
       if (rsvp.data.registered) {
         setActive(true);
         setEventData(prevState => {
-          alert("Succeeded!")
           return{
             ...prevState, attending : prevState.attending + 1
           }})
@@ -116,7 +111,7 @@ const EventPage = () => {
       userData = JSON.stringify(userData)
       localStorage.setItem("user", userData)
     }).catch((error) => {
-      console.log(error)
+      console.log("Error with API fetch on user page", error)
       alert("Can't RSVP for this event anymore!")
     })
   };
@@ -124,7 +119,7 @@ const EventPage = () => {
   if(!eventData)
     return (
       <LoadingIndicator>
-        <HashLoader size="150px" color={theme.main}/>
+        <HashLoader size="150px" color={theme["main"]}/>
       </LoadingIndicator>
     )
 

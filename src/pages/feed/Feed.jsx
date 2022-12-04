@@ -25,7 +25,7 @@ export default function Feed({toggleTheme}) {
 
     async function getEvents() {
       return axios.put(
-        'http://localhost:4000/api/utilities/filter',
+        `${Constants.API_ENDPOINT}/api/utilities/filter`,
         {
           tags: [],
           tonight: tonight,

@@ -13,6 +13,7 @@ import {
 } from '../Form.styled';
 import secureLocalStorage from 'react-secure-storage';
 import { useNavigate } from 'react-router-dom';
+import Constants from "../../../constants/Constants";
 
 const initUserInfo = {
   name: '', email: '', password: '', major: ''
@@ -66,7 +67,7 @@ function Register(props) {
     Register.append("major", userInfo.major);
     Register.append("file", file);
 
-    axios.post('http://localhost:4000/api/users/', Register, {
+    axios.post(`http://${Constants.API_ENDPOINT}/api/users/`, Register, {
       'Content-Type': 'multipart/form-data'
     }).then((response) => {
       let userData = response.data.user_data;

@@ -130,7 +130,7 @@ function EditEvent(props) {
     Event.append('file', file);
     Event.append('tags', toTagStr(selectedTags));
 
-    axios.post('http://localhost:4000/api/events/', Event, {
+    axios.post(`${Constants.API_ENDPOINT}/api/events/`, Event, {
       'Content-Type': 'multipart/form-data'
     }).then((response) => {
       console.log(response)

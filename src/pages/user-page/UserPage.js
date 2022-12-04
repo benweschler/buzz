@@ -24,6 +24,7 @@ import buildEventCards from "../../utils/buildEventCards";
 import OrgCard from "./OrgCard";
 import { EventOrgLink } from "../event-page/styles/EventPageInfoPanel.styled";
 import { CreateEventButton } from "../organization-page/styles/OrganizationBottom.styled";
+import Constants from "../../constants/Constants";
 
 const UserPage = () => {
   const [user, setUser] = useState(null);
@@ -37,15 +38,13 @@ const UserPage = () => {
 
     const readUser = async () => {
       const data = await axios.get(
-        'http://localhost:4000/api/users/' + localUser.id
+        `${Constants.API_ENDPOINT}/api/users/` + localUser.id
       );
 
-      setUserData(data.data);
+      setUserData(data["data"]);
     };
 
-    readUser().catch(() => {
-      console.log("ERROR");
-    });
+    readUser().catch((e) => console.log("Error getting data on user page:", e));
   }, []);
 
   if (!userData || !user)

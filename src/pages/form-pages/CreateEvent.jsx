@@ -19,6 +19,7 @@ import styled from "styled-components"
 import TagChipRow from "./components/TagChipRow"
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import Constants from "../../constants/Constants";
 
 const TagChipRowStyle = styled.div`
   display: flex;
@@ -140,7 +141,7 @@ function CreateEvent() {
     console.log("FormData", Event);
     console.log("Tag string", toTagStr(selectedTags));
 
-    axios.post('http://localhost:4000/api/events/', Event, {
+    axios.post(`${Constants.API_ENDPOINT}/api/events/`, Event, {
       'Content-Type': 'multipart/form-data'
     }).then((response) => {
       console.log(response)
