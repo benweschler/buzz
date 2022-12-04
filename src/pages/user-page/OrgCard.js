@@ -1,7 +1,7 @@
 
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { ImgOrgCard, OrgCardImgDiv, OrgCardWrapper, TitleDivOrgCard, TitleOrgCard } from './styles/UserOrgCard.styled'
+import { ImgOrgCard, OrgCardWrapper, TitleOrgCard } from './styles/UserOrgCard.styled'
 
 const OrgCard = (
     {
@@ -14,18 +14,8 @@ const OrgCard = (
   return (
     <Link to={"/organization-page/" + id}>
       <OrgCardWrapper>
-        <OrgCardImgDiv>
-          <ImgOrgCard src={image}>
-          </ImgOrgCard>
-        </OrgCardImgDiv>
-        <TitleDivOrgCard>
-          <TitleOrgCard>
-            {name}
-          </TitleOrgCard>
-
-        </TitleDivOrgCard>
-
-
+        <ImgOrgCard src={image}/>
+        <TitleOrgCard>{name}</TitleOrgCard>
       </OrgCardWrapper>
     </Link>
   )

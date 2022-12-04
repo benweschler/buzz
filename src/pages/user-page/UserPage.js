@@ -7,15 +7,13 @@ import {
   TicketHeaderUser,
   TicketsContainer,
   UserColumnDiv,
-  UserTicketsDiv,
+  ScrollableUserInfo,
 } from "./styles/UserBottom.styled";
 import {
   UserProfile,
   StyledUserAvatar,
   StyledUserInfo,
 } from "./styles/UserProfile.styled";
-// import ExampleEvents from "../../assets/ExampleEvents.json"
-// import UserEventCard from "../../components/UserPage/UserEventCard"
 import axios from "axios";
 import { LoadingIndicator } from "../feed/styles/Feed.styled";
 import { HashLoader } from "react-spinners";
@@ -37,11 +35,12 @@ const UserPage = () => {
     setUser(localUser);
 
     const readUser = async () => {
-      const data = await axios.get(
+      const response = await axios.get(
         `${Constants.API_ENDPOINT}/api/users/` + localUser.id
       );
 
-      setUserData(data["data"]);
+      setUserData(response["data"]);
+      console.log("TEST", response["data"])
     };
 
     readUser().catch((e) => console.log("Error getting data on user page:", e));
@@ -77,11 +76,11 @@ const UserPage = () => {
             <h2>Your Tickets</h2>
           </TicketHeaderUser>
 
-          <UserTicketsDiv>
+          <ScrollableUserInfo>
             <TicketsContainer>
               {buildEventCards(userData.events_registered)}
             </TicketsContainer>
-          </UserTicketsDiv>
+          </ScrollableUserInfo>
         </LeftColumnUser>
         <RightColumnUser>
           <OrgTopRow>
@@ -91,9 +90,9 @@ const UserPage = () => {
             </EventOrgLink>
           </OrgTopRow>
 
-          <UserTicketsDiv>
+          <ScrollableUserInfo>
             {buildOrgData(userData.organizations)}
-          </UserTicketsDiv>
+          </ScrollableUserInfo>
         </RightColumnUser>
       </UserColumnDiv>
     </>

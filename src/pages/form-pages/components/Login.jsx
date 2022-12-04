@@ -38,8 +38,6 @@ function Login(props) {
     body['email'] = userInfo.email;
     body['password'] = userInfo.password;
 
-    //console.log(process.env.REACT_APP_SERVER_URL);
-
     axios.post(`${Constants.API_ENDPOINT}/api/users/signin`, body).then((response) => {
       let userData = response.data.user_data;
       secureLocalStorage.setItem("private-key", response.data.user_data.secret);

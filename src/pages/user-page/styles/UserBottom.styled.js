@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 export const UserColumnDiv = styled.div`
@@ -8,7 +7,7 @@ export const UserColumnDiv = styled.div`
     justify-content: center;
     width: 100%;
     flex-direction: row;
-    gap: 5rem;
+    gap: 2rem;
     @media (max-width: ${({ theme }) => theme.mobile}) {
         flex-direction: column;
 
@@ -27,27 +26,25 @@ export const LeftColumnUser = styled.div`
     }
 `;
 
-export const UserTicketsDiv = styled.div`
+export const ScrollableUserInfo = styled.div`
   margin-top: 20px;
-  padding: 20px;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   border-radius: 8px;
-  align-items: center;
-  justify-content: start;
-  width: 100%;
+  align-items: stretch;
   background: ${({ theme }) => theme.card};
   box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
-  height: 500px;
+  height: 40rem;
   overflow-y: auto;
+  gap: 1.5rem;
 `;
 
 export const TicketsContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
   width: 100%;
-  margin: 10px 10px;
-
+  gap: 1.5rem;
 `
 
 export const RightColumnUser = styled.div`
@@ -57,10 +54,6 @@ export const RightColumnUser = styled.div`
   width: 50%;
   text-align: center;
   justify-content: space-between;
-  
-
-
-
 
   @media (max-width: ${({ theme }) => theme.mobile}) {
         width: 100%;
@@ -88,11 +81,4 @@ height: 100px;
 align-items: center;
 justify-content: center;
 
-`
-
-export const CreateEventLink = styled(Link)`
-  height: 100%;
-  display: flex;  
-  align-items: center;
-  justify-content: center;    
 `
