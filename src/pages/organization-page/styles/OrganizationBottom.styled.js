@@ -64,7 +64,7 @@ export const OrgButtonDiv = styled.div`
   height: 4rem;
   margin: 0 10px;
   margin-left: 40%;
-  background: rgba(0,0,0, 0.03);
+  background: ${({ theme }) => theme.card};
   box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
   @media (max-width: ${({ theme }) => theme.mobile}) {
     
