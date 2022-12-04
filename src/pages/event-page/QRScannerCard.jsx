@@ -9,6 +9,7 @@ import QrReader from "react-qr-scanner";
 import axios from "axios";
 import {StyledErrorMessage, StyledMessage} from "../../components/globalStyles";
 import {IoClose} from "react-icons/io5";
+import Constants from "../../constants/Constants";
 
 const ScanStatus = {
   scanning: "scanning",
@@ -102,7 +103,7 @@ export default function QRScannerCard({onClose, eventID}) {
 
 async function validateOtp(otp, userID) {
   const data = await axios.get(
-    `http://localhost:4000/api/users/validateOTP/${userID}/${otp}`)
+    `${Constants.API_ENDPOINT}/api/users/validateOTP/${userID}/${otp}`)
     .catch((e) => console.log("Error validating OTP:", e))
 
   return data.data.authentication
@@ -115,7 +116,7 @@ async function checkUserIn(userID, eventID) {
   }
 
   const response = await axios.patch(
-    'http://localhost:4000/api/users/checkIn', body)
+    `${Constants.API_ENDPOINT}/api/users/checkIn`, body)
     .catch((e) => console.log("Error checking user in:", e))
 
   return {
