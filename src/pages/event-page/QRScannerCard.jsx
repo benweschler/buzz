@@ -5,7 +5,7 @@ import {
   ScannerTitle, SuccessMessage,
   TopRow,
 } from "./styles/QRScannerCard.styled";
-import QrReader from "react-qr-scanner";
+import QrReader from "modern-react-qr-reader";
 import axios from "axios";
 import {StyledErrorMessage, StyledMessage} from "../../components/globalStyles";
 import {IoClose} from "react-icons/io5";
@@ -96,7 +96,7 @@ export default function QRScannerCard({onClose, eventID}) {
         style={{height: "25rem", width: "25rem"}}
         onError={onReaderError}
         onScan={onScan}
-        facingMode="rear"
+        facingMode="environment"
       />
     </ModalCardScaffold>
   )
