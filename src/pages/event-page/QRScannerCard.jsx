@@ -96,6 +96,7 @@ export default function QRScannerCard({onClose, eventID}) {
         style={{height: "25rem", width: "25rem"}}
         onError={onReaderError}
         onScan={onScan}
+        facing="rear"
       />
     </ModalCardScaffold>
   )
