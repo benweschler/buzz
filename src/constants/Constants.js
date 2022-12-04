@@ -10,7 +10,7 @@ import {GiHighHeel} from "react-icons/gi";
 import {RiHandCoinLine} from "react-icons/ri";
 
 export default class Constants {
-  static API_ENDPOINT = "http://localhost:4000"
+  static API_ENDPOINT = "https://buzz-backend.onrender.com"
 
   static tags = {
     "Workshop": <GrWorkshop/>,

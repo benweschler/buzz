@@ -4,7 +4,7 @@ const admin = require('firebase-admin');
 // Initializing Admin SDK with environment variables:
 // https://www.benmvp.com/blog/initializing-firebase-admin-node-sdk-env-vars/
 
-var serviceAccount = require('./.firebase/service-account.json');
+let serviceAccount = require('/etc/secrets/service-account.json');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
