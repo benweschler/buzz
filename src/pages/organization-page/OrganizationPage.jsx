@@ -26,7 +26,7 @@ import buildEventCards from "../../utils/buildEventCards";
 
 
 const OrganizationPage = () => {
-  const params = useParams();
+  const params = useParams()
   const organizationID = params.id;
 
   const [orgData, setOrgData] = useState(null);
@@ -92,7 +92,7 @@ const OrganizationPage = () => {
       "http://localhost:4000/api/users/add",
       body
     );
-    if (doJoin.data.member) {
+    if (doJoin["data"].member) {
       setJoin(true);
     } else {
       setJoin(false);
@@ -154,7 +154,7 @@ const OrganizationPage = () => {
           <OrganizationEventsDiv>
             
             <OrgEventsContainer>
-              {buildEventCards(orgData.events)}
+              {renderEventRow(orgData.events)}
             </OrgEventsContainer>
           </OrganizationEventsDiv>
           
@@ -162,6 +162,12 @@ const OrganizationPage = () => {
       </OrgBottomContainer>
     </>
   );
+}
+
+function renderEventRow(events) {
+  const cards = buildEventCards(events)
+
+  return cards.length === 0 ? <h4>No Events</h4> : cards
 }
 
 

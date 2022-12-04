@@ -44,7 +44,7 @@ function toTagStr(tagList) {
     }
   }
   TagStr = TagStr.slice(1);
-  return TagStr;
+  return TagStr.slice(1);
 }
 
 function CreateEvent() {

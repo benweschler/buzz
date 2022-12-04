@@ -7,6 +7,8 @@ export const OrganizationDescription = styled.div`
   margin-top: 30px;
   display: flex;
   flex-direction: column;
+  width: 1fr;
+  
   @media (max-width: ${({ theme }) => theme.mobile}) {
     margin-top: 20px;
   }
@@ -48,7 +50,7 @@ export const OrgBottomRow = styled.div`
 
   @media (max-width: ${({ theme }) => theme.mobile}) {
     width: 100%;
-    padding-left: 0px;
+    padding-left: 0;
   }
 `;
 
@@ -58,7 +60,7 @@ export const OrgButtonDiv = styled.div`
   border-radius: 8px;
   align-items: center;
   justify-content: space-between;
-  width: 60%;
+  width: 1fr;
   height: 4rem;
   margin: 0 10px;
   margin-left: 40%;
@@ -164,8 +166,7 @@ export const EventsHeaderOrg = styled.div`
 `
 
 export const CreateEventButton = styled.button`
-
-  appearance: button;
+  appearance: menulist-button;
   backface-visibility: hidden;
   background-color: #405cf5;
   border-radius: 6px;

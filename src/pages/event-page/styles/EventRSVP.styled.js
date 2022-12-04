@@ -37,8 +37,8 @@ export const RsvpMessage = styled.p`
 `;
 
 export const RsvpButton = styled.button`
-  background: #ff4742;
-  border: 1px solid #ff4742;
+  background: ${(props) => props["activated"] ? "green" : "#ff4742"};
+  border: 1px solid ${(props) => props["activated"] ? "green" : "#ff4742"};
   border-radius: 6px;
   box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
   box-sizing: border-box;

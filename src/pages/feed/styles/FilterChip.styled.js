@@ -8,8 +8,8 @@ export const FilterChipStyle = styled.button`
   border-radius: 0.5rem;
   align-self: start;
   padding: 0.5rem;
-  width: 4.5rem;
-  height: 4.5rem;
+  width: 5rem;
+  height: 5rem;
   font-size: 0.75rem;
   transition: color 200ms ease-in;
 

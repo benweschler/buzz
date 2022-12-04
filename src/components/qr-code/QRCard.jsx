@@ -50,7 +50,7 @@ export default function QRCard({onClose}) {
           <IDTitle>Personal Buzz ID</IDTitle>
           <CloseButton onClick={onClose}><IoClose/></CloseButton>
         </TopRow>
-        <IDUserName>Ben Weschler</IDUserName>
+        <IDUserName>{JSON.parse(localStorage.getItem('user')).name}</IDUserName>
       </div>
       <QRRow>
         <QRBorder>
